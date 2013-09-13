@@ -539,3 +539,22 @@ If point was already at that position, move point to beginning of line."
 
 (golden-ratio-mode 1)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Fiplr
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; For finding files in a project
+
+(prelude-require-packages '(fiplr))
+
+(setq *grizzl-read-max-results* 18)
+(setq fiplr-ignored-globs '((directories (".git" ".svn" "vendor" "tmp"))
+                            (files ("*.jpg" "*.png" "*.zip" "*~"))))
+(global-set-key (kbd "C-x o") 'fiplr-find-file)
+(global-set-key (kbd "C-x C-o") 'fiplr-find-file)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'personal)
+;;; personal.el ends here
+
