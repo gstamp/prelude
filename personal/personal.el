@@ -148,12 +148,6 @@
 ;; Open the buffer list in the same window
 (add-to-list 'same-window-buffer-names "*Buffer List*")
 
-;; Add rainbow delimiters to all programming modes
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-;; Alternatively it can be hooked up to specific modes:
-;; (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
-;; ..or globally..
-;; (global-rainbow-delimiters-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Buffer Management
