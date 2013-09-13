@@ -528,3 +528,14 @@ If point was already at that position, move point to beginning of line."
 
 (setq ffip-full-paths 't) ; Not really part of ido but works well with
                                         ; vertically displayed lists.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Golden ratio plugin
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(prelude-require-packages '(golden-ratio))
+
+(require 'golden-ratio)
+
+(golden-ratio-mode 1)
+
