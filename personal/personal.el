@@ -696,6 +696,26 @@ in the sexp, not the end of the current one."
      ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Multiple Cursors
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(prelude-require-package 'multiple-cursors)
+
+(eval-after-load 'multiple-cursors-autoloads
+  '(progn
+
+     (key-chord-define-global ";l" 'mc/edit-lines)
+     (key-chord-define-global ";e" 'mc/edit-ends-of-lines)
+     (key-chord-define-global ";a" 'mc/edit-beginnings-of-lines)
+
+     (global-set-key (kbd "C->") 'mc/mark-next-symbol-like-this)
+     (global-set-key (kbd "C-<") 'mc/mark-previous-symbol-like-this)
+     (global-set-key (kbd "C-*") 'mc/mark-all-dwim)
+     (global-unset-key (kbd "M-<down-mouse-1>"))
+     (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'personal)
 ;;; personal.el ends here
 
