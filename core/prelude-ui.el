@@ -73,7 +73,9 @@
                                           "%b"))))
 
 ;; use zenburn as the default theme
-(load-theme 'zenburn t)
+(prelude-require-packages '(soothe-theme sublime-themes))
+(load-theme 'spolsky t)
+;;(load-theme 'zenburn t)
 
 (provide 'prelude-ui)
 ;;; prelude-ui.el ends here
