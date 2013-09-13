@@ -553,6 +553,19 @@ If point was already at that position, move point to beginning of line."
 (global-set-key (kbd "C-x o") 'fiplr-find-file)
 (global-set-key (kbd "C-x C-o") 'fiplr-find-file)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Bookmark Mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(prelude-require-package 'bm)
+
+;; Part of bookmarks plugin.  Only highlight bookmarks on fringe.
+(setq bm-highlight-style 'bm-highlight-only-fringe)
+
+(global-set-key [(shift f2)] 'bm-toggle)
+(global-set-key [(shift f3)] 'bm-next)
+(global-set-key [(shift f4)] 'bm-prev)
+(global-set-key (kbd "<left-fringe> <mouse-1>") 'bm-toggle-mouse)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'personal)
