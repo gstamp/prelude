@@ -143,6 +143,97 @@
 ;; Open the buffer list in the same window
 (add-to-list 'same-window-buffer-names "*Buffer List*")
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Window Rearrangement
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun toggle-windows-split()
+  "Switch back and forth between one window and whatever split of windows we might have in the frame. The idea is to maximize the current buffer, while being able to go back to the previous split of windows in the frame simply by calling this command again."
+  (interactive)
+  (if (not(window-minibuffer-p (selected-window)))
+      (progn
+        (if (< 1 (count-windows))
+            (progn
+              (window-configuration-to-register ?u)
+              (delete-other-windows))
+          (jump-to-register ?u)))))
+
+(define-key global-map (kbd "C-|") 'toggle-windows-split)
+
+(defun toggle-split-direction ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
+
+(global-set-key [(shift f9)] 'toggle-split-direction)
+
+(defun split-window-right-and-choose-last-buffer ()
+  "Like split-window-right but selects the last buffer"
+  (interactive)
+  (split-window-right)
+  (other-window 1)
+  (switch-to-next-buffer)
+  (other-window -1))
+
+(global-set-key (kbd "C-x 3") 'split-window-right-and-choose-last-buffer)
+
+(defun split-window-below-and-choose-last-buffer ()
+  "Like split-window-below but selects the last buffer"
+  (interactive)
+  (split-window-below)
+  (other-window 1)
+  (switch-to-next-buffer)
+  (other-window -1))
+
+(global-set-key (kbd "C-x 2") 'split-window-below-and-choose-last-buffer)
+
+(defun rotate-windows ()
+  "Rotate your windows"
+  (interactive)
+  (cond ((not (> (count-windows)1))
+         (message "You can't rotate a single window!"))
+        (t
+         (setq i 1)
+         (setq numWindows (count-windows))
+         (while  (< i numWindows)
+           (let* (
+                  (w1 (elt (window-list) i))
+                  (w2 (elt (window-list) (+ (% i numWindows) 1)))
+
+                  (b1 (window-buffer w1))
+                  (b2 (window-buffer w2))
+
+                  (s1 (window-start w1))
+                  (s2 (window-start w2))
+                  )
+             (set-window-buffer w1  b2)
+             (set-window-buffer w2 b1)
+             (set-window-start w1 s2)
+             (set-window-start w2 s1)
+             (setq i (1+ i)))))))
+
+(global-set-key [(shift f10)] 'rotate-windows)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Buffer Management
