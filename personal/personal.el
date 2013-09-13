@@ -672,6 +672,12 @@ in the sexp, not the end of the current one."
        (yank)
        (exchange-point-and-mark))
 
+     (defun paredit-wrap-round-from-behind ()
+       (interactive)
+       (forward-sexp -1)
+       (paredit-wrap-round)
+       (insert " ")
+       (forward-char -1))
 
      ;; Some paredit keybindings conflict with windmove and SLIME,
      ;; adjust those and make some new bindings.
