@@ -456,7 +456,7 @@ If point was already at that position, move point to beginning of line."
 ;;;; Setup: Git Gutter
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(git-gutter+))
+(prelude-require-packages '(git-gutter+ git-gutter-fringe+))
 
 (global-git-gutter+-mode t)
 
