@@ -5,8 +5,8 @@
 
 ;; Zernburn is not awesome, soothe is not bad
 (disable-theme 'zenburn)
-(prelude-require-packages '(soothe-theme))
-(load-theme 'soothe)
+(prelude-require-packages '(soothe-theme sublime-themes))
+(load-theme 'spolsky t)
 
 ;; I like arrow keys turned on
 (setq prelude-guru nil)
