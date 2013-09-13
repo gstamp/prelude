@@ -110,6 +110,8 @@
     (setq mac-command-modifier 'meta)
     (setq mac-option-modifier nil)
 
+    (global-set-key [end] 'end-of-line)
+
     ;; I like the right option key to be control because there's no
     ;; right control key on the mac
     (setq mac-right-option-modifier 'control)
