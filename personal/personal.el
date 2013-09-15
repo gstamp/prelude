@@ -1,3 +1,8 @@
+;;; personal.el --- Personal changes to prelude
+;;; Commentary:
+
+;; Here are the definitions of most of my personalizations to prelude.
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Some sane defaults
