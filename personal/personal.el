@@ -721,6 +721,47 @@ in the sexp, not the end of the current one."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Org mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Don't use the standard org keys for todo and priority management
+;; http://orgmode.org/manual/Conflicts.html
+(setq org-replace-disputed-keys 1)
+(setq org-confirm-babel-evaluate nil)
+
+;; Colour org mode source code
+(setq org-src-fontify-natively 1)
+;; Valid task states in org mode
+;; Shift left/right switches between modes in the current sequence.
+;; Control shift left/right switches to a different sequence.
+(setq org-todo-keywords
+      '((sequence "TODO" "INPROGRESS" "|" "DONE")
+        (sequence "ONHOLD" "|" "CANCELLED")))
+;; When a task is finished log when it's done
+(setq org-log-done 'time)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (clojure . t)
+   (sh . t)
+   (js . t)
+   (java . t)
+   (awk . t)
+   (sql . t)
+   (ruby . t)
+   ))
+
+;; Store an org mode link C-cC-l to use it.
+(define-key org-mode-map "\C-cl" 'org-store-link)
+
+(global-set-key [f9] 'org-agenda)
+
+;; Slightly nicer default style for exports
+(setq org-export-html-style-extra "<style type=\"text/css\">\n  html {\n  font-family: sans-serif;\n  font-size: 11pt;\n  }\n  em { font-style: normal; font-weight: bold;}\n</style>")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'personal)
 ;;; personal.el ends here
 
