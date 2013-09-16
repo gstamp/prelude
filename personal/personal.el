@@ -762,6 +762,35 @@ in the sexp, not the end of the current one."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Ruby
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(prelude-require-packages '(rinari rspec-mode bundler))
+
+;; 'Fix' 'WARNING: terminal is not fully functional' from less/etc.
+(setenv "PAGER" "cat")
+
+(defun rspec-run-and-arrange ()
+  (interactive)
+
+  (if (not (rspec-buffer-is-spec-p))
+      (rspec-toggle-spec-and-target))
+
+  (rspec-verify)
+  (delete-other-windows)
+  (if (get-buffer "*rspec-compilation*")
+      (let ((result-window (split-window-below)))
+
+        (set-window-buffer result-window "*rspec-compilation*")
+        (rspec-toggle-spec-and-target)
+
+        (split-window-right-and-choose-last-buffer)
+
+        (enlarge-window 10)
+        )))
+(define-key rspec-mode-map (kbd "M-\"") 'rspec-run-and-arrange)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Magit
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
