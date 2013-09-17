@@ -788,7 +788,7 @@ in the sexp, not the end of the current one."
 
         (enlarge-window 10)
         )))
-(define-key rspec-mode-map (kbd "M-\"") 'rspec-run-and-arrange)
+(define-key ruby-mode-map (kbd "M-\"") 'rspec-run-and-arrange)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Magit
