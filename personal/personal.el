@@ -770,6 +770,10 @@ in the sexp, not the end of the current one."
 ;; 'Fix' 'WARNING: terminal is not fully functional' from less/etc.
 (setenv "PAGER" "cat")
 
+;; RSpec settings for greater good.
+(setq rspec-use-rake-flag nil)
+(setq rspec-use-bundler-when-possible 't)
+
 (defun rspec-run-and-arrange ()
   (interactive)
 
