@@ -14,6 +14,9 @@
 ;; No thanks to flyspell mode being on by default
 (setq prelude-flyspell nil)
 
+;; No whitespace by default
+(setq prelude-whitespace nil)
+
 ;; JS indent levels
 (setq js-indent-level 2)
 (setq js2-basic-offset 2)
