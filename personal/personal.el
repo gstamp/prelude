@@ -145,8 +145,11 @@
 
     ;; mac friendly font
     (if window-system
-        (set-face-attribute 'default nil :font "Monaco-12"))
-    ))
+        (progn
+          (prelude-require-packages '(exec-path-from-shell))
+
+          (exec-path-from-shell-initialize)
+          (set-face-attribute 'default nil :font "Monaco-12")))))
 
 ;; Open the buffer list in the same window
 (add-to-list 'same-window-buffer-names "*Buffer List*")
