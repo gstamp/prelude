@@ -20,3 +20,4 @@ projectile-bookmarks.eld
 session*
 .cask
 personal/work.el
+/tramp
