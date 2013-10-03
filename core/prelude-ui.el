@@ -72,10 +72,15 @@
                                             (abbreviate-file-name (buffer-file-name))
                                           "%b"))))
 
-;; use zenburn as the default theme
-(prelude-require-packages '(soothe-theme sublime-themes))
-(load-theme 'spolsky t)
-;;(load-theme 'zenburn t)
+(if (display-graphic-p)
+    (progn
+      
+      ;; use zenburn as the default theme
+      (prelude-require-packages '(soothe-theme sublime-themes))
+      (load-theme 'spolsky t)
+      ;;(load-theme 'zenburn t)
+      ))
+
 
 (provide 'prelude-ui)
 ;;; prelude-ui.el ends here
