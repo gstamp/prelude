@@ -5,6 +5,7 @@
       '(
         org-delete-char
         orgtbl-self-insert-command
+        paredit-forward-delete
         sp--self-insert-command
         ))
 
