@@ -76,8 +76,9 @@
     (progn
       
       ;; use zenburn as the default theme
-      (prelude-require-packages '(soothe-theme sublime-themes))
-      (load-theme 'spolsky t)
+      (prelude-require-packages '(soothe-theme sublime-themes ample-theme))
+      (load-theme 'ample t)
+      ;;(load-theme 'spolsky t)
       ;;(load-theme 'zenburn t)
       ))
 
