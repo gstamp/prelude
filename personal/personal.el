@@ -119,6 +119,9 @@
     ;; right control key on the mac
     (setq mac-right-option-modifier 'control)
 
+    ;; Option as super
+    (setq mac-option-modifier 'super)
+
     ;; sets fn-delete to be right-delete
     (global-set-key [kp-delete] 'delete-char)
 
