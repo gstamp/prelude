@@ -659,7 +659,7 @@ If point was already at that position, move point to beginning of line."
 ;;;; Setup: Ruby
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(rinari rspec-mode bundler robe))
+(prelude-require-packages '(rinari rspec-mode bundler robe ruby-mode))
 
 ;; 'Fix' 'WARNING: terminal is not fully functional' from less/etc.
 (setenv "PAGER" "cat")
@@ -686,10 +686,13 @@ If point was already at that position, move point to beginning of line."
 
         (enlarge-window 10)
         )))
-(define-key ruby-mode-map (kbd "M-\"") 'rspec-run-and-arrange)
 
-;; Init robe
-(add-hook 'ruby-mode-hook 'robe-mode)
+(add-hook 'prelude-ruby-mode-hook
+          (lambda ()
+            (define-key ruby-mode-map (kbd "M-\"") 'rspec-run-and-arrange))
+          
+          ;; Init robe
+          (add-hook 'ruby-mode-hook 'robe-mode))
 
 ;; Tell Riniari about extra prompt patterns
 ;; (setq rinari-inf-ruby-prompt-pattern
