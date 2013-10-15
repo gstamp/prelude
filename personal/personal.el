@@ -572,8 +572,13 @@ If point was already at that position, move point to beginning of line."
 (setq *grizzl-read-max-results* 18)
 (setq fiplr-ignored-globs '((directories (".git" ".svn" "vendor" "tmp"))
                             (files ("*.jpg" "*.png" "*.zip" "*~"))))
-(global-set-key (kbd "C-x o") 'fiplr-find-file)
-(global-set-key (kbd "C-x C-o") 'fiplr-find-file)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Helm/Projectile
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-set-key (kbd "C-x o") 'helm-projecttile)
+(global-set-key (kbd "C-x C-o") 'helm-projectile)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Bookmark Mode
