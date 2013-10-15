@@ -21,3 +21,4 @@ session*
 .cask
 personal/work.el
 /tramp
+/.org-id-locations
