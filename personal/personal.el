@@ -659,7 +659,7 @@ If point was already at that position, move point to beginning of line."
 ;;;; Setup: Ruby
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(rinari rspec-mode bundler robe ruby-mode))
+(prelude-require-packages '(rinari rspec-mode bundler robe ruby-mode ruby-tools))
 
 ;; 'Fix' 'WARNING: terminal is not fully functional' from less/etc.
 (setenv "PAGER" "cat")
@@ -686,6 +686,12 @@ If point was already at that position, move point to beginning of line."
 
         (enlarge-window 10)
         )))
+
+(eval-after-load 'ruby-tools
+  '(progn
+     (define-key ruby-tools-mode-map (kbd "C-;") nil)
+     (define-key ruby-tools-mode-map (kbd "C-c C-.") 'ruby-tools-clear-string)
+     ))
 
 (add-hook 'ruby-mode-hook
           (lambda ()
