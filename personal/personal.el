@@ -315,13 +315,7 @@
   (interactive)
   (shell-command (concat "open " (shell-quote-argument default-directory))))
 
-(defun join-with-next-line ()
-  "join with next line"
-  (interactive)
-  (next-line)
-  (delete-indentation))
-
-(global-set-key [(control shift j)] 'join-with-next-line)
+(global-set-key [(control shift j)] 'prelude-top-join-line)
 
 (defalias 'iwb 'prelude-indent-buffer)
 
