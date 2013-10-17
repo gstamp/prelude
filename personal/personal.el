@@ -362,20 +362,7 @@ there's a region, all lines that region covers will be duplicated."
   (forward-line 1)
   (indent-according-to-mode))
 
-(defun smart-beginning-of-line ()
-  "Move point to first non-whitespace character or beginning-of-line.
-
-Move point to the first non-whitespace character on this line.
-If point was already at that position, move point to beginning of line."
-  (interactive)
-  (if (not (string-equal major-mode "org-mode"))
-      (let ((oldpos (point)))
-        (back-to-indentation)
-        (and (= oldpos (point))
-             (beginning-of-line)))
-    (move-beginning-of-line nil)))
-
-(global-set-key [home] 'smart-beginning-of-line)
+(global-set-key [home] 'prelude-move-beginning-of-line)
 
 ;; this will indent the yanked region automatically in the provided
 ;; modes
