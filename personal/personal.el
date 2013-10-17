@@ -327,20 +327,6 @@
 
 (global-set-key [home] 'prelude-move-beginning-of-line)
 
-;; this will indent the yanked region automatically in the provided
-;; modes
-(defadvice yank (after indent-region activate)
-  (if (member major-mode '(emacs-lisp-mode scheme-mode
-                                           lisp-mode
-                                           clojure-mode
-                                           ruby-mode
-                                           c-mode
-                                           c++-mode
-                                           objc-mode
-                                           LaTeX-mode
-                                           TeX-mode))
-      (indent-region (region-beginning) (region-end) nil)))
-
 (defadvice kill-ring-save (before slick-copy activate compile)
   "When called interactively with no active region, copy the current line."
   (interactive
