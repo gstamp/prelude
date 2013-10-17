@@ -14,8 +14,8 @@
 ;; No thanks to flyspell mode being on by default
 (setq prelude-flyspell nil)
 
-;; No whitespace by default
-(setq prelude-whitespace nil)
+;; Auto cleans whitespace
+(setq prelude-whitespace t)
 
 ;; JS indent levels
 (setq js-indent-level 2)
@@ -60,7 +60,6 @@
 (setq kept-new-versions 10)             ; keep x new ones
 (setq kept-old-versions 3)              ; keep x old ones
 
-;; TODO: Not sure this is actually doing anything
 ;; Sets up whitepsace.
 ;;  trailing - no trailing whitespace and end of line
 ;;  lines - lines whose have columns beyond ‘whitespace-line-column’
