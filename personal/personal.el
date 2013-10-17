@@ -355,13 +355,6 @@ there's a region, all lines that region covers will be duplicated."
 
 (global-set-key (kbd "C-c d") 'duplicate-current-line-or-region)
 
-;; Make open-line work more like VI (bound to ctrl-o)
-(defadvice open-line (before new-open-line activate)
-  (end-of-visible-line))
-(defadvice open-line (after after-open-line activate)
-  (forward-line 1)
-  (indent-according-to-mode))
-
 (global-set-key [home] 'prelude-move-beginning-of-line)
 
 ;; this will indent the yanked region automatically in the provided
@@ -488,8 +481,8 @@ there's a region, all lines that region covers will be duplicated."
 
 (global-set-key "\r" 'newline-and-indent)
 
-(global-set-key (kbd "<S-return>") 'open-line)
-(global-set-key (kbd "C-S-o") '"\C-p\C-o") ; open line above
+(global-set-key (kbd "C-o") 'prelude-smart-open-line)
+(global-set-key (kbd "C-S-o") 'prelude-smart-open-line-above)
 
 ;; Move more quickly
 (global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (next-line 5))))
