@@ -323,14 +323,7 @@
 
 (global-set-key [(control shift j)] 'join-with-next-line)
 
-(defun iwb ()
-  "indent whole buffer"
-  (interactive)
-  (delete-trailing-whitespace)
-  (indent-region (point-min) (point-max) nil)
-  (untabify (point-min) (point-max)))
-
-;; TODO: setup a keybinding for this
+(defalias 'iwb 'prelude-indent-buffer)
 
 (global-set-key [home] 'prelude-move-beginning-of-line)
 
