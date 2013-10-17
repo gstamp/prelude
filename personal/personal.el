@@ -365,7 +365,7 @@
 ;;;; Setup: Helper Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Stops the mini buffer when switching back to emacs with mouse
+;; Stops the mini buffer when switching back to Emacs with mouse
 (defun stop-using-minibuffer ()
   "kill the minibuffer"
   (when (and (>= (recursion-depth) 1) (active-minibuffer-window))
@@ -435,14 +435,14 @@
 (global-set-key (kbd "C-S-o") 'prelude-smart-open-line-above)
 
 ;; Move more quickly
-(global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (next-line 5))))
-(global-set-key (kbd "C-S-p") (lambda () (interactive) (ignore-errors (previous-line 5))))
+(global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (line-move 5))))
+(global-set-key (kbd "C-S-p") (lambda () (interactive) (ignore-errors (line-move -5))))
 (global-set-key (kbd "C-S-f") (lambda () (interactive) (ignore-errors (forward-char 5))))
 (global-set-key (kbd "C-S-b") (lambda () (interactive) (ignore-errors (backward-char 5))))
 
 ;; This adds an extra keybinding to interactive search (C-s) that runs
 ;; occur on the current search string/regexp, immediately showing all
-;; hits in the entire buffer. I use it all the time now.
+;; hits in the entire buffer.  I use it all the time now.
 (define-key isearch-mode-map (kbd "C-o")
   (lambda ()
     (interactive)
@@ -452,7 +452,7 @@
 
 ;; Use regex searches by default.
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
@@ -467,8 +467,7 @@
       ido-auto-merge-work-directories-length nil
       ido-create-new-buffer 'always
       ido-use-filename-at-point 'guess
-      ido-use-virtual-buffers t
-      ido-handle-duplicate-virtual-buffers 2)
+      ido-use-virtual-buffers t)
 
 ;; Make ido open file list vertically
 (setq ido-max-prospects 60)
@@ -477,9 +476,6 @@
 (setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
 (defun ido-disable-line-truncation () (set (make-local-variable 'truncate-lines) nil))
 (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-truncation)
-
-(setq ffip-full-paths 't) ; Not really part of ido but works well with
-                                        ; vertically displayed lists.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Golden ratio plugin
@@ -671,7 +667,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Smart scan. Use M-n M-p to move forward and backward
-;;;;        for simple at point
+;;;;        for symbol at point
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar smart-use-extended-syntax nil
