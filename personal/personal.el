@@ -765,6 +765,13 @@ instead."
                     nil))))))
 (add-hook 'prog-mode-hook 'enable-pretty-lambdas)
 
+(defun enable-pretty-fn ()
+  (font-lock-add-keywords nil `(("(\\(fn\\>\\)"
+                                 (0 (progn (compose-region (match-beginning 1)
+                                                           (match-end 1)
+                                                           "\u0192") nil))))))
+(add-hook 'clojure-mode-hook 'enable-pretty-fn)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: IMenu Sections
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
