@@ -156,6 +156,7 @@
 ;; Open the buffer list in the same window
 (add-to-list 'same-window-buffer-names "*Buffer List*")
 (add-to-list 'same-window-buffer-names "COMMIT_EDITMSG")
+(add-to-list 'same-window-buffer-names "*magit-process*")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Window Rearrangement
