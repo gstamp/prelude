@@ -589,7 +589,7 @@
 ;;;; Setup: Ruby
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(rinari rspec-mode bundler robe ruby-mode ruby-tools))
+(prelude-require-packages '(rinari rspec-mode bundler robe ruby-mode ruby-tools company company-inf-ruby))
 
 ;; 'Fix' 'WARNING: terminal is not fully functional' from less/etc.
 (setenv "PAGER" "cat")
