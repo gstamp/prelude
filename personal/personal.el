@@ -594,10 +594,6 @@
 ;; 'Fix' 'WARNING: terminal is not fully functional' from less/etc.
 (setenv "PAGER" "cat")
 
-;; RSpec settings for greater good.
-(setq rspec-use-rake-flag nil)
-(setq rspec-use-bundler-when-possible 't)
-
 (defun rspec-run-and-arrange ()
   (interactive)
 
@@ -625,7 +621,10 @@
 
 (add-hook 'ruby-mode-hook
           (lambda ()
-            (define-key ruby-mode-map (kbd "M-\"") 'rspec-run-and-arrange)))
+            (define-key ruby-mode-map (kbd "M-\"") 'rspec-run-and-arrange)
+            ;; RSpec settings for greater good.
+            (setq rspec-use-rake-flag nil)
+            (setq rspec-use-bundler-when-possible 't)))
 
 (add-hook 'ruby-mode-hook 'robe-mode)
 
@@ -830,6 +829,8 @@ This function is intended to be used as a value of `ring-bell-function'."
   (setq imenu-prev-index-position-function nil)
   (add-to-list 'imenu-generic-expression '("Sections" "^;;;; \\(.+\\)$" 1) t))
 (add-hook 'emacs-lisp-mode-hook 'imenu-elisp-sections)
+
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
