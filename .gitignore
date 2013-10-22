@@ -5,7 +5,6 @@ recentf
 savehist
 saveplace
 eshell
-elpa
 el-get
 semanticdb
 url
@@ -21,3 +20,5 @@ session*
 personal/work.el
 /tramp
 /.org-id-locations
+/elpa/archives/gnu/archive-contents
+/elpa/archives/melpa/archive-contents
