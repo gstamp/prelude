@@ -417,12 +417,14 @@
 (global-set-key [f10] 'multi-term)
 (global-set-key [f11] 'ido-kill-buffer)
 
+(prelude-require-package 'highlight-symbol)
 (global-set-key [(control f3)] 'highlight-symbol-at-point)
 (global-set-key [(control f4)] 'kill-this-buffer)
 (autoload 'linum-mode "linum" "toggle line numbers on/off" t)
 (global-set-key [(control f5)] 'linum-mode)
 ;; Turn on the menu bar for exploring new modes
 (global-set-key (kbd "C-<f10>") 'menu-bar-mode)
+
 
 (global-set-key (kbd "C-x f") 'recentf-ido-find-file)
 
@@ -829,8 +831,6 @@ This function is intended to be used as a value of `ring-bell-function'."
   (setq imenu-prev-index-position-function nil)
   (add-to-list 'imenu-generic-expression '("Sections" "^;;;; \\(.+\\)$" 1) t))
 (add-hook 'emacs-lisp-mode-hook 'imenu-elisp-sections)
-
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
