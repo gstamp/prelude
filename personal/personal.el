@@ -591,7 +591,7 @@
 ;;;; Setup: Ruby
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(rinari rspec-mode bundler robe ruby-mode ruby-tools company company-inf-ruby ruby-hash-syntax))
+(prelude-require-packages '(rinari rspec-mode bundler robe ruby-mode ruby-tools company company-inf-ruby ruby-hash-syntax ruby-refactor))
 
 ;; 'Fix' 'WARNING: terminal is not fully functional' from less/etc.
 (setenv "PAGER" "cat")
@@ -623,10 +623,13 @@
 
 (add-hook 'ruby-mode-hook
           (lambda ()
+            (ruby-refactor-mode-launch)
             (define-key ruby-mode-map (kbd "M-\"") 'rspec-run-and-arrange)
             ;; RSpec settings for greater good.
             (setq rspec-use-rake-flag nil)
             (setq rspec-use-bundler-when-possible 't)))
+
+(setq ruby-refactor-add-parens +1)
 
 (add-hook 'ruby-mode-hook 'robe-mode)
 
