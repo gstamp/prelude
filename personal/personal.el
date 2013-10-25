@@ -591,7 +591,7 @@
 ;;;; Setup: Ruby
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(rinari rspec-mode bundler robe ruby-mode ruby-tools company company-inf-ruby ruby-hash-syntax ruby-refactor))
+(prelude-require-packages '(rinari rspec-mode bundler ruby-mode ruby-tools company company-inf-ruby ruby-hash-syntax ruby-refactor))
 
 ;; 'Fix' 'WARNING: terminal is not fully functional' from less/etc.
 (setenv "PAGER" "cat")
@@ -630,8 +630,6 @@
             (setq rspec-use-bundler-when-possible 't)))
 
 (setq ruby-refactor-add-parens +1)
-
-(add-hook 'ruby-mode-hook 'robe-mode)
 
 (defun ruby-eval-region()
   "Prints the evaluation of Ruby statements in region to a new output buffer"
