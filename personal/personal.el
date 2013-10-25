@@ -633,6 +633,25 @@
 
 (add-hook 'ruby-mode-hook 'robe-mode)
 
+(defun ruby-eval-region()
+  "Prints the evaluation of Ruby statements in region to a new output buffer"
+  (interactive)
+  (let ((output-buffer "Ruby Output"))
+    (shell-command-on-region (mark) (point) "ruby" output-buffer)
+    (switch-to-buffer output-buffer)))
+
+(defun ruby-pretty-print()
+  "Pretty prints the evaluation of a Ruby expression in region to a new output buffer"
+  (interactive)
+  (save-excursion
+    (let ((code (buffer-substring (mark) (point)))
+          (code-buffer (generate-new-buffer "ruby-code")))
+      (switch-to-buffer code-buffer)
+      (insert (concat "require 'pp'\nPP.pp(" code ")\n"))
+      (mark-whole-buffer)
+      (ruby-eval-region)
+      (kill-buffer code-buffer))))
+
 ;; Tell Riniari about extra prompt patterns
 ;; (setq rinari-inf-ruby-prompt-pattern
 ;;       (concat rinari-inf-ruby-prompt-pattern "\\|\\(.*»\\)"))
