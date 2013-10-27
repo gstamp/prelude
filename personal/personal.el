@@ -631,6 +631,24 @@
 
 (setq ruby-refactor-add-parens +1)
 
+(defun ruby-convert-json-to-hash (startPos endPos)
+  "Convert a json object to a ruby hash..
+This command calls the external script 'convert_json_to_rb_hash.rb'."
+  (interactive "r")
+  (let (scriptName)
+    (setq scriptName "convert_json_to_rb_hash.rb") ; full path to your script
+    (shell-command-on-region startPos endPos scriptName nil t nil t))
+  (indent-region startPos endPos))
+
+(defun ruby-convert-hash-to-json (startPos endPos)
+  "Convert a json object to a ruby hash..
+This command calls the external script 'convert_json_to_rb_hash.rb'."
+  (interactive "r")
+  (let (scriptName)
+    (setq scriptName "convert_rb_hash_to_json.rb") ; full path to your script
+    (shell-command-on-region startPos endPos scriptName nil t nil t))
+  (indent-region startPos endPos))
+
 (defun ruby-eval-region()
   "Prints the evaluation of Ruby statements in region to a new output buffer"
   (interactive)
