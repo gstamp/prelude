@@ -469,6 +469,11 @@ a carefully crafted index."
   :group 'magit
   :type 'boolean)
 
+(defcustom magit-show-child-count nil
+  "Whether to append the number of childen to section headings."
+  :group 'magit
+  :type 'boolean)
+
 (defcustom magit-revert-item-confirm t
   "Require acknowledgment before reverting an item."
   :group 'magit
@@ -1097,6 +1102,8 @@ Many Magit faces inherit from this one by default."
 
 ;;; Keymaps
 
+(define-key git-commit-mode-map (kbd "C-c C-d") 'magit-diff-staged)
+
 (defvar magit-mode-map
   (let ((map (make-keymap)))
     (suppress-keymap map t)
@@ -1137,6 +1144,7 @@ Many Magit faces inherit from this one by default."
            (define-key map (kbd "r") 'undefined)
            (define-key map (kbd "f") 'magit-fetch-current)
            (define-key map (kbd "F") 'magit-pull)
+           (define-key map (kbd "j") 'magit-apply-mailbox)
            (define-key map (kbd "!") 'magit-shell-command)
            (define-key map (kbd "P") 'magit-push)
            (define-key map (kbd "t") 'magit-tag)
@@ -1152,6 +1160,7 @@ Many Magit faces inherit from this one by default."
            (define-key map (kbd "r") 'magit-key-mode-popup-rewriting)
            (define-key map (kbd "f") 'magit-key-mode-popup-fetching)
            (define-key map (kbd "F") 'magit-key-mode-popup-pulling)
+           (define-key map (kbd "j") 'magit-key-mode-popup-apply-mailbox)
            (define-key map (kbd "!") 'magit-key-mode-popup-running)
            (define-key map (kbd "P") 'magit-key-mode-popup-pushing)
            (define-key map (kbd "t") 'magit-key-mode-popup-tagging)
@@ -1856,7 +1865,7 @@ according to `magit-remote-ref-format'"
   (let ((default-directory (magit-get-top-dir)))
     (magit-completing-read
      (format "Retrieve file from %s: " revision)
-     (magit-git-lines "ls-tree" "-r" "--name-only" revision)
+     (magit-git-lines "ls-tree" "-r" "-t" "--name-only" revision)
      nil 'require-match
      nil 'magit-read-file-hist
      (or default (magit-buffer-file-name t)))))
@@ -2102,9 +2111,10 @@ If TYPE is nil, the section won't be highlighted."
   (let ((s (make-symbol "*section*")))
     `(let* ((,s (magit-new-section ,title ,type))
             (magit-top-section ,s))
-       (setf (magit-section-beginning ,s) (point))
+       (setf (magit-section-beginning ,s) (point-marker))
        ,@body
-       (setf (magit-section-end ,s) (point))
+       (set-marker-insertion-type (magit-section-beginning ,s) t)
+       (setf (magit-section-end ,s) (point-marker))
        (setf (magit-section-children ,s)
              (nreverse (magit-section-children ,s)))
        ,s)))
@@ -2114,6 +2124,7 @@ If TYPE is nil, the section won't be highlighted."
   "Run PROGRAM with ARGS and put the output into a new section.
 Like `magit-git-section' (which see) but run PROGRAM instead of Git."
   (let* ((body-beg nil)
+         (children nil)
          (section-title (if (consp section-title-and-type)
                             (car section-title-and-type)
                           section-title-and-type))
@@ -2134,7 +2145,15 @@ Like `magit-git-section' (which see) but run PROGRAM instead of Git."
                 (narrow-to-region body-beg (point))
                 (goto-char (point-min))
                 (funcall washer)
-                (goto-char (point-max)))))))
+                (goto-char (point-max))))
+            (when (and buffer-title magit-show-child-count
+                       (> (setq children (length (magit-section-children
+                                                  magit-top-section))) 0))
+              (save-excursion
+                (goto-char (- body-beg 2))
+                (when (looking-at ":")
+                  (insert-before-markers-and-inherit
+                   (format " (%i)" children))))))))
     (if (= body-beg (point))
         (magit-cancel-section section)
       (insert "\n"))
@@ -4522,11 +4541,11 @@ when asking for user input."
 (defun magit-insert-status-rebase-lines ()
   (let ((rebase (magit-rebase-info)))
     (when rebase
-      (magit-insert-status-line "Rebasing"
+      (magit-insert-status-line (if (nth 4 rebase) "Applying" "Rebasing")
         (apply 'format
                "onto %s (%s of %s); Press \"R\" to Abort, Skip, or Continue"
                rebase))
-      (when (nth 3 rebase)
+      (when (and (null (nth 4 rebase)) (nth 3 rebase))
         (magit-insert-status-line "Stopped"
           (magit-format-commit (nth 3 rebase) "%h %s"))))))
 
@@ -4960,10 +4979,11 @@ If no branch is found near the cursor return nil."
 (defun magit-rebase-info ()
   "Return a list indicating the state of an in-progress rebase.
 
-The returned list has the form (ONTO DONE TOTAL STOPPED).
+The returned list has the form (ONTO DONE TOTAL STOPPED AM).
 ONTO is the commit being rebased onto.
 DONE and TOTAL are integers with obvious meanings.
 STOPPED is the SHA-1 of the commit at which rebase stopped.
+AM is non-nil if the current rebase is actually a git-am.
 
 Return nil if there is no rebase in progress."
   (let ((m (magit-git-dir "rebase-merge"))
@@ -4976,7 +4996,8 @@ Return nil if there is no rebase in progress."
        (cl-loop for line in (magit-file-lines
                              (expand-file-name "git-rebase-todo.backup" m))
                 count (string-match "^[^#\n]" line))
-       (magit-file-line (expand-file-name "stopped-sha" m))))
+       (magit-file-line (expand-file-name "stopped-sha" m))
+       nil))
 
      ((file-regular-p (expand-file-name "onto" a)) ; non-interactive
       (list
@@ -4986,28 +5007,42 @@ Return nil if there is no rebase in progress."
        (let ((patch-header (magit-file-line
                             (car (directory-files a t "^[0-9]\\{4\\}$")))))
          (when (string-match "^From \\([a-z0-9]\\{40\\}\\) " patch-header)
-           (match-string 1 patch-header))))))))
+           (match-string 1 patch-header)))))
+
+     ((file-regular-p (expand-file-name "applying" a)) ; am
+      (list
+       (magit-name-rev       "HEAD")
+       (1- (string-to-number (magit-file-line (expand-file-name "next" a))))
+       (string-to-number     (magit-file-line (expand-file-name "last" a)))
+       (let ((patch-header (magit-file-line
+                            (car (directory-files a t "^[0-9]\\{4\\}$")))))
+         (when (string-match "^From \\([a-z0-9]\\{40\\}\\) " patch-header)
+           (match-string 1 patch-header)))
+       t)))))
 
 (defun magit-rebase-step ()
   (interactive)
-  (if (magit-rebase-info)
-      (let ((cursor-in-echo-area t)
-            (message-log-max nil))
-        (message "Rebase in progress. [A]bort, [S]kip, or [C]ontinue? ")
-        (cl-case (read-event)
-          ((?A ?a) (magit-run-git-async "rebase" "--abort"))
-          ((?S ?s) (magit-run-git-async "rebase" "--skip"))
-          ((?C ?c) (magit-with-emacsclient magit-server-window-for-commit
-                     (magit-run-git-async "rebase" "--continue")))))
-    (let* ((branch (magit-get-current-branch))
-           (rev (magit-read-rev
-                 "Rebase to"
-                 (magit-get-tracked-branch branch nil t)
-                 (if branch
-                     (cons (concat "refs/heads/" branch)
-                           magit-uninteresting-refs)
-                   magit-uninteresting-refs))))
-      (magit-run-git "rebase" rev))))
+  (let ((rebase (magit-rebase-info)))
+    (if rebase
+        (let ((cursor-in-echo-area t)
+              (message-log-max nil)
+              (am (nth 4 rebase)))
+          (message "%s in progress. [A]bort, [S]kip, or [C]ontinue? "
+                   (if am "Apply mailbox" "Rebase"))
+          (cl-case (read-event)
+            ((?A ?a) (magit-run-git-async (if am "am" "rebase") "--abort"))
+            ((?S ?s) (magit-run-git-async (if am "am" "rebase") "--skip"))
+            ((?C ?c) (magit-with-emacsclient magit-server-window-for-commit
+                       (magit-run-git-async (if am "am" "rebase") "--continue")))))
+      (let* ((branch (magit-get-current-branch))
+             (rev (magit-read-rev
+                   "Rebase to"
+                   (magit-get-tracked-branch branch nil t)
+                   (if branch
+                       (cons (concat "refs/heads/" branch)
+                             magit-uninteresting-refs)
+                     magit-uninteresting-refs))))
+        (magit-run-git "rebase" rev)))))
 
 ;;;###autoload
 (defun magit-interactive-rebase (commit)
@@ -5022,6 +5057,14 @@ Return nil if there is no rebase in progress."
   (magit-assert-emacsclient "rebase interactively")
   (magit-with-emacsclient magit-server-window-for-rebase
     (magit-run-git-async "rebase" "-i" commit)))
+
+;;;; AM
+
+(defun magit-apply-mailbox (&optional file-or-dir)
+  (interactive "fmbox or Maildir file or directory: ")
+  (magit-with-emacsclient magit-server-window-for-rebase
+    (magit-run-git-async "am" file-or-dir))
+  (magit-refresh))
 
 ;;;; Reset
 
@@ -6024,22 +6067,35 @@ from the parent keymap `magit-mode-map' are also available."
   "Name of buffer used to display a diff.")
 
 ;;;###autoload (autoload 'magit-diff "magit")
-(magit-define-command diff (range &optional working)
+(magit-define-command diff (range &optional working args)
   (interactive (list (magit-read-rev-range "Diff")))
-  (let ((buf (get-buffer-create magit-diff-buffer-name)))
+  (let ((buf (get-buffer-create magit-diff-buffer-name))
+        (dir default-directory))
     (display-buffer buf)
     (with-current-buffer buf
-      (magit-mode-init default-directory
-                       'magit-diff-mode
+      (magit-mode-init dir
+                       #'magit-diff-mode
                        #'magit-refresh-diff-buffer
-                       range working))))
+                       range working args))))
 
 ;;;###autoload (autoload 'magit-diff-working-tree "magit")
 (magit-define-command diff-working-tree (rev)
   (interactive (list (magit-read-rev-with-default "Diff working tree with")))
   (magit-diff (or rev "HEAD") t))
 
-(defun magit-diff-with-mark (marked commit)
+;;;###autoload (autoload 'magit-diff-working-tree "magit")
+(magit-define-command diff-staged ()
+  "Show differences between index and HEAD."
+  (interactive)
+  (magit-diff nil nil (list "--cached")))
+
+;;;###autoload (autoload 'magit-diff-working-tree "magit")
+(magit-define-command diff-unstaged ()
+  "Show differences between working tree and index."
+  (interactive)
+  (magit-diff nil))
+
+(defun magit-diff-with-mark (range)
   (interactive
    (let* ((marked (or magit-marked-commit (error "No commit marked")))
           (current (magit-get-current-branch))
@@ -6051,12 +6107,13 @@ from the parent keymap `magit-mode-map' are also available."
                        (when is-current
                          (cons (concat "refs/heads/" current)
                                magit-uninteresting-refs))))))
-     (list marked commit)))
-  (magit-diff (concat marked ".." commit)))
+     (list (concat marked ".." commit))))
+  (magit-diff range))
 
-(defun magit-refresh-diff-buffer (range working)
+(defun magit-refresh-diff-buffer (range working args)
   (let ((magit-current-diff-range
          (cond (working (cons range 'working))
+               ((null range) nil)
                ((consp range)
                 (prog1 range
                   (setq range (concat (car range) ".." (cdr range)))))
@@ -6066,13 +6123,18 @@ from the parent keymap `magit-mode-map' are also available."
     (magit-create-buffer-sections
       (apply #'magit-git-section
              'diffbuf
-             (if working
-                 (format "Changes from %s to working tree" range)
-               (format "Changes in %s" range))
+             (cond (working
+                    (format "Changes from %s to working tree" range))
+                   ((not range)
+                    (if (member "--cached" args)
+                        "Staged changes"
+                      "Unstaged changes"))
+                   (t
+                    (format "Changes in %s" range)))
              'magit-wash-diffs
              "diff" (magit-diff-U-arg)
              `(,@(and magit-show-diffstat (list "--patch-with-stat"))
-               ,range "--")))))
+               ,@(and range (list range)) ,@args "--")))))
 
 ;;; Wazzup Mode
 
