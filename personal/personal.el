@@ -290,11 +290,14 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Setup: Ack and a Half
+;; Setup: The silver surfer
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-ensure-module-deps '(ag))
+(prelude-ensure-module-deps '(ag wgrep-ag))
 
 (global-set-key [f2] 'ag-project)
+
+;; Automatically save buffers when exiting wgrep edit mode.
+(setq wgrep-auto-save-buffer t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Editor helpers
