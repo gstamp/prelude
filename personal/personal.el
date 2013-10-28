@@ -463,6 +463,9 @@
 (global-set-key (kbd "C-o") 'prelude-smart-open-line)
 (global-set-key (kbd "C-S-o") 'prelude-smart-open-line-above)
 
+;; Repeat (default of C-x z is very hard to type)
+(global-set-key (kbd "s-.") 'repeat)
+
 ;; Move more quickly
 (global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (line-move 5))))
 (global-set-key (kbd "C-S-p") (lambda () (interactive) (ignore-errors (line-move -5))))
