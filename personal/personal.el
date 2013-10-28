@@ -907,7 +907,8 @@ This function is intended to be used as a value of `ring-bell-function'."
 (add-hook 'coffee-mode-hook
           (lambda () (highlight-indentation-current-column-mode)))
 
-(set-face-background 'highlight-indentation-current-column-face "#424343")
+(custom-set-faces
+ '(highlight-indentation-current-column-face ((t (:background "#444444")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Auto reload tags
