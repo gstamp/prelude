@@ -894,6 +894,43 @@ This function is intended to be used as a value of `ring-bell-function'."
       '("~/.emacs.d/snippets"))
 (yas-global-mode 1)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Auto reload tags
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun find-parent-tags (dir)
+  "Traverses the directory tree up to /home/[user]/ or / whichever comes first.
+   Returns either nil or the directory containing the first TAGS file it finds."
+  (interactive (list default-directory))
+  (find-parent-tags-rec (build-tag-paths dir)))
+
+(defun find-parent-tags-rec (list-of-filepath)
+  (cond ((null list-of-filepath) nil)
+        ((and (file-exists-p (car list-of-filepath)) (file-regular-p (car list-of-filepath))) (car list-of-filepath))
+        (t (find-parent-tags-rec (cdr list-of-filepath)))))
+
+(defun build-tag-paths (dir-string)
+  (build-tag-paths-rec (remove-if #'empty-string? (split-string dir-string "/")) (list "/")))
+
+(defun build-tag-paths-rec (steps acc)
+  (if (null steps)
+      (mapcar (lambda (p) (concat p "TAGS")) acc)
+    (build-tag-paths-rec (cdr steps)
+                         (cons (concat (car acc) (car steps) "/") acc))))
+
+(defun empty-string? (s) (equalp s ""))
+
+(defun auto-find-tagfile ()
+  "Automatically find the tag file and load."
+  (interactive)
+
+  (visit-tags-table (find-parent-tags default-directory))
+  (message "Tag file reloaded"))
+
+(global-set-key (kbd "M-<f9>") 'auto-find-tagfile)
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: IMenu Sections
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
