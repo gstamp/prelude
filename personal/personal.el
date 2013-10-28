@@ -537,8 +537,8 @@
 ;;;; Setup: Helm/Projectile
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(global-set-key (kbd "C-x o") 'helm-projecttile)
-(global-set-key (kbd "C-x C-o") 'helm-projectile)
+(global-set-key (kbd "C-x o") 'projectile-find-file)
+(global-set-key (kbd "C-x C-o") 'projectile-find-file)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Bookmark Mode
