@@ -292,14 +292,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Setup: Ack and a Half
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-ensure-module-deps '(ack-and-a-half))
+(prelude-ensure-module-deps '(ag))
 
-(eval-after-load 'ack-and-a-half
-  '(progn
-     (setq ack-and-a-half-root-directory-functions 'ack-and-a-half-guess-project-root)))
-
-(global-set-key [f2] 'ack-and-a-half)
-
+(global-set-key [f2] 'ag-project)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Editor helpers
