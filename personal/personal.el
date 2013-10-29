@@ -84,9 +84,6 @@
 ;; Emacs starter kit turns on flyspell by default but I prefer it off
 (remove-hook 'text-mode-hook 'turn-on-flyspell)
 
-;; Emacs starter kit also turns on idle-highlight-mode.  Not a fan.
-(remove-hook 'prog-mode-hook 'esk-turn-on-idle-highlight-mode)
-
 ;; Redraw more frequently
 (setq redisplay-dont-pause 't)
 
