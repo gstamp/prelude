@@ -432,6 +432,8 @@
 ;;;; Setup: General Keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(prelude-require-package 'highlight-symbol)
+
 (global-set-key [f1] 'ido-switch-buffer)
 (global-set-key [f3] 'kmacro-start-macro-or-insert-counter)
 (global-set-key [f4] 'kmacro-end-or-call-macro)
@@ -439,11 +441,10 @@
 (global-set-key [f10] 'multi-term)
 (global-set-key [f11] 'ido-kill-buffer)
 
-(prelude-require-package 'highlight-symbol)
-(global-set-key [(control f3)] 'highlight-symbol-at-point)
 (global-set-key [(control f4)] 'kill-this-buffer)
-(autoload 'linum-mode "linum" "toggle line numbers on/off" t)
 (global-set-key [(control f5)] 'linum-mode)
+(global-set-key [(control f6)] 'highlight-symbol-at-point)
+
 ;; Turn on the menu bar for exploring new modes
 (global-set-key (kbd "C-<f10>") 'menu-bar-mode)
 
