@@ -682,6 +682,7 @@ This command calls the external script 'convert_json_to_rb_hash.rb'."
     (shell-command-on-region (mark) (point) "ruby" output-buffer)
     (switch-to-buffer output-buffer)))
 
+;; This will require awesome print to be installed
 (defun ruby-pretty-print()
   "Pretty prints the evaluation of a Ruby expression in region to a new output buffer"
   (interactive)
@@ -689,7 +690,7 @@ This command calls the external script 'convert_json_to_rb_hash.rb'."
     (let ((code (buffer-substring (mark) (point)))
           (code-buffer (generate-new-buffer "ruby-code")))
       (switch-to-buffer code-buffer)
-      (insert (concat "require 'pp'\nPP.pp(" code ")\n"))
+      (insert (concat "require 'awesome_print'\nap(" code ", indent: -2, index: false)\n"))
       (mark-whole-buffer)
       (ruby-eval-region)
       (kill-buffer code-buffer))))
