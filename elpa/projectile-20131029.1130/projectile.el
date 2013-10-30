@@ -5,7 +5,7 @@
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
 ;; Keywords: project, convenience
-;; Version: 20131018.1037
+;; Version: 20131029.1130
 ;; X-Original-Version: 1.0.0-cvs
 ;; Package-Requires: ((s "1.6.0") (dash "1.5.0") (pkg-info "0.1"))
 
@@ -718,6 +718,7 @@ With a prefix ARG invalidates the cache first."
 (defvar projectile-maven '("pom.xml"))
 (defvar projectile-lein '("project.clj"))
 (defvar projectile-rebar '("rebar"))
+(defvar projectile-sbt '("build.sbt"))
 (defvar projectile-make '("Makefile"))
 
 (defun projectile-project-type ()
@@ -732,6 +733,7 @@ With a prefix ARG invalidates the cache first."
      ((projectile-verify-files projectile-maven) 'maven)
      ((projectile-verify-files projectile-lein) 'lein)
      ((projectile-verify-files projectile-rebar) 'rebar)
+     ((projectile-verify-files projectile-sbt) 'sbt)
      ((projectile-verify-files projectile-make) 'make)
      (t 'generic))))
 
@@ -831,6 +833,16 @@ With a prefix ARG invalidates the cache first."
           (projectile-ignored-directories))))
     (call-interactively projectile-ack-function)))
 
+(defun projectile-ag ()
+  "Run an ag search in the project."
+  (interactive)
+  (if (fboundp 'ag)
+      (let ((search-regexp (read-from-minibuffer
+                            (projectile-prepend-project-name "Ag search for: ")
+                            (projectile-symbol-at-point))))
+       (ag/search search-regexp (projectile-project-root) t))
+    (error "Ag is not available")))
+
 (defun projectile-tags-exclude-patterns ()
   "Return a string with exclude patterns for ctags."
   (mapconcat (lambda (pattern) (format "--exclude=%s" pattern))
@@ -921,6 +933,8 @@ With a prefix argument ARG prompts you for a directory on which to run the repla
 (defvar projectile-lein-test-cmd "lein test")
 (defvar projectile-rebar-compile-cmd "rebar")
 (defvar projectile-rebar-test-cmd "rebar eunit")
+(defvar projectile-sbt-compile-cmd "sbt compile")
+(defvar projectile-sbt-test-cmd "sbt test")
 (defvar projectile-make-compile-cmd "make")
 (defvar projectile-make-test-cmd "make test")
 
@@ -941,6 +955,7 @@ With a prefix argument ARG prompts you for a directory on which to run the repla
    ((eq project-type 'make) projectile-make-compile-cmd)
    ((eq project-type 'rebar) projectile-rebar-compile-cmd)
    ((eq project-type 'maven) projectile-maven-compile-cmd)
+   ((eq project-type 'sbt) projectile-sbt-compile-cmd)
    (t projectile-make-compile-cmd)))
 
 (defun projectile-default-test-command (project-type)
@@ -953,6 +968,7 @@ With a prefix argument ARG prompts you for a directory on which to run the repla
    ((eq project-type 'make) projectile-make-test-cmd)
    ((eq project-type 'rebar) projectile-rebar-test-cmd)
    ((eq project-type 'maven) projectile-maven-test-cmd)
+   ((eq project-type 'sbt) projectile-sbt-test-cmd)
    (t projectile-make-test-cmd)))
 
 (defun projectile-compilation-command (project)
@@ -1082,6 +1098,7 @@ Also set `projectile-known-projects'."
       (define-key prefix-map (kbd "D") 'projectile-dired)
       (define-key prefix-map (kbd "e") 'projectile-recentf)
       (define-key prefix-map (kbd "a") 'projectile-ack)
+      (define-key prefix-map (kbd "A") 'projectile-ag)
       (define-key prefix-map (kbd "c") 'projectile-compile-project)
       (define-key prefix-map (kbd "p") 'projectile-test-project)
       (define-key prefix-map (kbd "z") 'projectile-cache-current-file)
