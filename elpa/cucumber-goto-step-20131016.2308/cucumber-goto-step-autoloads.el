@@ -1,10 +1,10 @@
 ;;; cucumber-goto-step-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-
+(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads (jump-to-cucumber-step) "cucumber-goto-step" "cucumber-goto-step.el"
-;;;;;;  (21087 391 0 0))
+;;;### (autoloads nil "cucumber-goto-step" "cucumber-goto-step.el"
+;;;;;;  (21110 49087 0 0))
 ;;; Generated autoloads from cucumber-goto-step.el
 
 (autoload 'jump-to-cucumber-step "cucumber-goto-step" "\
@@ -14,16 +14,9 @@ Jumps to a step definition.
 
 ;;;***
 
-;;;### (autoloads nil nil ("cucumber-goto-step-pkg.el") (21087 392
-;;;;;;  9668 0))
-
-;;;***
-
-(provide 'cucumber-goto-step-autoloads)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
-;; coding: utf-8
 ;; End:
 ;;; cucumber-goto-step-autoloads.el ends here
