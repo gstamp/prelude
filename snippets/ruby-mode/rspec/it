@@ -1,6 +1,0 @@
-#-*- require-final-newline: nil -*-
-#it ... end
-# --
-it 'should ${1:description}' do
-  $0
-end
