@@ -672,7 +672,7 @@ This command calls the external script 'convert_json_to_rb_hash.rb'."
 This command calls the external script 'convert_json_to_rb_hash.rb'."
   (interactive "r")
   (let (scriptName)
-    (setq scriptName "convert_rb_hash_to_json.rb") ; full path to your script
+    (setq scriptName "convert_rb_hash_to_json.rb")
     (shell-command-on-region startPos endPos scriptName nil t nil t))
   (indent-region startPos endPos))
 
@@ -683,18 +683,16 @@ This command calls the external script 'convert_json_to_rb_hash.rb'."
     (shell-command-on-region (mark) (point) "ruby" output-buffer)
     (switch-to-buffer output-buffer)))
 
-;; This will require awesome print to be installed
-(defun ruby-pretty-print()
-  "Pretty prints the evaluation of a Ruby expression in region to a new output buffer"
-  (interactive)
-  (save-excursion
-    (let ((code (buffer-substring (mark) (point)))
-          (code-buffer (generate-new-buffer "ruby-code")))
-      (switch-to-buffer code-buffer)
-      (insert (concat "require 'awesome_print'\nap(" code ", indent: -2, index: false)\n"))
-      (mark-whole-buffer)
-      (ruby-eval-region)
-      (kill-buffer code-buffer))))
+(defun ruby-awesome-print (start-pos end-pos)
+  "Use awesome print to format the selected bit of code"
+  (interactive "r")
+  (let (ruby-script
+        script-name)
+    (setq ruby-script (concat "require 'awesome_print'\nap(eval(ARGF.read), indent: -2, index: false)\n"))
+    (setq script-name (concat "ruby -e \"" ruby-script "\""))
+    (shell-command-on-region start-pos end-pos script-name nil t nil t))
+  (indent-region start-pos end-pos))
+
 
 ;; Tell Riniari about extra prompt patterns
 ;; (setq rinari-inf-ruby-prompt-pattern
