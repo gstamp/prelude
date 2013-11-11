@@ -292,9 +292,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-ensure-module-deps '(ag wgrep-ag))
 
-(global-set-key [f2] 'ag-project)
+(global-set-key [f2] 'ag-project-regexp)
+(global-set-key [(meta f2)] 'ag-project)
 
-(setq ag-arguments (list "--ignore-case" "--nogroup" "--column" "--"))
+(setq ag-arguments (list "--ignore-case" "--nogroup" "--column" "--hidden" "--"))
 
 ;; Automatically save buffers when exiting wgrep edit mode.
 (setq wgrep-auto-save-buffer t)
