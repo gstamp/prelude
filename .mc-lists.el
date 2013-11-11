@@ -4,12 +4,13 @@
 (setq mc/cmds-to-run-for-all
       '(
         org-delete-char
+        org-force-self-insert
         org-self-insert-command
         orgtbl-self-insert-command
         paredit-forward-delete
         sp--self-insert-command
-        sp-delete-char
         sp-backward-delete-char
+        sp-delete-char
         ))
 
 (setq mc/cmds-to-run-once
