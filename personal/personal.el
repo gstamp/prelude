@@ -294,6 +294,8 @@
 
 (global-set-key [f2] 'ag-project)
 
+(setq ag-arguments (list "--ignore-case" "--nogroup" "--column" "--"))
+
 ;; Automatically save buffers when exiting wgrep edit mode.
 (setq wgrep-auto-save-buffer t)
 
