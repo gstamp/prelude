@@ -714,7 +714,7 @@ This command calls the external script 'convert_json_to_rb_hash.rb'."
 
 (prelude-require-packages '(dash-at-point))
 
-(global-set-key [(control f2)] 'dash-at-point)
+(global-set-key [(shift f1)] 'dash-at-point)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: web-mode
