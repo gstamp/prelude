@@ -427,7 +427,9 @@
 ;;;; Setup: Git Gutter
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(git-gutter-fringe))
+(prelude-require-packages '(git-gutter git-gutter-fringe))
+
+(require 'git-gutter-fringe)
 
 (global-git-gutter-mode +1)
 
