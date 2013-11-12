@@ -427,10 +427,9 @@
 ;;;; Setup: Git Gutter
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(git-gutter+ git-gutter-fringe+))
+(prelude-require-packages '(git-gutter-fringe))
 
-(global-git-gutter+-mode t)
-
+(global-git-gutter-mode +1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: General Keybindings
