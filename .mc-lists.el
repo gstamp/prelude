@@ -12,8 +12,10 @@
         sp--self-insert-command
         sp-backward-delete-char
         sp-delete-char
+        sp-forward-slurp-sexp
         ))
 
 (setq mc/cmds-to-run-once
       '(
+        smex
         ))
