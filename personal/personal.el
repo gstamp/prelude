@@ -731,6 +731,9 @@ This command calls the external script 'convert_json_to_rb_hash.rb'."
 (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 
+(setq web-mode-code-indent-offset 2)   ;; prelude sets this to 4
+(setq web-mode-markup-indent-offset 2) ;; prelude sets this to 4
+
 (add-hook 'web-mode-hook (lambda () (font-lock-mode -1)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
