@@ -1,5 +1,4 @@
-(define-package "magit" "20131026.1235" "control Git from Emacs [github]"
+(define-package "magit" "20131125.2319" "control Git from Emacs"
   '((cl-lib "0.3")
     (git-commit-mode "0.14.0")
     (git-rebase-mode "0.14.0")))
-
