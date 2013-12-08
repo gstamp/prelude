@@ -659,6 +659,7 @@
 (defun rspec-run-and-arrange ()
   (interactive)
 
+  (save-buffer)
   (if (not (rspec-buffer-is-spec-p))
       (rspec-toggle-spec-and-target))
 
