@@ -5,8 +5,8 @@
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
 ;; Keywords: project, convenience
-;; Version: 20131129.1607
-;; X-Original-Version: 1.0.0-cvs
+;; Version: 20131209.809
+;; X-Original-Version: 0.10.0
 ;; Package-Requires: ((s "1.6.0") (dash "1.5.0") (pkg-info "0.4"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -324,7 +324,9 @@ The cache is created both in memory and on the hard drive."
                (cons current-file (gethash current-project projectile-projects-cache))
                projectile-projects-cache)
       (projectile-serialize-cache)
-      (message "File %s added to project %s cache." current-file current-project))))
+      (message "File %s added to project %s cache."
+               (propertize current-file 'face 'font-lock-keyword-face)
+               (propertize current-project 'face 'font-lock-keyword-face)))))
 
 ;; cache opened files automatically to reduce the need for cache invalidation
 (defun projectile-cache-files-find-file-hook ()
@@ -548,6 +550,14 @@ Operates on filenames relative to the project root."
     "Switch to buffer: "
     (projectile-project-buffer-names))))
 
+(defun projectile-switch-to-buffer-other-window ()
+  "Switch to a project buffer and show it in another window."
+  (interactive)
+  (switch-to-buffer-other-window
+   (projectile-completing-read
+    "Switch to buffer: "
+    (projectile-project-buffer-names))))
+
 (defun projectile-multi-occur ()
   "Do a `multi-occur' in the project's buffers."
   (interactive)
@@ -722,6 +732,18 @@ With a prefix ARG invalidates the cache first."
     (find-file (expand-file-name file (projectile-project-root)))
     (run-hooks 'projectile-find-file-hook)))
 
+(defun projectile-find-file-other-window (&optional arg)
+  "Jump to a project's file using completion and show it in another window.
+
+With a prefix ARG invalidates the cache first."
+  (interactive "P")
+  (when arg
+    (projectile-invalidate-cache nil))
+  (let ((file (projectile-completing-read "Find file: "
+                                          (projectile-current-project-files))))
+    (find-file-other-window (expand-file-name file (projectile-project-root)))
+    (run-hooks 'projectile-find-file-hook)))
+
 (defun projectile-find-dir (&optional arg)
   "Jump to a project's directory using completion.
 
@@ -737,7 +759,7 @@ With a prefix ARG invalidates the cache first."
     (dired (expand-file-name dir (projectile-project-root)))
     (run-hooks 'projectile-find-dir-hook)))
 
-(defun projectile-find-test-file (arg)
+(defun projectile-find-test-file (&optional arg)
   "Jump to a project's test file using completion.
 
 With a prefix ARG invalidates the cache first."
@@ -937,7 +959,19 @@ With a prefix ARG invalidates the cache first."
          (tags-exclude (projectile-tags-exclude-patterns))
          (default-directory project-root))
     (shell-command (format projectile-tags-command tags-exclude))
-    (visit-tags-table project-root)))
+    (visit-tags-table project-root t)))
+
+(defun projectile-find-tag ()
+  "Find tag in project."
+  (interactive)
+  (visit-tags-table (projectile-project-root) t)
+  (tags-completion-table)
+  (let (tag-names)
+    (mapc (lambda (x)
+            (unless (integerp x)
+              (push (prin1-to-string x t) tag-names)))
+          tags-completion-table)
+    (find-tag (projectile-completing-read "Find tag: " tag-names))))
 
 (defun projectile-files-in-project-directory (directory)
   "Return a list of files in DIRECTORY."
@@ -1119,14 +1153,19 @@ with a prefix ARG."
                    (list (abbreviate-file-name (projectile-project-root))))
     projectile-known-projects))
 
-(defun projectile-switch-project ()
-  "Switch to a project we have seen before."
-  (interactive)
+(defun projectile-switch-project (&optional arg)
+  "Switch to a project we have visited before.
+Invokes the command referenced by `projectile-switch-project-action' on switch.
+With a prefix ARG invokes `projectile-commander' instead of
+`projectile-switch-project-action.'"
+  (interactive "P")
   (let* ((project-to-switch
          (projectile-completing-read "Switch to project: "
                                      (projectile-relevant-known-projects)))
          (default-directory project-to-switch))
-    (funcall projectile-switch-project-action)
+    (if arg
+        (projectile-commander)
+      (funcall projectile-switch-project-action))
     (let ((project-switched project-to-switch))
       (run-hooks 'projectile-switch-project-hook))))
 
@@ -1183,21 +1222,128 @@ Also set `projectile-known-projects'."
   "Save PROJECTILE-KNOWN-PROJECTS to PROJECTILE-KNOWN-PROJECTS-FILE."
   (projectile-serialize projectile-known-projects projectile-known-projects-file))
 
+;;;; projectile-commander
+
+(defconst projectile-commander-help-buffer "*Commander Help*")
+
+(defvar projectile-commander-methods nil
+  "List of file-selection methods for the `projectile-commander' command.
+Each element is a list (KEY DESCRIPTION FUNCTION).
+DESCRIPTION is a one-line description of what the key selects.")
+
+;;;###autoload
+(defun projectile-commander ()
+  "Execute a Projectile command with a single letter.
+The user is prompted for a single character indicating the action to invoke.
+The `?' character describes then
+available actions.
+
+See `def-projectile-commander-method' for defining new methods."
+  (interactive)
+  (message "Commander [%s]: "
+           (apply #'string (mapcar #'car projectile-commander-methods)))
+  (let* ((ch (save-window-excursion
+               (select-window (minibuffer-window))
+               (read-char)))
+         (method (cl-find ch projectile-commander-methods :key #'car)))
+    (cond (method
+           (funcall (cl-caddr method)))
+          (t
+           (message "No method for character: ?\\%c" ch)
+           (ding)
+           (sleep-for 1)
+           (discard-input)
+           (projectile-commander)))))
+
+(defmacro def-projectile-commander-method (key description &rest body)
+  "Define a new `projectile-commander' method.
+
+KEY is the key the user will enter to choose this method.
+
+DESCRIPTION is a one-line sentence describing how the method.
+
+BODY is a series of forms which are evaluated when the find
+is chosen."
+  (let ((method `(lambda ()
+                   ,@body)))
+    `(setq projectile-commander-methods
+           (cl-sort (cons (list ,key ,description ,method)
+                          (cl-remove ,key projectile-commander-methods :key #'car))
+                  #'< :key #'car))))
+
+(def-projectile-commander-method ?? "Commander help buffer."
+  (ignore-errors (kill-buffer projectile-commander-help-buffer))
+  (with-current-buffer (get-buffer-create projectile-commander-help-buffer)
+    (insert "Projectile Commander Methods:\n\n")
+    (loop for (key line nil) in projectile-commander-methods
+          do (insert (format "%c:\t%s\n" key line)))
+    (goto-char (point-min))
+    (help-mode)
+    (display-buffer (current-buffer) t))
+  (projectile-commander))
+
+(def-projectile-commander-method ?f
+  "Find file in project."
+  (projectile-find-file))
+
+(def-projectile-commander-method ?T
+  "Find test file in project."
+  (projectile-find-test-file))
+
+(def-projectile-commander-method ?b
+  "Switch to project buffer."
+  (projectile-switch-to-buffer))
+
+(def-projectile-commander-method ?d
+  "Find directory in project."
+  (projectile-find-dir))
+
+(def-projectile-commander-method ?D
+  "Open project root in dired."
+  (projectile-dired))
+
+(def-projectile-commander-method ?g
+  "Run grep on project."
+  (projectile-grep))
+
+(def-projectile-commander-method ?s
+  "Switch project."
+  (projectile-switch-project))
+
+(def-projectile-commander-method ?o
+  "Run multi-occur on project buffers."
+  (projectile-multi-occur))
+
+(def-projectile-commander-method ?j
+  "Find tag in project."
+  (projectile-find-tag))
+
+(def-projectile-commander-method ?k
+  "Kill all project buffers."
+  (projectile-kill-buffers))
+
+(def-projectile-commander-method ?e
+  "Find recently visited file in project."
+  (projectile-recentf))
+
 
 ;;; Minor mode
 (defvar projectile-mode-map
   (let ((map (make-sparse-keymap)))
     (let ((prefix-map (make-sparse-keymap)))
+      (define-key prefix-map (kbd "4 f") 'projectile-find-file-other-window)
       (define-key prefix-map (kbd "f") 'projectile-find-file)
       (define-key prefix-map (kbd "T") 'projectile-find-test-file)
       (define-key prefix-map (kbd "l") 'projectile-find-file-in-directory)
       (define-key prefix-map (kbd "t") 'projectile-toggle-between-implementation-and-test)
       (define-key prefix-map (kbd "g") 'projectile-grep)
+      (define-key prefix-map (kbd "4 b") 'projectile-switch-to-buffer-other-window)
       (define-key prefix-map (kbd "b") 'projectile-switch-to-buffer)
       (define-key prefix-map (kbd "o") 'projectile-multi-occur)
       (define-key prefix-map (kbd "r") 'projectile-replace)
       (define-key prefix-map (kbd "i") 'projectile-invalidate-cache)
       (define-key prefix-map (kbd "R") 'projectile-regenerate-tags)
+      (define-key prefix-map (kbd "j") 'projectile-find-tag)
       (define-key prefix-map (kbd "k") 'projectile-kill-buffers)
       (define-key prefix-map (kbd "d") 'projectile-find-dir)
       (define-key prefix-map (kbd "D") 'projectile-dired)
@@ -1209,6 +1355,7 @@ Also set `projectile-known-projects'."
       (define-key prefix-map (kbd "p") 'projectile-test-project)
       (define-key prefix-map (kbd "z") 'projectile-cache-current-file)
       (define-key prefix-map (kbd "s") 'projectile-switch-project)
+      (define-key prefix-map (kbd "m") 'projectile-commander)
 
       (define-key map projectile-keymap-prefix prefix-map))
     map)
@@ -1277,13 +1424,14 @@ Otherwise behave as if called interactively.
   :require 'projectile
   (cond
    (projectile-mode
-    (add-hook 'find-file-hook 'projectile-cache-files-find-file-hook)
-    (add-hook 'find-file-hook 'projectile-cache-projects-find-file-hook)
+    (add-hook 'find-file-hook 'projectile-cache-files-find-file-hook t t)
+    (add-hook 'find-file-hook 'projectile-cache-projects-find-file-hook t t)
     (add-hook 'projectile-find-dir-hook 'projectile-cache-projects-find-file-hook)
     (add-hook 'find-file-hook 'projectile-update-mode-line t t))
    (t
-    (remove-hook 'find-file-hook 'projectile-cache-files-find-file-hook)
-    (remove-hook 'find-file-hook 'projectile-cache-projects-find-file-hook))))
+    (remove-hook 'find-file-hook 'projectile-cache-files-find-file-hook t)
+    (remove-hook 'find-file-hook 'projectile-cache-projects-find-file-hook t)
+    (remove-hook 'find-file-hook 'projectile-update-mode-line t))))
 
 ;;;###autoload
 (define-globalized-minor-mode projectile-global-mode
