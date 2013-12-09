@@ -651,7 +651,12 @@
 ;;;; Setup: Ruby
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(rinari rspec-mode bundler ruby-mode ruby-tools company company-inf-ruby ruby-hash-syntax ruby-refactor))
+(prelude-require-packages '(rinari rspec-mode bundler ruby-mode ruby-tools company company-inf-ruby ruby-hash-syntax ruby-refactor projectile-rails))
+
+(setq projectile-rails-keymap-prefix (kbd "C-c C-f"))
+
+;; Projecttile rails setup
+(add-hook 'projectile-mode-hook 'projectile-rails-on)
 
 ;; 'Fix' 'WARNING: terminal is not fully functional' from less/etc.
 (setenv "PAGER" "cat")
@@ -726,6 +731,8 @@ This command calls the external script 'convert_json_to_rb_hash.rb'."
     (setq script-name (concat "ruby -e \"" ruby-script "\""))
     (shell-command-on-region start-pos end-pos script-name nil t nil t))
   (indent-region start-pos end-pos))
+
+
 
 
 ;; Tell Riniari about extra prompt patterns
