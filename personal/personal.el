@@ -558,6 +558,8 @@
 ;;;; Setup: Helm/Projectile
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(setq projectile-completion-system 'grizzl)
+
 (global-set-key (kbd "C-x o") 'projectile-find-file)
 (global-set-key (kbd "C-x C-o") 'projectile-find-file)
 
