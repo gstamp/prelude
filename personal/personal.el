@@ -773,7 +773,9 @@ This command calls the external script 'convert_json_to_rb_hash.rb'."
 (setq web-mode-code-indent-offset 2)   ;; prelude sets this to 4
 (setq web-mode-markup-indent-offset 2) ;; prelude sets this to 4
 
-(add-hook 'web-mode-hook (lambda () (font-lock-mode -1)))
+(add-hook 'web-mode-hook (lambda ()
+                           (font-lock-mode -1)
+                           (smartparens-mode 0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Org Drill
