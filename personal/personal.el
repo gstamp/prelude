@@ -550,7 +550,7 @@
 
 (prelude-require-packages '(fiplr))
 
-(setq *grizzl-read-max-results* 18)
+(setq *grizzl-read-max-results* 60)
 (setq fiplr-ignored-globs '((directories (".git" ".svn" "vendor" "tmp"))
                             (files ("*.jpg" "*.png" "*.zip" "*~"))))
 
