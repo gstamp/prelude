@@ -4,7 +4,7 @@
 
 ;; Author:            Adam Sokolnicki <adam.sokolnicki@gmail.com>
 ;; URL:               https://github.com/asok/projectile-rails
-;; Version: 20131206.729
+;; Version: 20131210.931
 ;; X-Original-Version:           0.3.0
 ;; Keywords:          rails, projectile
 ;; Package-Requires:  ((projectile "1.0.0-cvs") (inflections "1.1") (inf-ruby "2.2.6"))
@@ -177,7 +177,7 @@
    (list (list
           (concat "\\(^\\|[^_:.@$]\\|\\.\\.\\)\\b"
                   (regexp-opt keywords t)
-                  ruby-keyword-end-re)
+		  "\\_>")
           (list 2 projectile-rails-font-lock-face-name)))))
 
 (defun projectile-rails-apply-keywords-for-file-type ()

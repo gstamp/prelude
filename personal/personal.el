@@ -560,6 +560,9 @@
 
 (setq projectile-completion-system 'grizzl)
 
+;; Appears to be buggy for me so switch off
+(setq projectile-rails-expand-snippet nil)
+
 (global-set-key (kbd "C-x o") 'projectile-find-file)
 (global-set-key (kbd "C-x C-o") 'projectile-find-file)
 
