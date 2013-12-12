@@ -645,7 +645,10 @@
 ;;;; Setup: Clojure
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(cider))
+(prelude-require-packages '(clojure-mode cider align-cljlet))
+
+(eval-after-load 'clojure-mode
+  '(define-key clojure-mode-map (kbd "C-c C-a") 'align-cljlet))
 
 ;; Save buffer before trying to compile
 (defadvice cider-load-current-buffer (before save-before-cider-compile activate compile)
