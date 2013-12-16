@@ -3,8 +3,8 @@
 ;;; Code:
 
 
-;;;### (autoloads (ample-theme) "ample-theme" "ample-theme.el" (21148
-;;;;;;  3604 0 0))
+;;;### (autoloads (ample-theme) "ample-theme" "ample-theme.el" (21167
+;;;;;;  29136 0 0))
 ;;; Generated autoloads from ample-theme.el
 
 (when load-file-name (add-to-list 'custom-theme-load-path (file-name-as-directory (file-name-directory load-file-name))))
@@ -16,7 +16,7 @@ Apply the ample-theme.
 
 ;;;***
 
-;;;### (autoloads nil nil ("ample-theme-pkg.el") (21148 3604 776224
+;;;### (autoloads nil nil ("ample-theme-pkg.el") (21167 29136 561741
 ;;;;;;  0))
 
 ;;;***

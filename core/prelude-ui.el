@@ -74,7 +74,7 @@
 
 (if (display-graphic-p)
     (progn
-      
+
       ;; use zenburn as the default theme
       (prelude-require-packages '(soothe-theme sublime-themes ample-theme))
       (load-theme 'ample t)

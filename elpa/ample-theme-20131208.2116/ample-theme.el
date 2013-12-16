@@ -4,11 +4,11 @@
 ;; Description: Calm Dark Theme for Emacs
 ;; Author: Jordon Biondo <biondoj@mail.gvsu.edu>
 ;; Created: Wed Jul 24 01:04:58 2013 (-0400)
-;; Version: 20131126.104
+;; Version: 20131208.2116
 ;; X-Original-Version: 0.2.7
-;; Last-Updated: Tue Nov 26 01:03:24 2013 (-0500)
+;; Last-Updated: Mon Dec  9 00:15:27 2013 (-0500)
 ;;           By: Jordon Biondo
-;;     Update #: 20
+;;     Update #: 22
 ;; URL: https://github.com/jordonbiondo/ample-theme
 ;; Keywords: theme, dark
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -43,7 +43,7 @@
 
 ;; Not a bad idea to define a palette...
 (let ((ample/green "#6aaf50")
-      (ample/dark-green "#057f10")
+      (ample/dark-green "#057f40")
       (ample/blue "#5180b3")
       (ample/light-blue "#528fd1")
       (ample/lighter-blue "#68a5e9")
@@ -61,8 +61,9 @@
       (ample/dark-red "#9d2512")
 
       (ample/cursor "#f57e00")
-      (ample/fringe "#1f1f1f")
-      (ample/region "#303030")
+      ;;(ample/fringe "#1f1f1f")
+      (ample/fringe "#3f3f3f")
+      (ample/region "#304020")
 
       (ample/rb0 "#81b0e3")
       (ample/rb1 "#a5a5a5")
@@ -70,7 +71,7 @@
       (ample/rb3 "#959595")
       (ample/rb4 "#4170a3")
       (ample/rb5 "#757575")
-      
+
       (ample/bg "gray13")
       (ample/fg "#bdbdb3"))
 
@@ -150,7 +151,7 @@
    `(erc-input-face ((t (:foreground "white"))))
    `(erc-timestamp-face ((t (:foreground ,ample/darker-gray))))
    `(erc-prompt-face ((t (:foreground "#191919" :background ,ample/purple))))
-   
+
    ;;undo-tree
    `(undo-tree-visualizer-active-branch-face ((t (:inherit default))))
    `(undo-tree-visualizer-default-face ((t (:inherit font-lock-comment-face))))
@@ -170,6 +171,19 @@
    `(ido-first-match ((t (:foreground ,ample/blue))))
    `(ido-incomplete-regexp ((t (:foreground ,ample/red))))
    `(ido-subdir ((t (:foreground ,ample/yellow))))
+
+   ;;js2
+   `(js2-external-variable  ((t (:foreground ,ample/orange :background nil))))
+   `(js2-function-param  ((t (:foreground ,ample/dark-green :background nil))))
+   `(js2-instance-member  ((t (:foreground ,ample/purple :background nil))))
+   ;; `(js2-jsdoc-html-tag-delimiter  ((t (:foreground "green" :background nil))))
+   ;; `(js2-jsdoc-html-tag-name  ((t (:foreground "yellow" :background nil))))
+   ;; `(js2-jsdoc-tag  ((t (:foreground "SlateGray" :background nil))))
+   ;; `(js2-jsdoc-type  ((t (:foreground "SteelBlue" :background nil))))
+   ;; `(js2-jsdoc-value  ((t (:foreground "PeachPuff3" :background nil))))
+   ;; `(js2-private-function-call  ((t (:foreground "goldenrod" :background nil))))
+   `(js2-private-member  ((t (:foreground "PeachPuff3" :background nil))))
+   `(js2-warning  ((t (:foreground nil :background nil :underline ,ample/orange))))
 
 
    ;; helm
@@ -217,7 +231,7 @@
    `(jabber-activity-face  ((t (:inherit font-lock-variable-name-face :bold t))))
    `(jabber-activity-personal-face  ((t (:inherit font-lock-function-name-face :bold t))))
    `(jabber-chat-error  ((t (:inherit error :bold t))))
-   ;; `(jabber-chat-prompt-foreign  ((t (:foreground "red" :background nil :bold t)))) 
+   ;; `(jabber-chat-prompt-foreign  ((t (:foreground "red" :background nil :bold t))))
    ;;`(jabber-chat-prompt-local  ((t (:foreground "blue" :background nil :bold t))))
    ;;`(jabber-chat-prompt-system  ((t (:foreground "green" :background nil :bold t))))
    `(jabber-chat-text-foreign  ((t (:inherit font-lock-function-name-face))))

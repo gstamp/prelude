@@ -183,7 +183,7 @@ The body of the advice is in BODY."
 (add-hook 'mouse-leave-buffer-hook 'prelude-auto-save-command)
 
 ;; highlight the current line
-(global-hl-line-mode +1)
+(global-hl-line-mode 0)
 
 (require 'volatile-highlights)
 (volatile-highlights-mode t)
