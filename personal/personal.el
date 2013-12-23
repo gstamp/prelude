@@ -1001,13 +1001,10 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Misc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-require-packages '(cucumber-goto-step visual-regexp guide-key))
+(prelude-require-packages '(cucumber-goto-step visual-regexp discover))
 
 (define-key global-map (kbd "M-g M-r") 'vr/replace)
 (define-key global-map (kbd "M-g r") 'vr/query-replace)
-
-(setq guide-key/guide-key-sequence '("C-x r" "C-x 4"))
-(guide-key-mode 1)  ; Enable guide-key-mode
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: IMenu Sections
