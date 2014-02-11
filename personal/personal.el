@@ -502,6 +502,8 @@
       (occur (if isearch-regexp isearch-string
                (regexp-quote isearch-string))))))
 
+(global-set-key (kbd "M-g M-i") 'prelude-indent-defun)
+
 ;; Use regex searches by default.
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
