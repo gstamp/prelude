@@ -664,8 +664,6 @@
 (setq rubocop-keymap-prefix (kbd "C-c C-c"))
 (setq projectile-rails-keymap-prefix (kbd "C-c C-f"))
 
-(add-hook 'ruby-mode-hook 'rubocop-mode)
-
 ;; Projecttile rails setup
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
 
