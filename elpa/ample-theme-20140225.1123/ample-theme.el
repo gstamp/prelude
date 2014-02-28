@@ -62,7 +62,7 @@
 
       (ample/cursor "#f57e00")
       (ample/fringe "#1f1f1f")
-      (ample/region "#303030")
+      (ample/region "#f57e00")
 
       (ample/rb0 "#81b0e3")
       (ample/rb1 "#a5a5a5")
@@ -327,7 +327,7 @@
    `(ac-slime-selection-face		((t (:inherit ac-selection-face))))
    `(ac-yasnippet-candidate-face	((t (:inherit ac-candidate-face))))
    `(ac-yasnippet-selection-face	((t (:inherit ac-selection-face))))
-   
+
    ;;`(company-echo			((t (:foreground nil :background nil))))
    ;;`(company-echo-common		((t (:foreground nil :background "firebrick4"))))
    ;;`(company-preview			((t (:foreground "wheat" :background "blue4"))))
@@ -463,7 +463,7 @@
    ;;`(org-table ((t (:foreground nil :background nil))))
    ;;`(org-tag ((t (:foreground nil :background nil))))
    ;;`(org-target ((t (:foreground nil :background nil))))
-   ;;`(org-time-grid ((t (:foreground nil :background nil))))   
+   ;;`(org-time-grid ((t (:foreground nil :background nil))))
    ;;`(org-upcoming-deadline ((t (:foreground nil :background nil))))
    ;;`(org-verbatim ((t (:foreground nil :background nil))))
    ;;`(org-verse ((t (:foreground nil :background nil))))
