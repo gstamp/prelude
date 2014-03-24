@@ -593,8 +593,8 @@
      (key-chord-define-global ";e" 'mc/edit-ends-of-lines)
      (key-chord-define-global ";a" 'mc/edit-beginnings-of-lines)
 
-     (global-set-key (kbd "C->") 'mc/mark-next-symbol-like-this)
-     (global-set-key (kbd "C-<") 'mc/mark-previous-symbol-like-this)
+     (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+     (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
      (global-set-key (kbd "C-*") 'mc/mark-all-dwim)
      (global-unset-key (kbd "M-<down-mouse-1>"))
      (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)))
