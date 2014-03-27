@@ -664,6 +664,9 @@
 (setq rubocop-keymap-prefix (kbd "C-c C-c"))
 (setq projectile-rails-keymap-prefix (kbd "C-c C-f"))
 
+;; Enable symbol auto completion
+(setq dabbrev-abbrev-skip-leading-regexp ":")
+
 ;; Projecttile rails setup
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
 
