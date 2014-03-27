@@ -3,6 +3,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        kill-region
         org-delete-char
         org-force-self-insert
         org-self-insert-command
