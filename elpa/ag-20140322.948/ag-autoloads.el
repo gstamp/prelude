@@ -6,7 +6,7 @@
 ;;;### (autoloads (ag-kill-other-buffers ag-kill-buffers ag-project-dired-regexp
 ;;;;;;  ag-project-dired ag-dired-regexp ag-dired ag-project-regexp
 ;;;;;;  ag-project-files ag-project ag-regexp ag-files ag) "ag" "ag.el"
-;;;;;;  (21264 3176 0 0))
+;;;;;;  (21299 46537 0 0))
 ;;; Generated autoloads from ag.el
 
 (autoload 'ag "ag" "\
@@ -27,6 +27,7 @@ If called with a prefix, prompts for flags to pass to ag.
 
 (autoload 'ag-regexp "ag" "\
 Search using ag in a given directory for a given regexp.
+The regexp should be in PCRE syntax, not Emacs regexp syntax.
 
 If called with a prefix, prompts for flags to pass to ag.
 
@@ -50,7 +51,8 @@ If called with a prefix, prompts for flags to pass to ag.
 
 (autoload 'ag-project-regexp "ag" "\
 Guess the root of the current project and search it with ag
-for the given regexp.
+for the given regexp. The regexp should be in PCRE syntax, not
+Emacs regexp syntax.
 
 If called with a prefix, prompts for flags to pass to ag.
 
@@ -75,11 +77,12 @@ See also `ag-dired-regexp'.
 
 (autoload 'ag-dired-regexp "ag" "\
 Recursively find files in DIR matching REGEXP.
+REGEXP should be in PCRE syntax, not Emacs regexp syntax.
 
 The REGEXP is matched against the full path to the file, not
 only against the file name.
 
-The results are presented as a `dired-mode' buffer with
+Results are presented as a `dired-mode' buffer with
 `default-directory' being DIR.
 
 See also `find-dired'.
@@ -101,18 +104,18 @@ See also `ag-dired-regexp'.
 \(fn REGEXP)" t nil)
 
 (autoload 'ag-kill-buffers "ag" "\
-Kill all ag-mode buffers.
+Kill all `ag-mode' buffers.
 
 \(fn)" t nil)
 
 (autoload 'ag-kill-other-buffers "ag" "\
-Kill all ag-mode buffers other than the current buffer.
+Kill all `ag-mode' buffers other than the current buffer.
 
 \(fn)" t nil)
 
 ;;;***
 
-;;;### (autoloads nil nil ("ag-pkg.el") (21264 3176 21639 0))
+;;;### (autoloads nil nil ("ag-pkg.el") (21299 46537 144147 0))
 
 ;;;***
 
