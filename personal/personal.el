@@ -1006,6 +1006,11 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-require-packages '(cucumber-goto-step visual-regexp discover))
 
+;; Some smart parens options to make editing ruby less annoying
+(add-to-list 'sp-autoescape-string-quote-if-empty 'ruby-mode)
+(setq sp-autoescape-string-quote nil)
+(setq sp-autoinsert-if-followed-by-same 2)
+
 (define-key global-map (kbd "M-g M-r") 'vr/replace)
 (define-key global-map (kbd "M-g r") 'vr/query-replace)
 
