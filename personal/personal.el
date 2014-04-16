@@ -370,6 +370,12 @@
 
 (global-set-key (kbd "C-;") 'mark-line-or-next)
 
+(defun diff-current-with-master ()
+  (interactive)
+  (shell-command (format "git diff master -- %s" (buffer-file-name))) nil)
+
+(global-set-key [f8] 'diff-current-with-master)
+
 (defun smart-kill-whole-line (&optional arg)
   "A simple wrapper around `kill-whole-line' that respects indentation."
   (interactive "P")
