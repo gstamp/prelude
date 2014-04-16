@@ -1047,12 +1047,3 @@ This function is intended to be used as a value of `ring-bell-function'."
 (provide 'personal)
 ;;; personal.el ends here
 
-
-
-
-(setq web-mode-engines-alist
-      '(("php"    . "\\.phtml\\'")
-        ("blade"  . "\\.blade\\.")
-        ("ruby"  . "\\.html\\.erb")
-        )
-      )
