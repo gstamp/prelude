@@ -501,12 +501,12 @@
 ;; This adds an extra keybinding to interactive search (C-s) that runs
 ;; occur on the current search string/regexp, immediately showing all
 ;; hits in the entire buffer.  I use it all the time now.
-(define-key isearch-mode-map (kbd "C-o")
-  (lambda ()
-    (interactive)
-    (let ((case-fold-search isearch-case-fold-search))
-      (occur (if isearch-regexp isearch-string
-               (regexp-quote isearch-string))))))
+;; (define-key isearch-mode-map (kbd "C-o")
+;;   (lambda ()
+;;     (interactive)
+;;     (let ((case-fold-search isearch-case-fold-search))
+;;       (occur (if isearch-regexp isearch-string
+;;                (regexp-quote isearch-string))))))
 
 (global-set-key (kbd "M-g M-i") 'prelude-indent-defun)
 
@@ -1009,7 +1009,14 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Misc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-require-packages '(cucumber-goto-step visual-regexp discover))
+(prelude-require-packages '(cucumber-goto-step visual-regexp discover swoop))
+
+;; Swoop config. To edit inside swoop buffer: C-c C-e
+(global-set-key (kbd "C-o")   'swoop)
+(global-set-key (kbd "C-M-o") 'swoop-multi)
+(global-set-key (kbd "M-o")   'swoop-pcre-regexp)
+(global-set-key (kbd "C-S-o") 'swoop-back-to-last-position)
+(define-key isearch-mode-map (kbd "C-o") 'swoop-from-isearch)
 
 ;; Some smart parens options to make editing ruby less annoying
 (add-to-list 'sp-autoescape-string-quote-if-empty 'ruby-mode)
@@ -1040,3 +1047,12 @@ This function is intended to be used as a value of `ring-bell-function'."
 (provide 'personal)
 ;;; personal.el ends here
 
+
+
+
+(setq web-mode-engines-alist
+      '(("php"    . "\\.phtml\\'")
+        ("blade"  . "\\.blade\\.")
+        ("ruby"  . "\\.html\\.erb")
+        )
+      )
