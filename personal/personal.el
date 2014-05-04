@@ -1009,7 +1009,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Misc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-require-packages '(cucumber-goto-step visual-regexp discover swoop))
+(prelude-require-packages '(cucumber-goto-step visual-regexp discover swoop pig-mode))
 
 ;; Swoop config. To edit inside swoop buffer: C-c C-e
 (global-set-key (kbd "C-o")   'swoop)
