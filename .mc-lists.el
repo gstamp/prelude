@@ -15,6 +15,8 @@
         sp-delete-char
         sp-forward-slurp-sexp
         sp-kill-word
+        yaml-electric-backspace
+        yaml-electric-dash-and-dot
         ))
 
 (setq mc/cmds-to-run-once
