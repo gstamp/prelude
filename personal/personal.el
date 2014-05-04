@@ -156,6 +156,11 @@
 (add-to-list 'same-window-buffer-names "COMMIT_EDITMSG")
 (add-to-list 'same-window-buffer-names "*magit-process*")
 
+;; Don't auto add newline at EOF
+(setq require-final-newline nil)
+(setq next-line-add-newlines nil)
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Window Rearrangement
@@ -717,19 +722,19 @@
 
 (defun ruby-convert-json-to-hash (startPos endPos)
   "Convert a json object to a ruby hash..
-This command calls the external script 'convert_json_to_rb_hash.rb'."
+This command calls the external script 'json-to-ruby'."
   (interactive "r")
   (let (scriptName)
-    (setq scriptName "convert_json_to_rb_hash.rb") ; full path to your script
+    (setq scriptName "json-to-ruby") ; full path to your script
     (shell-command-on-region startPos endPos scriptName nil t nil t))
   (indent-region startPos endPos))
 
 (defun ruby-convert-hash-to-json (startPos endPos)
   "Convert a json object to a ruby hash..
-This command calls the external script 'convert_json_to_rb_hash.rb'."
+This command calls the external script 'ruby-to-json.rb'."
   (interactive "r")
   (let (scriptName)
-    (setq scriptName "convert_rb_hash_to_json.rb")
+    (setq scriptName "ruby-to-json")
     (shell-command-on-region startPos endPos scriptName nil t nil t))
   (indent-region startPos endPos))
 
