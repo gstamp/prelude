@@ -1016,13 +1016,6 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-require-packages '(cucumber-goto-step visual-regexp discover go-mode pig-mode))
 
-;; Swoop config. To edit inside swoop buffer: C-c C-e
-(global-set-key (kbd "C-o")   'swoop)
-(global-set-key (kbd "C-M-o") 'swoop-multi)
-(global-set-key (kbd "M-o")   'swoop-pcre-regexp)
-(global-set-key (kbd "C-S-o") 'swoop-back-to-last-position)
-(define-key isearch-mode-map (kbd "C-o") 'swoop-from-isearch)
-
 ;; Some smart parens options to make editing ruby less annoying
 (add-to-list 'sp-autoescape-string-quote-if-empty 'ruby-mode)
 (setq sp-autoescape-string-quote nil)
