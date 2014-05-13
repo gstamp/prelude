@@ -40,7 +40,7 @@
 (key-chord-define-global "jk" 'ace-jump-char-mode)
 (key-chord-define-global "JJ" 'prelude-switch-to-previous-buffer)
 (key-chord-define-global "uu" 'undo-tree-visualize)
-(key-chord-define-global "xx" 'execute-extended-command)
+(key-chord-define-global "xx" 'smex)
 (key-chord-define-global "yy" 'browse-kill-ring)
 
 (key-chord-mode +1)
