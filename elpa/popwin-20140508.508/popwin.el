@@ -1,10 +1,10 @@
 ;;; popwin.el --- Popup Window Manager.
 
-;; Copyright (C) 2011, 2012, 2013  Tomohiro Matsuyama
+;; Copyright (C) 2011, 2012, 2013, 2014  Tomohiro Matsuyama
 
 ;; Author: Tomohiro Matsuyama <tomo@cx4a.org>
 ;; Keywords: convenience
-;; Version: 20130329.2035
+;; Version: 20140508.508
 ;; X-Original-Version: 0.7.0alpha
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -186,7 +186,8 @@ HFACTOR, and vertical factor VFACTOR."
             (popwin:window-point node)
             (window-start node)
             (window-edges node)
-            (eq (selected-window) node))
+            (eq (selected-window) node)
+            (window-dedicated-p node))
     (destructuring-bind (dir edges . windows) node
       (append (list dir edges)
               (mapcar 'popwin:window-config-tree-1 windows)))))
@@ -204,14 +205,18 @@ horizontal factor HFACTOR, and vertical factor VFACTOR. The
 return value is a association list of mapping from old-window to
 new-window."
   (if (eq (car node) 'window)
-      (destructuring-bind (old-win buffer point start edges selected)
+      (destructuring-bind (old-win buffer point start edges selected dedicated)
           (cdr node)
+        (set-window-dedicated-p window nil)
         (popwin:adjust-window-edges window edges hfactor vfactor)
         (with-selected-window window
           (popwin:switch-to-buffer buffer t))
         (when selected
           (select-window window))
         (set-window-point window point)
+        (set-window-start window start t)
+        (when dedicated
+          (set-window-dedicated-p window t))
         `((,old-win . ,window)))
     (destructuring-bind (dir edges . windows) node
       (loop while windows
@@ -228,7 +233,7 @@ which is a node of `window-tree' and OUTLINE which is a node of
    ((and (windowp node)
          (eq (car outline) 'window))
     ;; same window
-    (destructuring-bind (old-win buffer point start edges selected)
+    (destructuring-bind (old-win buffer point start edges selected dedicated)
         (cdr outline)
       (popwin:adjust-window-edges node edges)
       (when (and (eq (window-buffer node) buffer)
@@ -343,10 +348,10 @@ of the value and frame-size."
   :type 'number
   :group 'popwin)
 
-(defcustom popwin:reuse-window 'current-frame
+(defcustom popwin:reuse-window 'current
   "Non-nil means `popwin:display-buffer' will not popup the
 visible buffer.  The value is same as a second argument of
-`get-buffer-window'."
+`get-buffer-window', except `current' means the selected frame."
   :group 'popwin)
 
 (defcustom popwin:adjust-other-windows t
@@ -678,6 +683,7 @@ be closed by `popwin:close-popup-window'."
 
 (defcustom popwin:special-display-config
   '(;; Emacs
+    ("*Miniedit Help*" :noselect t)
     help-mode
     (completion-list-mode :noselect t)
     (compilation-mode :noselect t)
@@ -834,6 +840,17 @@ special displaying."
       (popwin:original-pop-to-buffer (car popwin:popup-last-config))
     (error "No popup buffer ever")))
 
+(defun popwin:reuse-window-p (buffer-or-name not-this-window)
+  "Return t if a window showing BUFFER-OR-NAME exists and should
+be used displaying the buffer."
+  (and popwin:reuse-window
+       (let ((window (get-buffer-window buffer-or-name
+                                        (if (eq popwin:reuse-window 'current)
+                                            nil
+                                          popwin:reuse-window))))
+         (and (not (null window))
+              (not (eq window (if not-this-window (selected-window))))))))
+
 (defun* popwin:match-config (buffer)
   (when (stringp buffer) (setq buffer (get-buffer buffer)))
   (loop with name = (buffer-name buffer)
@@ -890,9 +907,7 @@ specifies default values of the config."
 usual. This function can be used as a value of
 `display-buffer-function'."
   (interactive "BDisplay buffer:\n")
-  (if (and popwin:reuse-window
-           (not (memq (get-buffer-window buffer-or-name popwin:reuse-window)
-                      (list (if not-this-window (selected-window)) nil))))
+  (if (popwin:reuse-window-p buffer-or-name not-this-window)
       ;; Call `display-buffer' for reuse.
       (popwin:original-display-buffer buffer-or-name not-this-window)
     (popwin:display-buffer-1

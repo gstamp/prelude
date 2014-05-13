@@ -1015,7 +1015,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;; Setup: Misc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-require-packages '(cucumber-goto-step visual-regexp discover go-mode pig-mode
-                                               nyan-mode))
+                                               nyan-mode popwin))
 
 ;; Smartline setup
 (setq sml/theme 'dark)
