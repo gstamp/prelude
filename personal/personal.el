@@ -1017,6 +1017,12 @@ This function is intended to be used as a value of `ring-bell-function'."
 (prelude-require-packages '(cucumber-goto-step visual-regexp discover go-mode pig-mode
                                                nyan-mode))
 
+;; Smartline setup
+(setq sml/theme 'dark)
+(require 'smart-mode-line)
+(setq sml/hidden-modes "yas\\|Golden\\|GitGutter\\|Projectile\\|RubyRef\\|rt\\|rails\\|,\\||\\|Pre")
+(sml/setup)
+
 ;; Nyan cat scroll indicator!
 (nyan-mode)
 
