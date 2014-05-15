@@ -9,6 +9,7 @@
         org-self-insert-command
         orgtbl-self-insert-command
         paredit-forward-delete
+        prelude-top-join-line
         ruby-tools-interpolate
         sp--self-insert-command
         sp-backward-delete-char
