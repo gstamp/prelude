@@ -160,7 +160,8 @@
 (setq require-final-newline nil)
 (setq next-line-add-newlines nil)
 
-
+;; warn when opening files bigger than 100MB
+(setq large-file-warning-threshold 100000000)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Window Rearrangement
