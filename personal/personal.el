@@ -90,12 +90,6 @@
 ;; Allow editing of permissions in writable-dired-mode
 (setq wdired-allow-to-change-permissions 't)
 
-;; Add some extra snippets
-;;GJS: (require 'yasnippet)
-;;GJS: (setq yas/snippet-dirs
-;;GJS:       '("~/.emacs.d/snippets"))
-;;GJS: (yas/global-mode 1)
-
 ;; Stop ERC telling me about all those people joining/quiting.
 (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
