@@ -87,6 +87,9 @@
 ;; Redraw more frequently
 (setq redisplay-dont-pause 't)
 
+;; Allow editing of permissions in writable-dired-mode
+(setq wdired-allow-to-change-permissions 't)
+
 ;; Add some extra snippets
 ;;GJS: (require 'yasnippet)
 ;;GJS: (setq yas/snippet-dirs
