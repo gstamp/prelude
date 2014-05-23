@@ -1037,10 +1037,26 @@ This function is intended to be used as a value of `ring-bell-function'."
 (global-set-key (kbd "M-<f9>") 'auto-find-tagfile)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Go Language
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(prelude-require-packages '(go-mode go-eldoc go-projectile company-go))
+
+(add-hook 'before-save-hook 'gofmt-before-save)
+
+(add-hook 'go-mode-hook '(lambda ()
+                           (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)))
+
+(add-hook 'go-mode-hook '(lambda ()
+                           (local-set-key (kbd "C-c C-g") 'go-goto-imports)))
+
+(add-hook 'go-mode-hook '(lambda ()
+                           (local-set-key (kbd "C-c C-k") 'godoc)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Misc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-require-packages '(cucumber-goto-step visual-regexp discover go-mode pig-mode
-                                               nyan-mode popwin))
+(prelude-require-packages '(cucumber-goto-step visual-regexp
+                            discover pig-mode nyan-mode popwin))
 
 ;; Smartline setup
 (setq sml/theme 'dark)
