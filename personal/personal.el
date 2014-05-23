@@ -627,6 +627,10 @@
 (setq org-replace-disputed-keys 1)
 (setq org-confirm-babel-evaluate nil)
 
+;; Define org-capture key - make sure org-default-notes-file is
+;; defined for local machine
+(define-key global-map "\C-cc" 'org-capture)
+
 ;; Colour org mode source code
 (setq org-src-fontify-natively 1)
 ;; Valid task states in org mode
