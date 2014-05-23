@@ -359,6 +359,15 @@
      (progn
        (list (line-beginning-position) (line-beginning-position 2)) ) ) ))
 
+;; Ask to create the directory if it doesn't exist
+(add-hook 'before-save-hook
+          (lambda ()
+            (when buffer-file-name
+              (let ((dir (file-name-directory buffer-file-name)))
+                (when (and (not (file-exists-p dir))
+                           (y-or-n-p (format "Directory %s does not exist. Create it?" dir)))
+                  (make-directory dir t))))))
+
 (defun mark-line-or-next ()
   "Marks the current line or extends the mark if there is no current selection"
   (interactive)
