@@ -1084,6 +1084,12 @@ This function is intended to be used as a value of `ring-bell-function'."
 (define-key global-map (kbd "M-g M-r") 'vr/replace)
 (define-key global-map (kbd "M-g r") 'vr/query-replace)
 
+;; Auto save on focus change - only works on Emacs HEAD
+(defun save-all ()
+  (interactive)
+  (save-some-buffers t))
+(add-hook 'focus-out-hook 'save-all)
+
 ;; Use a more subtle colour for smartparens overlays
 (custom-set-faces
  '(sp-pair-overlay-face ((t (:inherit highlight :background "gray16")))))
