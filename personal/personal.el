@@ -729,6 +729,7 @@
 
 (add-hook 'ruby-mode-hook
           (lambda ()
+            (visual-line-mode)
             (ruby-refactor-mode-launch)
             (define-key ruby-mode-map (kbd "M-\"") 'rspec-run-and-arrange)
             ;; RSpec settings for greater good.
@@ -1072,7 +1073,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;; Setup: Misc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-require-packages '(cucumber-goto-step visual-regexp
-                            discover pig-mode nyan-mode popwin))
+                            discover pig-mode nyan-mode popwin adaptive-wrap))
 
 ;; Smartline setup
 (setq sml/theme 'dark)
