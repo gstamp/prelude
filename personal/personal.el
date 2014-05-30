@@ -15,7 +15,10 @@
 (setq prelude-flyspell nil)
 
 ;; Auto cleans whitespace
-(setq prelude-whitespace t)
+(setq prelude-clean-whitespace-on-save t)
+
+;; Show whitespace
+(setq prelude-whitespace nil)
 
 ;; JS indent levels
 (setq js-indent-level 2)
@@ -67,6 +70,19 @@
 ;;  tabs - TABs are visualized via faces.
 (setq whitespace-style '(trailing lines tabs)
       whitespace-line-column 80)        ; no trailing space or tabs
+
+;; Whitespace for these things
+(setq whitespace-style (quote (tabs newline tab-mark newline-mark)))
+
+;; Unicode for whitespace thingies
+(setq whitespace-display-mappings
+      ;; all numbers are Unicode codepoint in decimal. try (insert-char 182 ) to see it
+      '(
+        (space-mark 32 [183] [46]) ; 32 SPACE, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+        (newline-mark 10 [182 10]) ; 10 LINE FEED
+        (tab-mark 9 [9655 9] [92 9]) ; 9 TAB, 9655 WHITE RIGHT-POINTING TRIANGLE 「▷」
+        ))
+
 
 ;; gerkin config
 (setq feature-default-language "en")
