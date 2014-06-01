@@ -11,6 +11,9 @@
 ;; I like arrow keys turned on
 (setq prelude-guru nil)
 
+;; Ignore the case when sorting
+(setq sort-fold-case t)
+
 ;; No thanks to flyspell mode being on by default
 (setq prelude-flyspell nil)
 
