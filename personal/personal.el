@@ -350,9 +350,9 @@
   (align-regexp begin end
                 (rx (group (zero-or-more (syntax whitespace))) "=>") 1 1 ))
 
-(defadvice shell-command (before my-shell-command (arg command &optional output-buffer error-buffer) activate)
+(defadvice shell-command (before my-shell-command (command &optional output-buffer error-buffer) activate)
   "Save the buffer before runng shell command"
-  (save-some-buffers t))
+  (simple-save-some-buffers))
 
 (defadvice zap-to-char (after my-zap-to-char-advice (arg char) activate)
   "Kill up to the ARG'th occurence of CHAR, and leave CHAR. If
@@ -430,6 +430,46 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Helper Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Modifed version of save-some-buffers that saves the buffers but doesn't
+;; spit out rubbish to the message bage
+(defun simple-save-some-buffers ()
+  (interactive)
+  (save-window-excursion
+    (let* (queried autosaved-buffers
+	   files-done abbrevs-done)
+      (dolist (buffer (buffer-list))
+	;; First save any buffers that we're supposed to save unconditionally.
+	;; That way the following code won't ask about them.
+	(with-current-buffer buffer
+	  (when (and buffer-save-without-query (buffer-modified-p))
+	    (push (buffer-name) autosaved-buffers)
+	    (save-buffer))))
+      ;; Ask about those buffers that merit it,
+      ;; and record the number thus saved.
+      (setq files-done
+	    (mapcar
+             (lambda (buffer)
+               (with-current-buffer buffer
+                 (if (and (buffer-live-p buffer)
+                          (buffer-modified-p buffer)
+                          (not (buffer-base-buffer buffer))
+                          (buffer-file-name buffer)
+                          )
+                     (save-buffer))))
+             (buffer-list)
+             ))
+      ;; Maybe to save abbrevs, and record whether
+      ;; we either saved them or asked to.
+      (and save-abbrevs abbrevs-changed
+	   (progn
+	     (if (or (eq save-abbrevs 'silently)
+		     (y-or-n-p (format "Save abbrevs in %s? " abbrev-file-name)))
+		 (write-abbrev-file nil))
+	     ;; Don't keep bothering user if he says no.
+	     (setq abbrevs-changed nil)
+	     (setq abbrevs-done t)))
+      )))
 
 ;; Stops the mini buffer when switching back to Emacs with mouse
 (defun stop-using-minibuffer ()
@@ -1123,7 +1163,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;; Auto save on focus change - only works on Emacs HEAD
 (defun save-all ()
   (interactive)
-  (save-some-buffers t))
+  (simple-save-some-buffers))
 (add-hook 'focus-out-hook 'save-all)
 
 ;; Use a more subtle colour for smartparens overlays
