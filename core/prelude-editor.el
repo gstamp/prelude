@@ -186,16 +186,8 @@ The body of the advice is in BODY."
 
 (add-hook 'mouse-leave-buffer-hook 'prelude-auto-save-command)
 
-;; Autosave buffers when focus is lost
-(defun prelude-save-all-buffers ()
-  "Save all modified buffers, without prompts."
-  (save-some-buffers 'dont-ask))
-
-(when (version<= "24.4" emacs-version)
-  (add-hook 'focus-out-hook 'prelude-save-all-buffers))
-
 ;; highlight the current line
-(global-hl-line-mode 0)
+(global-hl-line-mode t)
 
 (require 'volatile-highlights)
 (volatile-highlights-mode t)
