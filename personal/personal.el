@@ -136,7 +136,7 @@
 
     ;; sets fn-delete to be right-delete
     (global-set-key [kp-delete] 'delete-char)
-
+    
     ;; Move to trash when deleting stuff
     (setq delete-by-moving-to-trash t
           trash-directory "~/.Trash/emacs")
@@ -510,7 +510,8 @@
 (global-set-key [f3] 'kmacro-start-macro-or-insert-counter)
 (global-set-key [f4] 'kmacro-end-or-call-macro)
 (global-set-key [f8] 'find-file-at-point)
-(global-set-key [f10] 'multi-term)
+(global-set-key [M-f10] (quote toggle-frame-fullscreen))
+(global-set-key [f10] 'toggle-frame-maximized)
 (global-set-key [f11] 'ido-kill-buffer)
 
 (global-set-key [(control f4)] 'kill-this-buffer)
