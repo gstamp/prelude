@@ -137,9 +137,6 @@
     ;; sets fn-delete to be right-delete
     (global-set-key [kp-delete] 'delete-char)
 
-    ;; keybinding to toggle full screen mode
-    (global-set-key (quote [M-f10]) (quote ns-toggle-fullscreen))
-
     ;; Move to trash when deleting stuff
     (setq delete-by-moving-to-trash t
           trash-directory "~/.Trash/emacs")
