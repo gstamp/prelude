@@ -163,6 +163,32 @@
         (progn
           (prelude-require-packages '(exec-path-from-shell))
 
+          (setq exec-path-from-shell-variables '("PATH"
+                                                 "MANPATH"
+                                                 "BOXEN_BIN_DIR"
+                                                 "BOXEN_CONFIG_DIR"
+                                                 "BOXEN_DATA_DIR"
+                                                 "BOXEN_ELASTICSEARCH_HOST"
+                                                 "BOXEN_ELASTICSEARCH_PORT"
+                                                 "BOXEN_ELASTICSEARCH_URL"
+                                                 "BOXEN_ENV_DIR"
+                                                 "BOXEN_GITHUB_LOGIN"
+                                                 "BOXEN_HOME"
+                                                 "BOXEN_LOG_DIR"
+                                                 "BOXEN_MEMCACHED_PORT"
+                                                 "BOXEN_MEMCACHED_URL"
+                                                 "BOXEN_MYSQL_PORT"
+                                                 "BOXEN_MYSQL_SOCKET"
+                                                 "BOXEN_MYSQL_URL"
+                                                 "BOXEN_POSTGRESQL_HOST"
+                                                 "BOXEN_POSTGRESQL_PORT"
+                                                 "BOXEN_POSTGRESQL_URL"
+                                                 "BOXEN_REDIS_PORT"
+                                                 "BOXEN_REDIS_URL"
+                                                 "BOXEN_SETUP_VERSION"
+                                                 "BOXEN_SOCKET_DIR"
+                                                 "BOXEN_SRC_DIR"))
+          
           (exec-path-from-shell-initialize)
           (set-face-attribute 'default nil :font "Monaco-14")
           (set-frame-size (selected-frame) 124 40)))))
@@ -1149,7 +1175,13 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;; Setup: Misc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-require-packages '(cucumber-goto-step visual-regexp
-                            discover pig-mode nyan-mode popwin adaptive-wrap))
+                            discover pig-mode nyan-mode popwin
+                            adaptive-wrap robe company))
+
+(add-hook 'ruby-mode-hook 'robe-mode)
+(eval-after-load 'company-mode
+  '(progn
+     (push 'company-robe company-backends)))
 
 ;; Smartline setup
 (setq sml/theme 'dark)
