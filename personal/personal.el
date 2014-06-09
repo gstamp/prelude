@@ -859,6 +859,7 @@ This command calls the external script 'ruby-to-json.rb'."
 
 (defun github-pr (&optional prompt)
   (interactive "P")
+  (git-link)  ;; this is just here to force autoloading of git-link
   (let* ((remote-name (if prompt (read-string "Remote: " nil nil git-link-default-remote)
 			git-link-default-remote))
 	 (remote-host (git-link-remote-host remote-name))
