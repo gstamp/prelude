@@ -768,6 +768,14 @@
 ;; 'Fix' 'WARNING: terminal is not fully functional' from less/etc.
 (setenv "PAGER" "cat")
 
+;; Fix problem with running rspec with zsh
+(defadvice rspec-compile (around rspec-compile-around)
+  "Use BASH shell for running the specs because of ZSH issues."
+  (let ((shell-file-name "/bin/bash"))
+    ad-do-it))
+(ad-activate 'rspec-compile)
+
+;; Nice helper to arrange rspec windows nicely
 (defun rspec-run-and-arrange ()
   (interactive)
 
