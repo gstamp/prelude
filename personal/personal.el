@@ -752,9 +752,8 @@
 ;;;; Setup: Ruby
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(rinari rspec-mode bundler ruby-mode ruby-tools company company-inf-ruby ruby-hash-syntax ruby-refactor projectile-rails rubocop))
+(prelude-require-packages '(rinari rspec-mode bundler ruby-mode ruby-tools company company-inf-ruby ruby-hash-syntax ruby-refactor projectile-rails))
 
-(setq rubocop-keymap-prefix (kbd "C-c C-c"))
 (setq projectile-rails-keymap-prefix (kbd "C-c C-f"))
 
 ;; Align to the state of the statement rather than the keyword
