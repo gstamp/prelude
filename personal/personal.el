@@ -66,16 +66,16 @@
 (setq kept-new-versions 10)             ; keep x new ones
 (setq kept-old-versions 3)              ; keep x old ones
 
+(setq whitespace-line-column 80)
+
 ;; Sets up whitepsace.
 ;;  trailing - no trailing whitespace and end of line
 ;;  lines - lines whose have columns beyond ‘whitespace-line-column’
 ;;          are highlighted via faces.
 ;;  tabs - TABs are visualized via faces.
-(setq whitespace-style '(trailing lines tabs)
-      whitespace-line-column 80)        ; no trailing space or tabs
-
-;; Whitespace for these things
-(setq whitespace-style (quote (tabs newline tab-mark newline-mark)))
+;;  newline-mark - NEWLINEs are visualized via display table.
+;;  tab-mark - TABs are visualized via display table.
+(setq whitespace-style (quote (tabs newline trailing lines tab-mark newline-mark)))
 
 ;; Unicode for whitespace thingies
 (setq whitespace-display-mappings
@@ -86,6 +86,9 @@
         (tab-mark 9 [9655 9] [92 9]) ; 9 TAB, 9655 WHITE RIGHT-POINTING TRIANGLE 「▷」
         ))
 
+;; Normally prelude only enables whitespace cleanup when whitespace
+;; mode is switched on. Best to have it on all the time.
+(add-hook 'before-save-hook 'prelude-cleanup-maybe nil nil)
 
 ;; gerkin config
 (setq feature-default-language "en")
@@ -136,7 +139,7 @@
 
     ;; sets fn-delete to be right-delete
     (global-set-key [kp-delete] 'delete-char)
-    
+
     ;; Move to trash when deleting stuff
     (setq delete-by-moving-to-trash t
           trash-directory "~/.Trash/emacs")
@@ -188,7 +191,7 @@
                                                  "BOXEN_SETUP_VERSION"
                                                  "BOXEN_SOCKET_DIR"
                                                  "BOXEN_SRC_DIR"))
-          
+
           (exec-path-from-shell-initialize)
           (set-face-attribute 'default nil :font "Monaco-14")
           (set-frame-size (selected-frame) 124 40)))))
@@ -463,18 +466,18 @@
   (interactive)
   (save-window-excursion
     (let* (queried autosaved-buffers
-	   files-done abbrevs-done)
+                   files-done abbrevs-done)
       (dolist (buffer (buffer-list))
-	;; First save any buffers that we're supposed to save unconditionally.
-	;; That way the following code won't ask about them.
-	(with-current-buffer buffer
-	  (when (and buffer-save-without-query (buffer-modified-p))
-	    (push (buffer-name) autosaved-buffers)
-	    (save-buffer))))
+        ;; First save any buffers that we're supposed to save unconditionally.
+        ;; That way the following code won't ask about them.
+        (with-current-buffer buffer
+          (when (and buffer-save-without-query (buffer-modified-p))
+            (push (buffer-name) autosaved-buffers)
+            (save-buffer))))
       ;; Ask about those buffers that merit it,
       ;; and record the number thus saved.
       (setq files-done
-	    (mapcar
+            (mapcar
              (lambda (buffer)
                (with-current-buffer buffer
                  (if (and (buffer-live-p buffer)
@@ -488,13 +491,13 @@
       ;; Maybe to save abbrevs, and record whether
       ;; we either saved them or asked to.
       (and save-abbrevs abbrevs-changed
-	   (progn
-	     (if (or (eq save-abbrevs 'silently)
-		     (y-or-n-p (format "Save abbrevs in %s? " abbrev-file-name)))
-		 (write-abbrev-file nil))
-	     ;; Don't keep bothering user if he says no.
-	     (setq abbrevs-changed nil)
-	     (setq abbrevs-done t)))
+           (progn
+             (if (or (eq save-abbrevs 'silently)
+                     (y-or-n-p (format "Save abbrevs in %s? " abbrev-file-name)))
+                 (write-abbrev-file nil))
+             ;; Don't keep bothering user if he says no.
+             (setq abbrevs-changed nil)
+             (setq abbrevs-done t)))
       )))
 
 ;; Stops the mini buffer when switching back to Emacs with mouse
@@ -894,21 +897,21 @@ This command calls the external script 'ruby-to-json.rb'."
   (interactive "P")
   (git-link)  ;; this is just here to force autoloading of git-link
   (let* ((remote-name (if prompt (read-string "Remote: " nil nil git-link-default-remote)
-			git-link-default-remote))
-	 (remote-host (git-link-remote-host remote-name))
-	 (branch      (git-link-current-branch))
-	 (commit      (git-link-last-commit))
-	 (handler     (nth 1 (assoc remote-host git-link-remote-alist))))
+                        git-link-default-remote))
+         (remote-host (git-link-remote-host remote-name))
+         (branch      (git-link-current-branch))
+         (commit      (git-link-last-commit))
+         (handler     (nth 1 (assoc remote-host git-link-remote-alist))))
 
     (cond ((null remote-host)
-	   (message "Unknown remote '%s'" remote-name))
-	  ((and (null commit) (null branch))
-	   (message "Not on a branch, and repo does not have commits"))
-	  ;; functionp???
-	  ((null handler)
-	   (message "No handler for %s" remote-host))
-	  ;; null ret val
-	  ((browse-url
+           (message "Unknown remote '%s'" remote-name))
+          ((and (null commit) (null branch))
+           (message "Not on a branch, and repo does not have commits"))
+          ;; functionp???
+          ((null handler)
+           (message "No handler for %s" remote-host))
+          ;; null ret val
+          ((browse-url
             (format "https://github.com/%s/compare/%s"
                     (git-link-remote-dir remote-name)
                     branch))))))
@@ -1175,8 +1178,8 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;; Setup: Misc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-require-packages '(cucumber-goto-step visual-regexp
-                            discover pig-mode nyan-mode popwin
-                            adaptive-wrap robe company))
+                                               discover pig-mode nyan-mode popwin
+                                               adaptive-wrap robe company))
 
 (add-hook 'ruby-mode-hook 'robe-mode)
 (eval-after-load 'company-mode
