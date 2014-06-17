@@ -362,28 +362,33 @@
 ;;;; Setup: Editor helpers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun align-to-equals (begin end)
+(defun auto-align (align-to mark-f)
+  (save-excursion
+    (unless mark-active
+      (funcall mark-f))
+    (align-regexp (min (point) (mark))
+                  (max (point) (mark))
+                  align-to 1 1 )))
+
+(defun align-to-equals ()
   "Align region to equal signs"
-  (interactive "r")
-  (align-regexp begin end "\\(\\s-*\\)=" 1 1 ))
+  (interactive)
+  (auto-align "\\(\\s-*\\)=" #'er/mark-paragraph))
 
-(defun align-to-colon (begin end)
+(defun align-to-colon ()
   "Align region to colon (:) signs"
-  (interactive "r")
-  (align-regexp begin end
-                (rx (group (zero-or-more (syntax whitespace))) ":") 1 1 ))
+  (interactive)
+  (auto-align ":\\(\\s-*\\)" #'er/mark-inside-pairs))
 
-(defun align-to-comma (begin end)
+(defun align-to-comma ()
   "Align region to comma signs"
-  (interactive "r")
-  (align-regexp begin end
-                (rx "," (group (zero-or-more (syntax whitespace))) ) 1 1 ))
+  (interactive)
+  (auto-align ",\\(\\s-*\\)" #'er/mark-inside-pairs))
 
-(defun align-to-hash (begin end)
-  "Align region to hash ( => ) signs"
-  (interactive "r")
-  (align-regexp begin end
-                (rx (group (zero-or-more (syntax whitespace))) "=>") 1 1 ))
+(defun align-to-hash ()
+  "Align region to hash ( => ) signs automatically selecting scope if no region active"
+  (interactive)
+  (auto-align "\\(\\s-*\\)=>" #'er/mark-inside-pairs))
 
 (defadvice shell-command (before my-shell-command (command &optional output-buffer error-buffer) activate)
   "Save the buffer before runng shell command"
