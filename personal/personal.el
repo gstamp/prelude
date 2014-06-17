@@ -589,7 +589,6 @@
 (global-set-key [f1] 'ido-switch-buffer)
 (global-set-key [f3] 'kmacro-start-macro-or-insert-counter)
 (global-set-key [f4] 'kmacro-end-or-call-macro)
-(global-set-key [f8] 'find-file-at-point)
 (global-set-key [M-f10] (quote toggle-frame-fullscreen))
 (global-set-key [f10] 'toggle-frame-maximized)
 (global-set-key [f11] 'ido-kill-buffer)
