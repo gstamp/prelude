@@ -1188,8 +1188,9 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;; Setup: Misc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-require-packages '(cucumber-goto-step visual-regexp
-                                               discover pig-mode nyan-mode popwin
-                                               adaptive-wrap robe company))
+                            discover pig-mode nyan-mode popwin
+                            adaptive-wrap robe company
+                            nginx-mode))
 
 (add-hook 'ruby-mode-hook 'robe-mode)
 (eval-after-load 'company-mode
