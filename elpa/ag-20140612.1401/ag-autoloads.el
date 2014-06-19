@@ -1,12 +1,9 @@
 ;;; ag-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-
+(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads (ag-kill-other-buffers ag-kill-buffers ag-project-dired-regexp
-;;;;;;  ag-project-dired ag-dired-regexp ag-dired ag-project-regexp
-;;;;;;  ag-project-files ag-project ag-regexp ag-files ag) "ag" "ag.el"
-;;;;;;  (21299 46537 0 0))
+;;;### (autoloads nil "ag" "ag.el" (21410 36486 0 0))
 ;;; Generated autoloads from ag.el
 
 (autoload 'ag "ag" "\
@@ -115,15 +112,9 @@ Kill all `ag-mode' buffers other than the current buffer.
 
 ;;;***
 
-;;;### (autoloads nil nil ("ag-pkg.el") (21299 46537 144147 0))
-
-;;;***
-
-(provide 'ag-autoloads)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
-;; coding: utf-8
 ;; End:
 ;;; ag-autoloads.el ends here
