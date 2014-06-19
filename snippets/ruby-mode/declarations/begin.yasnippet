@@ -4,7 +4,7 @@
 # expand-env: ((yas/indent-line 'fixed))
 # --
 begin
+  $3
+rescue ${1:Exception} => ${2:e}
   $0
-rescue ${1:Exception}${2:$(if (> (length text) 0) " => " "")}${2:error}
-  
 end
