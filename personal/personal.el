@@ -17,8 +17,8 @@
 ;; No thanks to flyspell mode being on by default
 (setq prelude-flyspell nil)
 
-;; Auto cleans whitespace
-(setq prelude-clean-whitespace-on-save t)
+;; Don't auto clean whitespace, we'll let ws-butler deal with it
+(setq prelude-clean-whitespace-on-save nil)
 
 ;; Show whitespace
 (setq prelude-whitespace nil)
@@ -1191,7 +1191,9 @@ This function is intended to be used as a value of `ring-bell-function'."
                             discover pig-mode nyan-mode popwin
                             robe company nginx-mode
                             idle-highlight-mode hungry-delete
-                            flycheck))
+                            flycheck ws-butler))
+
+(add-hook 'prog-mode-hook 'ws-butler-mode)
 
 (add-hook 'visual-line-mode-hook 'adaptive-wrap-prefix-mode)
 (setq adaptive-wrap-extra-indent 4)
