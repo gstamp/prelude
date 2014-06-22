@@ -791,7 +791,7 @@
 ;;;; Setup: Ruby
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(rinari rspec-mode bundler ruby-mode ruby-tools company company-inf-ruby ruby-hash-syntax ruby-refactor projectile-rails))
+(prelude-require-packages '(rinari rspec-mode bundler ruby-mode ruby-tools company company-inf-ruby ruby-hash-syntax ruby-refactor projectile-rails adaptive-wrap))
 
 (setq projectile-rails-keymap-prefix (kbd "C-c C-f"))
 
@@ -1189,14 +1189,18 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-require-packages '(cucumber-goto-step visual-regexp
                             discover pig-mode nyan-mode popwin
-                            adaptive-wrap robe company
-                            nginx-mode idle-highlight-mode
-                            hungry-delete))
+                            robe company nginx-mode
+                            idle-highlight-mode hungry-delete
+                            flycheck))
+
+(add-hook 'visual-line-mode-hook 'adaptive-wrap-prefix-mode)
+(setq adaptive-wrap-extra-indent 4)
 
 (add-hook 'ruby-mode-hook 'robe-mode)
 (eval-after-load 'company-mode
   '(progn
      (push 'company-robe company-backends)))
+(setq flycheck-disabled-checkers '(ruby-rubocop))
 
 ;; Smartline setup
 (setq sml/theme 'dark)
