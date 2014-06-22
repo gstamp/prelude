@@ -848,7 +848,8 @@
             (define-key ruby-mode-map (kbd "M-\"") 'rspec-run-and-arrange)
             ;; RSpec settings for greater good.
             (setq rspec-use-rake-flag nil)
-            (setq rspec-use-bundler-when-possible 't)))
+            (setq rspec-use-bundler-when-possible 't)
+            (setq flycheck-disabled-checkers '(ruby-rubocop))))
 
 (setq ruby-refactor-add-parens +1)
 
@@ -1191,7 +1192,7 @@ This function is intended to be used as a value of `ring-bell-function'."
                             discover pig-mode nyan-mode popwin
                             robe company nginx-mode
                             idle-highlight-mode hungry-delete
-                            flycheck ws-butler))
+                            ws-butler))
 
 (add-hook 'prog-mode-hook 'ws-butler-mode)
 
@@ -1202,7 +1203,6 @@ This function is intended to be used as a value of `ring-bell-function'."
 (eval-after-load 'company-mode
   '(progn
      (push 'company-robe company-backends)))
-(setq flycheck-disabled-checkers '(ruby-rubocop))
 
 ;; Smartline setup
 (setq sml/theme 'dark)
