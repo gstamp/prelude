@@ -120,6 +120,12 @@
 
 (setq feature-cucumber-command "bundle exec cucumber {options} {feature}")
 
+;; Why are we setting the shell explicitly? I'm glad you
+;; asked. zsh has this habit of prepending standard paths
+;; onto the PATH environment variable. This means we
+;; frequently end up using the wrong version of ruby.
+(setq shell-file-name "/bin/bash")
+
 (when (equal system-type 'darwin)
   (progn
     ;; map meta to the command key on mac
