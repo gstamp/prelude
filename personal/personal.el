@@ -31,11 +31,7 @@
 ;; formats a region. We want spaces.
 (setq-default intent-tabs-mode nil)
 
-;; Setup flx (https://github.com/lewang/flx)
-(require 'flx-ido)
-(flx-ido-mode 1)
-;; disable ido faces to see flx highlights.
-(setq ido-use-faces nil)
+(ido-everywhere 1)
 
 ;; Indenting defaults
 (setq nxml-child-indent 4)
