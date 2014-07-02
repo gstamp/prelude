@@ -106,6 +106,8 @@
 ;; Emacs starter kit turns on flyspell by default but I prefer it off
 (remove-hook 'text-mode-hook 'turn-on-flyspell)
 
+(setq ag-reuse-buffers t)
+
 ;; Redraw more frequently
 (setq redisplay-dont-pause 't)
 
