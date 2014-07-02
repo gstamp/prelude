@@ -4,6 +4,7 @@
 (setq mc/cmds-to-run-for-all
       '(
         end-of-visual-line
+        go-mode-insert-and-indent
         kill-region
         org-delete-char
         org-force-self-insert
@@ -24,5 +25,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+        ns-handle-scroll-bar-event
         smex
+        undo-tree-visualize
         ))
