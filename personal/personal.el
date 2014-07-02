@@ -406,6 +406,11 @@
   (insert char)
   (if (< 0 arg) (forward-char -1)))
 
+(defun select-method()
+  (local-set-key (kbd "M-h") #'mark-defun))
+
+(add-hook 'prog-mode-hook 'select-method)
+
 (defun finder ()
   "Open the current working directory in finder."
   (interactive)
