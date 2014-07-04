@@ -1202,7 +1202,7 @@ This function is intended to be used as a value of `ring-bell-function'."
                             discover pig-mode nyan-mode popwin
                             robe company nginx-mode
                             idle-highlight-mode hungry-delete
-                            ws-butler mkdown ansible))
+                            ws-butler mkdown ansible auto-dim-other-buffers))
 
 (add-hook 'prog-mode-hook 'ws-butler-mode)
 
