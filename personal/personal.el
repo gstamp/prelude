@@ -198,7 +198,7 @@
                                                  "BOXEN_SRC_DIR"))
 
           (exec-path-from-shell-initialize)
-          (set-face-attribute 'default nil :font "Monaco-14")
+          (set-face-attribute 'default nil :font "Meslo LG M DZ" :weight 'bold :height 140)
           (set-frame-size (selected-frame) 124 40)))))
 
 ;; Open the buffer list in the same window
