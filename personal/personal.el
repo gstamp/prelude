@@ -1195,6 +1195,27 @@ This function is intended to be used as a value of `ring-bell-function'."
 (add-hook 'go-mode-hook '(lambda ()
                            (local-set-key (kbd "C-c C-k") 'godoc)))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Theme adjustments
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(custom-theme-set-variables
+ 'sanityinc-tomorrow-eighties
+ '(fringe-mode 10 nil (fringe))
+ '(linum-format     " %6d "  ))
+
+
+(custom-theme-set-faces
+ 'sanityinc-tomorrow-eighties
+ '(linum                               ((t (:foreground "#ffffff"  :background "#6a6a6a" :height 120 :weight light))))
+ '(minibuffer-prompt                   ((t (:foreground "#ffffff"  :background "#F20211" :height 180 ))))
+ ;;'(mode-line                           ((t (:foreground "#777777"  :background "#111111" :weight light :box nil :height 125 :inherit (variable-pitch) ))))
+ '(mode-line                           ((t (:foreground "#777777"  :background "#303030" :weight light :box nil :height 125 :inherit (variable-pitch) ))))
+ '(fringe                              ((t (                       :background "#4a4a4a"                                               ))))
+ )
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Misc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
