@@ -696,7 +696,7 @@
 ;;;; Setup: Helm/Projectile
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq projectile-completion-system 'grizzl)
+(setq projectile-completion-system 'ido)
 
 ;; Appears to be buggy for me so switch off
 (setq projectile-rails-expand-snippet nil)
