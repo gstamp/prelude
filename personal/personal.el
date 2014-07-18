@@ -626,7 +626,9 @@
 
 ;; Just use 'e' to enter edit mode
 (define-key dired-mode-map (kbd "e") 'wdired-change-to-wdired-mode)
-(define-key ag-mode-map (kbd "e") 'wgrep-change-to-wgrep-mode)
+(eval-after-load 'ag
+  (lambda ()
+    (define-key ag-mode-map (kbd "e") 'wgrep-change-to-wgrep-mode)))
 
 ;; Move more quickly
 (global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (line-move 5))))
