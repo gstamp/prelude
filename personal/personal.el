@@ -722,11 +722,6 @@
 
 (eval-after-load 'multiple-cursors-autoloads
   '(progn
-
-     (key-chord-define-global ";l" 'mc/edit-lines)
-     (key-chord-define-global ";e" 'mc/edit-ends-of-lines)
-     (key-chord-define-global ";a" 'mc/edit-beginnings-of-lines)
-
      (global-set-key (kbd "C->") 'mc/mark-next-like-this)
      (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
      (global-set-key (kbd "C-*") 'mc/mark-all-dwim)
