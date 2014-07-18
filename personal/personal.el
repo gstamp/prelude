@@ -624,21 +624,15 @@
 ;; Repeat (default of C-x z is very hard to type)
 (global-set-key (kbd "s-.") 'repeat)
 
+;; Just use 'e' to enter edit mode
+(define-key dired-mode-map (kbd "e") 'wdired-change-to-wdired-mode)
+(define-key ag-mode-map (kbd "e") 'wgrep-change-to-wgrep-mode)
+
 ;; Move more quickly
 (global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (line-move 5))))
 (global-set-key (kbd "C-S-p") (lambda () (interactive) (ignore-errors (line-move -5))))
 (global-set-key (kbd "C-S-f") (lambda () (interactive) (ignore-errors (forward-char 5))))
 (global-set-key (kbd "C-S-b") (lambda () (interactive) (ignore-errors (backward-char 5))))
-
-;; This adds an extra keybinding to interactive search (C-s) that runs
-;; occur on the current search string/regexp, immediately showing all
-;; hits in the entire buffer.  I use it all the time now.
-;; (define-key isearch-mode-map (kbd "C-o")
-;;   (lambda ()
-;;     (interactive)
-;;     (let ((case-fold-search isearch-case-fold-search))
-;;       (occur (if isearch-regexp isearch-string
-;;                (regexp-quote isearch-string))))))
 
 (global-set-key (kbd "M-g M-i") 'prelude-indent-defun)
 
