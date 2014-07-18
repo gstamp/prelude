@@ -1219,7 +1219,11 @@ This function is intended to be used as a value of `ring-bell-function'."
                             discover pig-mode nyan-mode popwin
                             robe company nginx-mode
                             idle-highlight-mode hungry-delete
-                            ws-butler mkdown ansible auto-dim-other-buffers))
+                            ws-butler mkdown ansible auto-dim-other-buffers
+                            flycheck-tip))
+
+(require 'flycheck-tip) ; force load
+(flycheck-tip-use-timer 'verbose)
 
 (add-hook 'prog-mode-hook 'ws-butler-mode)
 
