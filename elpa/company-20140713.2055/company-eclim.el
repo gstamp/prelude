@@ -32,7 +32,7 @@
 
 (require 'company)
 (require 'company-template)
-(eval-when-compile (require 'cl))
+(require 'cl-lib)
 
 (defgroup company-eclim nil
   "Completion back-end for Eclim."
@@ -40,12 +40,12 @@
 
 (defun company-eclim-executable-find ()
   (let (file)
-    (dolist (eclipse-root '("/Applications/eclipse" "/usr/lib/eclipse"
+    (cl-dolist (eclipse-root '("/Applications/eclipse" "/usr/lib/eclipse"
                             "/usr/local/lib/eclipse"))
       (and (file-exists-p (setq file (expand-file-name "plugins" eclipse-root)))
            (setq file (car (last (directory-files file t "^org.eclim_"))))
            (file-exists-p (setq file (expand-file-name "bin/eclim" file)))
-           (return file)))))
+           (cl-return file)))))
 
 (defcustom company-eclim-executable
   (or (executable-find "eclim") (company-eclim-executable-find))
@@ -60,11 +60,9 @@ eclim can only complete correctly when the buffer has been saved."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar company-eclim--project-dir 'unknown)
-(make-variable-buffer-local 'company-eclim--project-dir)
+(defvar-local company-eclim--project-dir 'unknown)
 
-(defvar company-eclim--project-name nil)
-(make-variable-buffer-local 'company-eclim--project-name)
+(defvar-local company-eclim--project-name nil)
 
 (declare-function json-read "json")
 (defvar json-array-type)
@@ -92,7 +90,7 @@ eclim can only complete correctly when the buffer has been saved."
       (setq company-eclim--project-dir
             (directory-file-name
              (expand-file-name
-              (company-locate-dominating-file buffer-file-name ".project"))))
+              (locate-dominating-file buffer-file-name ".project"))))
     company-eclim--project-dir))
 
 (defun company-eclim--project-name ()
@@ -100,9 +98,9 @@ eclim can only complete correctly when the buffer has been saved."
       (let ((dir (company-eclim--project-dir)))
         (when dir
           (setq company-eclim--project-name
-                (loop for project in (company-eclim--project-list)
-                      when (equal (cdr (assoc 'path project)) dir)
-                      return (cdr (assoc 'name project))))))))
+                (cl-loop for project in (company-eclim--project-list)
+                         when (equal (cdr (assoc 'path project)) dir)
+                         return (cdr (assoc 'name project))))))))
 
 (defun company-eclim--candidates (prefix)
   (interactive "d")
@@ -134,7 +132,7 @@ eclim can only complete correctly when the buffer has been saved."
       (all-completions prefix completions))))
 
 (defun company-eclim--search-point (prefix)
-  (if (or (plusp (length prefix)) (eq (char-before) ?.))
+  (if (or (cl-plusp (length prefix)) (eq (char-before) ?.))
       (1- (point))
     (point)))
 
@@ -163,7 +161,7 @@ Eclim version 1.7.13 or newer (?) is required.
 Completions only work correctly when the buffer has been saved.
 `company-eclim-auto-save' determines whether to do this automatically."
   (interactive (list 'interactive))
-  (case command
+  (cl-case command
     (interactive (company-begin-backend 'company-eclim))
     (prefix (and (derived-mode-p 'java-mode 'jde-mode)
                  buffer-file-name

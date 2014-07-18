@@ -1,6 +1,6 @@
-;;; company-dabbrev.el --- dabbrev-like company-mode completion back-end
+;;; company-dabbrev.el --- dabbrev-like company-mode completion back-end  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2009, 2011  Free Software Foundation, Inc.
+;; Copyright (C) 2009, 2011, 2014  Free Software Foundation, Inc.
 
 ;; Author: Nikolaj Schumacher
 
@@ -26,7 +26,7 @@
 ;;; Code:
 
 (require 'company)
-(eval-when-compile (require 'cl))
+(require 'cl-lib)
 
 (defgroup company-dabbrev nil
   "dabbrev-like completion back-end."
@@ -64,7 +64,8 @@ If you set this value to nil, you may also want to set
 `company-dabbrev-ignore-case' to any value other than `keep-prefix'.")
 
 (defcustom company-dabbrev-minimum-length (1+ company-minimum-prefix-length)
-  "The minimum length for the string to be included.")
+  "The minimum length for the string to be included."
+  :type 'integer)
 
 (defmacro company-dabrev--time-limit-while (test start limit &rest body)
   (declare (indent 3) (debug t))
@@ -73,7 +74,7 @@ If you set this value to nil, you may also want to set
        (while ,test
          ,@body
          (and ,limit
-              (eq (incf company-time-limit-while-counter) 25)
+              (eq (cl-incf company-time-limit-while-counter) 25)
               (setq company-time-limit-while-counter 0)
               (> (float-time (time-since ,start)) ,limit)
               (throw 'done 'company-time-out))))))
@@ -108,35 +109,37 @@ If you set this value to nil, you may also want to set
             (push match symbols))))
       symbols)))
 
-(defun company-dabbrev--search (regexp &optional limit other-buffers
+(defun company-dabbrev--search (regexp &optional limit other-buffer-modes
                                 ignore-comments)
   (let* ((start (current-time))
          (symbols (company-dabbrev--search-buffer regexp (point) nil start limit
                                                   ignore-comments)))
-    (when other-buffers
-      (dolist (buffer (delq (current-buffer) (buffer-list)))
-        (and (or (eq other-buffers 'all)
-                 (eq (buffer-local-value 'major-mode buffer) major-mode))
-             (with-current-buffer buffer
-               (setq symbols
-                     (company-dabbrev--search-buffer regexp nil symbols start
-                                                     limit ignore-comments))))
+    (when other-buffer-modes
+      (cl-dolist (buffer (delq (current-buffer) (buffer-list)))
+        (with-current-buffer buffer
+          (when (or (eq other-buffer-modes 'all)
+                    (apply #'derived-mode-p other-buffer-modes))
+            (setq symbols
+                  (company-dabbrev--search-buffer regexp nil symbols start
+                                                  limit ignore-comments))))
         (and limit
              (> (float-time (time-since start)) limit)
-             (return))))
+             (cl-return))))
     symbols))
 
 ;;;###autoload
 (defun company-dabbrev (command &optional arg &rest ignored)
   "dabbrev-like `company-mode' completion back-end."
   (interactive (list 'interactive))
-  (case command
+  (cl-case command
     (interactive (company-begin-backend 'company-dabbrev))
     (prefix (company-grab-word))
     (candidates
      (let ((words (company-dabbrev--search (company-dabbrev--make-regexp arg)
-                                         company-dabbrev-time-limit
-                                         company-dabbrev-other-buffers))
+                                           company-dabbrev-time-limit
+                                           (pcase company-dabbrev-other-buffers
+                                             (`t (list major-mode))
+                                             (`all `all))))
            (downcase-p (if (eq company-dabbrev-downcase 'case-replace)
                            case-replace
                          company-dabbrev-downcase)))

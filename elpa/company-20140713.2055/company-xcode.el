@@ -26,7 +26,7 @@
 ;;; Code:
 
 (require 'company)
-(eval-when-compile (require 'cl))
+(require 'cl-lib)
 
 (defgroup company-xcode nil
   "Completion back-end for Xcode projects."
@@ -62,8 +62,7 @@ valid in most contexts."
               (const "Structure") (const "Type") (const "Union")
               (const "Variable") (const "Function")))
 
-(defvar company-xcode-project 'unknown)
-(make-variable-buffer-local 'company-xcode-project)
+(defvar-local company-xcode-project 'unknown)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -109,7 +108,7 @@ valid in most contexts."
 (defun company-xcode (command &optional arg &rest ignored)
   "`company-mode' completion back-end for Xcode projects."
   (interactive (list 'interactive))
-  (case command
+  (cl-case command
     (interactive (company-begin-backend 'company-xcode))
     (prefix (and company-xcode-xcodeindex-executable
                  (company-xcode-tags)

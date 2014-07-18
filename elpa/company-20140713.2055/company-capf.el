@@ -25,10 +25,10 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+(require 'company)
+(require 'cl-lib)
 
-(defvar company--capf-data nil)
-(make-variable-buffer-local 'company--capf-data)
+(defvar-local company--capf-data nil)
 
 (defun company--capf-clear-data (&optional _ignore)
   (setq company--capf-data nil)
@@ -36,17 +36,19 @@
   (remove-hook 'company-completion-finished-hook 'company--capf-clear-data t))
 
 (defun company--capf-data ()
-  ;; Ignore tags-completion-at-point-function because it subverts company-etags
-  ;; in the default value of company-backends, where the latter comes later.
-  (letf* (((default-value 'completion-at-point-functions) nil)
-          (data (run-hook-wrapped 'completion-at-point-functions
-                                  ;; Ignore misbehaving functions.
-                                  #'completion--capf-wrapper 'optimist)))
+  (cl-letf* (((default-value 'completion-at-point-functions)
+              ;; Ignore tags-completion-at-point-function because it subverts
+              ;; company-etags in the default value of company-backends, where
+              ;; the latter comes later.
+              (remove 'tags-completion-at-point-function
+                      (default-value 'completion-at-point-functions)))
+             (data (run-hook-wrapped 'completion-at-point-functions
+                                     ;; Ignore misbehaving functions.
+                                     #'completion--capf-wrapper 'optimist)))
     (when (and (consp (cdr data)) (numberp (nth 1 data))) data)))
 
 (defun company-capf (command &optional arg &rest _args)
-  "`company-mode' back-end using `completion-at-point-functions'.
-Requires Emacs 24.1 or newer."
+  "`company-mode' back-end using `completion-at-point-functions'."
   (interactive (list 'interactive))
   (pcase command
     (`interactive (company-begin-backend 'company-capf))

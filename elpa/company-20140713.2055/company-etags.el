@@ -25,8 +25,8 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
 (require 'company)
+(require 'cl-lib)
 (require 'etags)
 
 (defgroup company-etags nil
@@ -40,16 +40,20 @@ buffer automatically."
   :type '(choice (const :tag "off" nil)
                  (const :tag "on" t)))
 
+(defcustom company-etags-ignore-case nil
+  "Non-nil to ignore case in completion candidates."
+  :type 'boolean
+  :package-version '(company . "0.7.3"))
+
 (defvar company-etags-modes '(prog-mode c-mode objc-mode c++-mode java-mode
                               jde-mode pascal-mode perl-mode python-mode))
 
-(defvar company-etags-buffer-table 'unknown)
-(make-variable-buffer-local 'company-etags-buffer-table)
+(defvar-local company-etags-buffer-table 'unknown)
 
 (defun company-etags-find-table ()
-  (let ((file (company-locate-dominating-file (or buffer-file-name
-                                                  default-directory)
-                                              "TAGS")))
+  (let ((file (locate-dominating-file (or buffer-file-name
+                                          default-directory)
+                                      "TAGS")))
     (when file
       (list (expand-file-name file)))))
 
@@ -61,7 +65,7 @@ buffer automatically."
 
 (defun company-etags--candidates (prefix)
   (let ((tags-table-list (company-etags-buffer-table))
-        (completion-ignore-case nil))
+        (completion-ignore-case company-etags-ignore-case))
     (and (or tags-file-name tags-table-list)
          (fboundp 'tags-completion-table)
          (save-excursion
@@ -72,7 +76,7 @@ buffer automatically."
 (defun company-etags (command &optional arg &rest ignored)
   "`company-mode' completion back-end for etags."
   (interactive (list 'interactive))
-  (case command
+  (cl-case command
     (interactive (company-begin-backend 'company-etags))
     (prefix (and (apply 'derived-mode-p company-etags-modes)
                  (not (company-in-string-or-comment))
@@ -83,7 +87,8 @@ buffer automatically."
                 (when (fboundp 'find-tag-noselect)
                   (save-excursion
                     (let ((buffer (find-tag-noselect arg)))
-                      (cons buffer (with-current-buffer buffer (point))))))))))
+                      (cons buffer (with-current-buffer buffer (point))))))))
+    (ignore-case company-etags-ignore-case)))
 
 (provide 'company-etags)
 ;;; company-etags.el ends here

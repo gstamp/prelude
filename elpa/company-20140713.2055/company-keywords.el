@@ -26,7 +26,7 @@
 ;;; Code:
 
 (require 'company)
-(eval-when-compile (require 'cl))
+(require 'cl-lib)
 
 (defun company-keywords-upper-lower (&rest lst)
   ;; Upcase order is different for _.
@@ -203,13 +203,14 @@
      "except" "exec" "finally" "for" "from" "global" "if" "import" "in" "is"
      "lambda" "not" "or" "pass" "print" "raise" "return" "try" "while" "yield")
     (ruby-mode
-     "BEGIN" "END" "alias" "and"  "begin" "break" "case" "class" "def" "defined"
+     "BEGIN" "END" "alias" "and"  "begin" "break" "case" "class" "def" "defined?"
      "do" "else" "elsif"  "end" "ensure" "false" "for" "if" "in" "module"
      "next" "nil" "not" "or" "redo" "rescue" "retry" "return" "self" "super"
      "then" "true" "undef" "unless" "until" "when" "while" "yield")
     ;; aliases
     (js2-mode . javascript-mode)
     (espresso-mode . javascript-mode)
+    (js-mode . javascript-mode)
     (cperl-mode . perl-mode)
     (jde-mode . java-mode))
   "Alist mapping major-modes to sorted keywords for `company-keywords'.")
@@ -218,7 +219,7 @@
 (defun company-keywords (command &optional arg &rest ignored)
   "`company-mode' back-end for programming language keywords."
   (interactive (list 'interactive))
-  (case command
+  (cl-case command
     (interactive (company-begin-backend 'company-keywords))
     (prefix (and (assq major-mode company-keywords-alist)
                  (not (company-in-string-or-comment))

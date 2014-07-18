@@ -26,7 +26,7 @@
 ;;; Code:
 
 (require 'company)
-(eval-when-compile (require 'cl))
+(require 'cl-lib)
 
 (defvar semantic-idle-summary-function)
 (declare-function semantic-documentation-for-tag "semantic/doc" )
@@ -49,22 +49,27 @@
 
 (defvar company-semantic-modes '(c-mode c++-mode jde-mode java-mode))
 
-(defvar company-semantic--current-tags nil
+(defvar-local company-semantic--current-tags nil
   "Tags for the current context.")
 
+(defun company-semantic-documentation-for-tag (tag)
+  (when (semantic-tag-buffer tag)
+    ;; When TAG's buffer is unknown, the function below raises an error.
+    (semantic-documentation-for-tag tag)))
+
 (defun company-semantic-doc-or-summary (tag)
-  (or (semantic-documentation-for-tag tag)
+  (or (company-semantic-documentation-for-tag tag)
       (and (require 'semantic-idle nil t)
            (require 'semantic/idle nil t)
            (funcall semantic-idle-summary-function tag nil t))))
 
 (defun company-semantic-summary-and-doc (tag)
-  (let ((doc (semantic-documentation-for-tag tag))
+  (let ((doc (company-semantic-documentation-for-tag tag))
         (summary (funcall semantic-idle-summary-function tag nil t)))
     (and (stringp doc)
          (string-match "\n*\\(.*\\)$" doc)
          (setq doc (match-string 1 doc)))
-    (concat (funcall semantic-idle-summary-function tag nil t)
+    (concat summary
             (when doc
                   (if (< (+ (length doc) (length summary) 4) (window-width))
                       " -- "
@@ -72,7 +77,7 @@
             doc)))
 
 (defun company-semantic-doc-buffer (tag)
-  (let ((doc (semantic-documentation-for-tag tag)))
+  (let ((doc (company-semantic-documentation-for-tag tag)))
     (when doc
       (company-doc-buffer
        (concat (funcall semantic-idle-summary-function tag nil t)
@@ -115,7 +120,7 @@ Symbols are chained by \".\" or \"->\"."
 (defun company-semantic (command &optional arg &rest ignored)
   "`company-mode' completion back-end using CEDET Semantic."
   (interactive (list 'interactive))
-  (case command
+  (cl-case command
     (interactive (company-begin-backend 'company-semantic))
     (prefix (and (featurep 'semantic)
                  (semantic-active-p)
