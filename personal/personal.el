@@ -698,7 +698,7 @@
 (setq projectile-rails-expand-snippet nil)
 
 (global-set-key (kbd "C-x o") 'projectile-find-file)
-(global-set-key (kbd "C-x C-o") 'helm-projectile)
+(global-set-key (kbd "C-x C-o") 'helm-prelude)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Bookmark Mode
