@@ -1,11 +1,10 @@
 ;;; rspec-mode-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-
+(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads (rspec-enable-appropriate-mode rspec-buffer-is-spec-p
-;;;;;;  rspec-dired-mode rspec-verifiable-mode rspec-mode) "rspec-mode"
-;;;;;;  "rspec-mode.el" (21264 2982 0 0))
+;;;### (autoloads nil "rspec-mode" "rspec-mode.el" (21452 39174 0
+;;;;;;  0))
 ;;; Generated autoloads from rspec-mode.el
 
 (autoload 'rspec-mode "rspec-mode" "\
@@ -39,16 +38,14 @@ Returns true if the current buffer is a spec
 
 ;;;***
 
-;;;### (autoloads nil nil ("rspec-mode-pkg.el") (21264 2982 162421
+;;;### (autoloads nil nil ("rspec-mode-pkg.el") (21452 39174 822410
 ;;;;;;  0))
 
 ;;;***
 
-(provide 'rspec-mode-autoloads)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
-;; coding: utf-8
 ;; End:
 ;;; rspec-mode-autoloads.el ends here
