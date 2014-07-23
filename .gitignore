@@ -22,3 +22,5 @@ personal/work.el
 /.org-id-locations
 /elpa/archives/gnu/archive-contents
 /elpa/archives/melpa/archive-contents
+tramp
+/var/pcache

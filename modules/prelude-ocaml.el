@@ -1,8 +1,8 @@
-;;; prelude-scheme.el --- Emacs Prelude: Some defaults for Scheme.
+;;; prelude-ocaml.el --- Emacs Prelude: decent Perl coding settings.
 ;;
-;; Copyright © 2011-2013 Bozhidar Batsov
+;; Copyright © 2014 Geoff Shannon
 ;;
-;; Author: Bozhidar Batsov <bozhidar@batsov.com>
+;; Author: Geoff Shannon <geoffpshannon@gmail.com>
 ;; URL: https://github.com/bbatsov/prelude
 ;; Version: 1.0.0
 ;; Keywords: convenience
@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Some basic configuration for Scheme programming.
+;; tuareg is the preferred ocaml mode for Emacs
 
 ;;; License:
 
@@ -31,20 +31,28 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Code:
-(prelude-require-package 'geiser)
 
-(require 'prelude-lisp)
-(require 'geiser)
+(prelude-require-packages '(tuareg utop merlin))
 
-;; geiser replies on a REPL to provide autodoc and completion
-(setq geiser-mode-start-repl-p t)
+(require 'tuareg)
+(require 'utop)
+(require 'merlin)
 
-;; keep the home clean
-(setq geiser-repl-history-filename
-      (expand-file-name "geiser-history" prelude-savefile-dir))
+(add-hook 'tuareg-mode-hook 'tuareg-imenu-set-imenu)
 
-(add-hook 'scheme-mode-hook (lambda () (run-hooks 'prelude-lisp-coding-hook)))
+(setq auto-mode-alist
+      (append '(("\\.ml[ily]?\\'" . tuareg-mode)
+                ("\\.topml\\'" . tuareg-mode))
+              auto-mode-alist))
 
-(provide 'prelude-scheme)
+(autoload 'utop-setup-ocaml-buffer "utop" "Toplevel for OCaml" t)
 
-;;; prelude-scheme.el ends here
+(add-hook 'tuareg-mode-hook 'utop-setup-ocaml-buffer)
+(add-hook 'tuareg-mode-hook 'merlin-mode)
+
+(setq utop-command "opam config exec \"utop -emacs\""
+      merlin-error-after-save nil)
+
+(provide 'prelude-ocaml)
+
+;;; prelude-ocaml.el ends here
