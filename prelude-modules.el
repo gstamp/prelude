@@ -11,7 +11,6 @@
 (require 'prelude-erc)
 ;; (require 'prelude-erlang)
 ;; (require 'prelude-go) seems broken because of projectile-go
-;; (require 'prelude-haskell)
 (require 'prelude-helm)
 (require 'prelude-ido)
 (require 'prelude-js)
