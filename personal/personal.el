@@ -420,7 +420,7 @@
 
 (defalias 'iwb 'prelude-indent-buffer)
 
-(global-set-key [home] 'prelude-move-beginning-of-line)
+(global-set-key [home] (kbd "C-a"))
 
 (defadvice kill-ring-save (before slick-copy activate compile)
   "When called interactively with no active region, copy the current line."
