@@ -195,7 +195,8 @@
                                                  "BOXEN_REDIS_URL"
                                                  "BOXEN_SETUP_VERSION"
                                                  "BOXEN_SOCKET_DIR"
-                                                 "BOXEN_SRC_DIR"))
+                                                 "BOXEN_SRC_DIR"
+                                                 "GOPATH"))
 
           (exec-path-from-shell-initialize)
           (set-face-attribute 'default nil :font "Meslo LG M DZ" :weight 'bold :height 140)
