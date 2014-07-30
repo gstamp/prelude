@@ -1229,9 +1229,6 @@ This function is intended to be used as a value of `ring-bell-function'."
 
 (add-hook 'ruby-mode-hook 'robe-mode)
 (add-hook 'ruby-mode-hook 'company-mode)
-(eval-after-load 'company-mode
-  '(progn
-     (push 'company-robe company-backends)))
 
 ;; Smartline setup
 (setq sml/theme 'dark)
