@@ -350,7 +350,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-ensure-module-deps '(ag wgrep-ag))
 
-(global-set-key [f2] 'ag-project-regexp)
+(global-set-key [f2] 'projectile-ag)
 (global-set-key [(meta f2)] 'ag-project)
 
 (setq ag-arguments (list "--ignore-case" "--nogroup" "--column" "--"))
