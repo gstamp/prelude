@@ -851,6 +851,9 @@
             (setq rspec-use-bundler-when-possible 't)
             (setq flycheck-disabled-checkers '(ruby-rubocop))))
 
+;; Use preludes beginning of line for virual-line-mode
+(define-key visual-line-mode-map [remap move-beginning-of-line] 'prelude-move-beginning-of-line)
+
 (setq ruby-refactor-add-parens +1)
 
 (defun ruby-convert-json-to-hash (startPos endPos)
