@@ -544,7 +544,6 @@
   (eval-buffer)
   (ert 't)
   )
-(global-set-key [f5] 'ert-run)
 
 (defun url-humanify ()
   "Take the URL at point and make it human readable."
