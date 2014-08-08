@@ -600,13 +600,14 @@
 (global-set-key [f1] 'ido-switch-buffer)
 (global-set-key [f3] 'kmacro-start-macro-or-insert-counter)
 (global-set-key [f4] 'kmacro-end-or-call-macro)
+(global-set-key [f6] 'highlight-symbol-at-point)
+(global-set-key [(shift f6)] 'unhighlight-regexp)
 (global-set-key [M-f10] (quote toggle-frame-fullscreen))
 (global-set-key [f10] 'toggle-frame-maximized)
 (global-set-key [f11] 'ido-kill-buffer)
 
 (global-set-key [(control f4)] 'kill-this-buffer)
 (global-set-key [(control f5)] 'linum-mode)
-(global-set-key [(control f6)] 'highlight-symbol-at-point)
 
 ;; Turn on the menu bar for exploring new modes
 (global-set-key (kbd "C-<f10>") 'menu-bar-mode)
