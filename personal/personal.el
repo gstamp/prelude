@@ -846,7 +846,9 @@
           (lambda ()
             (visual-line-mode)
             (ruby-refactor-mode-launch)
-            (define-key ruby-mode-map (kbd "M-\"") 'rspec-run-and-arrange)
+            (define-key ruby-mode-map (kbd "S-<f5>") 'rspec-run-and-arrange)
+            (define-key ruby-mode-map (kbd "<f5>") 'rspec-verify)
+            (define-key ruby-mode-map (kbd "M-<f5>") 'rspec-verify-all)
             ;; RSpec settings for greater good.
             (setq rspec-use-rake-flag nil)
             (setq rspec-use-bundler-when-possible 't)
