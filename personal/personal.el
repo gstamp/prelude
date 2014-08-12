@@ -777,7 +777,7 @@
 ;;;; Setup: Clojure
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(clojure-mode cider align-cljlet))
+(prelude-require-packages '(clojure-mode cider cider-browse-ns cider-decompile cider-tracing align-cljlet company-cider))
 
 (eval-after-load 'clojure-mode
   '(define-key clojure-mode-map (kbd "C-c C-a") 'align-cljlet))

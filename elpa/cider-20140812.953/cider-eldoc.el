@@ -1,7 +1,7 @@
 ;;; cider-eldoc.el --- eldoc support for Clojure -*- lexical-binding: t -*-
 
-;; Copyright © 2012-2013 Tim King, Phil Hagelberg
-;; Copyright © 2013 Bozhidar Batsov, Hugo Duncan, Steve Purcell
+;; Copyright © 2012-2014 Tim King, Phil Hagelberg
+;; Copyright © 2013-2014 Bozhidar Batsov, Hugo Duncan, Steve Purcell
 ;;
 ;; Author: Tim King <kingtim@gmail.com>
 ;;         Phil Hagelberg <technomancy@gmail.com>
@@ -36,7 +36,7 @@
 (require 'eldoc)
 (require 'dash)
 
-(defvar cider-extra-eldoc-commands '("cider-complete" "yas/expand")
+(defvar cider-extra-eldoc-commands '("yas-expand")
   "Extra commands to be added to eldoc's safe commands list.")
 
 (defun cider-eldoc-format-thing (thing)
@@ -76,7 +76,9 @@ POS is the index of the argument to highlight."
 POS is the index of current argument."
   (concat "("
           (mapconcat (lambda (args) (cider-highlight-arglist args pos))
-                     (read arglist) " ") ")"))
+                     arglist
+                     " ")
+          ")"))
 
 (defun cider-eldoc-info-in-current-sexp ()
   "Return a list of the current sexp and the current argument index."
@@ -90,21 +92,31 @@ POS is the index of current argument."
           nil
         (list (cider-symbol-at-point) argument-index)))))
 
+(defun cider-eldoc-arglist (thing)
+  "Return the arglist for THING."
+  (when (nrepl-op-supported-p "info")
+    (let* ((var-info (cider-var-info thing t))
+           (candidates (cdadr (assoc "candidates" var-info))))
+      (if candidates
+          (->> candidates
+            (-map (lambda (x) (cdr (assoc "arglists-str" x))))
+            (-map 'read)
+            -flatten
+            -distinct)
+        (let ((arglists (cider-get-var-attr var-info "arglists-str")))
+          (when arglists
+            (read arglists)))))))
+
 (defun cider-eldoc ()
   "Backend function for eldoc to show argument list in the echo area."
-  (when (cider-connected-p)
+  (when (and (cider-connected-p)
+             ;; don't clobber an error message in the minibuffer
+             (not (member last-command '(next-error previous-error))))
     (let* ((info (cider-eldoc-info-in-current-sexp))
            (thing (car info))
            (pos (cadr info))
-           (form (format "(try
-                           (:arglists
-                            (clojure.core/meta
-                             (clojure.core/resolve
-                              (clojure.core/read-string \"%s\"))))
-                           (catch Throwable t nil))" thing))
-           (value (when thing
-                    (cider-get-raw-value (cider-tooling-eval-sync form nrepl-buffer-ns)))))
-      (unless (string= value "nil")
+           (value (cider-eldoc-arglist thing)))
+      (when value
         (format "%s: %s"
                 (cider-eldoc-format-thing thing)
                 (cider-eldoc-format-arglist value pos))))))
@@ -116,4 +128,5 @@ POS is the index of current argument."
   (eldoc-mode +1))
 
 (provide 'cider-eldoc)
-;;; cider-eldoc ends here
+
+;;; cider-eldoc.el ends here
