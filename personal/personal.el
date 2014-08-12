@@ -1219,7 +1219,7 @@ This function is intended to be used as a value of `ring-bell-function'."
                             robe company nginx-mode
                             idle-highlight-mode hungry-delete
                             ws-butler mkdown ansible auto-dim-other-buffers
-                            flycheck-tip emmet-mode))
+                            flycheck-tip emmet-mode htmlize))
 
 (require 'flycheck-tip) ; force load
 (flycheck-tip-use-timer 'verbose)
