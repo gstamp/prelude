@@ -37,6 +37,9 @@
 (setq nxml-child-indent 4)
 (setq lua-indent-level 4)
 
+;; Why you keep prompting me emacs?
+(setq tags-revert-without-query 1)
+
 ;; Allow emacs to access the x clipboard
 (setq x-select-enable-clipboard t)
 
