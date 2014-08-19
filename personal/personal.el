@@ -1219,7 +1219,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-require-packages '(cucumber-goto-step visual-regexp
                             discover pig-mode nyan-mode popwin
-                            robe company nginx-mode
+                            company nginx-mode
                             idle-highlight-mode hungry-delete
                             ws-butler mkdown ansible auto-dim-other-buffers
                             flycheck-tip emmet-mode htmlize))
@@ -1232,7 +1232,6 @@ This function is intended to be used as a value of `ring-bell-function'."
 (add-hook 'visual-line-mode-hook 'adaptive-wrap-prefix-mode)
 (setq adaptive-wrap-extra-indent 4)
 
-(add-hook 'ruby-mode-hook 'robe-mode)
 (add-hook 'ruby-mode-hook 'company-mode)
 
 ;; Smartline setup
