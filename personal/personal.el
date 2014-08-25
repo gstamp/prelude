@@ -1224,6 +1224,10 @@ This function is intended to be used as a value of `ring-bell-function'."
                             ws-butler mkdown ansible auto-dim-other-buffers
                             flycheck-tip emmet-mode htmlize))
 
+(require 'auto-highlight-symbol)
+
+(global-auto-highlight-symbol-mode)
+
 (require 'flycheck-tip) ; force load
 (flycheck-tip-use-timer 'verbose)
 
