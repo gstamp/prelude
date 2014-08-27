@@ -848,6 +848,41 @@
           (lambda ()
             (visual-line-mode)
             (ruby-refactor-mode-launch)
+
+            ;; Hack rspec so we can close the rspec popup when finished
+            (require 'rspec-mode)
+            (defun rspec-handle-complete (&rest ignore)
+              (save-excursion
+                (goto-char (point-max))
+                (if (save-excursion
+                        (forward-line -15)
+                        (search-forward "0 failures" nil t))
+                    (progn
+                      (popwin:close-popup-window)
+                      (message "%s" (propertize "All green. Super!" 'face '(:foreground "green"))))
+                  (progn
+                    (popwin:select-popup-window)
+                    (popwin:one-window)
+                    (message "%s" (propertize "Oh noes!!! failures!" 'face '(:foreground "red")))
+                    ))))
+            (define-derived-mode rspec-compilation-mode compilation-mode "RSpec Compilation"
+              "Compilation mode for RSpec output."
+              (set (make-local-variable 'compilation-error-regexp-alist)
+                   (append '(rspec rspec-capybara-html rspec-capybara-screenshot)
+                           compilation-error-regexp-alist))
+              (set (make-local-variable 'compilation-error-regexp-alist-alist)
+                   (append '((rspec-capybara-html
+                              "Saved file \\([0-9A-Za-z@_./\:-]+\\.html\\)" 1 nil nil 0 1)
+                             (rspec-capybara-screenshot
+                              "Screenshot: \\([0-9A-Za-z@_./\:-]+\\.png\\)" 1 nil nil 0 1)
+                             (rspec
+                              "rspec +\\([0-9A-Za-z@_./\:-]+\\.rb\\):\\([0-9]+\\)" 1 2 nil 2 1))
+                           compilation-error-regexp-alist-alist))
+              (setq font-lock-defaults '(rspec-compilation-mode-font-lock-keywords t))
+              (add-hook 'compilation-filter-hook 'rspec-colorize-compilation-buffer nil t)
+              (add-hook 'compilation-finish-functions 'rspec-handle-error nil t)
+              (add-hook 'compilation-finish-functions 'rspec-handle-complete nil t))
+
             (define-key ruby-mode-map (kbd "S-<f5>") 'rspec-run-and-arrange)
             (define-key ruby-mode-map (kbd "<f5>") 'rspec-verify)
             (define-key ruby-mode-map (kbd "M-<f5>") 'rspec-verify-all)
