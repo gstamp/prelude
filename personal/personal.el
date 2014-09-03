@@ -804,6 +804,8 @@
 ;; Enable symbol auto completion
 (setq dabbrev-abbrev-skip-leading-regexp ":")
 
+(setq rspec-command-options "--format progress")
+
 ;; Projecttile rails setup
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
 
