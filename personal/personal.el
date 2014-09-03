@@ -1259,8 +1259,28 @@ This function is intended to be used as a value of `ring-bell-function'."
 
 (setq display-buffer-function 'popwin:display-buffer)
 
+(add-to-list 'popwin:special-display-config '("*ag search*" :noselect t))
 (add-to-list 'popwin:special-display-config '("*rspec-compilation*" :noselect t))
 (add-to-list 'popwin:special-display-config '("*Help*" :noselect t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Shell
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; alias
+(eval-after-load "em-alias"
+  '(progn (eshell/alias "ll" "ls -la $*")
+          (eshell/alias "g" "git $*")
+          (eshell/alias "be" "bundle exec $*")
+          (eshell/alias "gs" "git status")
+          (eshell/alias "gco" "git checkout $*")
+          ))
+
+;; Case? It matters not.
+(setq eshell-cmpl-ignore-case t)
+
+(setq eshell-prompt-regexp "^[^#$]*[$#] ")
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Misc
