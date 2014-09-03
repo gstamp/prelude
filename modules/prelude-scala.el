@@ -36,7 +36,7 @@
 (prelude-require-packages '(scala-mode2))
 
 (defun prelude-scala-mode-defaults ()
-  (subword-mode +1))
+  (superword-mode +1))
 
 (setq prelude-scala-mode-hook 'prelude-scala-mode-defaults)
 

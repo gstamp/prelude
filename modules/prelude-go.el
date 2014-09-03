@@ -73,7 +73,7 @@
        (go-eldoc-setup)
 
        ;; CamelCase aware editing operations
-       (subword-mode +1))
+       (superword-mode +1))
 
      (setq prelude-go-mode-hook 'prelude-go-mode-defaults)
 

@@ -60,7 +60,7 @@
             (file-exists-p (buffer-file-name))
             (file-exists-p (coffee-compiled-file-name (buffer-file-name)))
             (coffee-cos-mode t))
-       (subword-mode +1))
+       (superword-mode +1))
 
      (setq prelude-coffee-mode-hook 'prelude-coffee-mode-defaults)
 

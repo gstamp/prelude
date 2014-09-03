@@ -38,7 +38,7 @@
 (eval-after-load 'haskell-mode
   '(progn
      (defun prelude-haskell-mode-defaults ()
-       (subword-mode +1)
+       (superword-mode +1)
        (turn-on-haskell-doc-mode)
        (turn-on-haskell-indentation))
 
