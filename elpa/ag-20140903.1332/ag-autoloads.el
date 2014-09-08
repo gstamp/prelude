@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "ag" "ag.el" (21410 36486 0 0))
+;;;### (autoloads nil "ag" "ag.el" (21518 14442 0 0))
 ;;; Generated autoloads from ag.el
 
 (autoload 'ag "ag" "\
@@ -15,12 +15,13 @@ If called with a prefix, prompts for flags to pass to ag.
 \(fn STRING DIRECTORY)" t nil)
 
 (autoload 'ag-files "ag" "\
-Search using ag in a given DIRECTORY and file type regex FILE-REGEX
-for a given search STRING, with STRING defaulting to the symbol under point.
+Search using ag in a given DIRECTORY for a given search STRING,
+limited to files that match FILE-TYPE. STRING defaults to
+the symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag.
 
-\(fn STRING FILE-REGEX DIRECTORY)" t nil)
+\(fn STRING FILE-TYPE DIRECTORY)" t nil)
 
 (autoload 'ag-regexp "ag" "\
 Search using ag in a given directory for a given regexp.
@@ -39,12 +40,13 @@ If called with a prefix, prompts for flags to pass to ag.
 \(fn STRING)" t nil)
 
 (autoload 'ag-project-files "ag" "\
-Search using ag in a given DIRECTORY and file type regex FILE-REGEX
-for a given search STRING, with STRING defaulting to the symbol under point.
+Search using ag for a given search STRING,
+limited to files that match FILE-TYPE. STRING defaults to the
+symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag.
 
-\(fn STRING FILE-REGEX)" t nil)
+\(fn STRING FILE-TYPE)" t nil)
 
 (autoload 'ag-project-regexp "ag" "\
 Guess the root of the current project and search it with ag
