@@ -116,23 +116,17 @@ NS specifies the namespace in which to evaluate the request."
 NS & SESSION specify the evaluation context."
   (nrepl-sync-request:eval input ns session))
 
-(defun cider-eval-and-get-value (input &optional ns session)
+(defun cider-sync-eval-and-parse (input &optional ns session)
   "Send the INPUT to the nREPL server synchronously and return the value.
-NS & SESSION specify the evaluation context."
-  (cider-get-value (cider-eval-sync input ns session)))
+NS & SESSION specify the evaluation context.  The output must be a readable
+Emacs list or a vector of other lists and vectors as `read' is used to
+convert the output into an Emacs object."
+  (read (plist-get (cider-eval-sync input ns session) :value)))
 
 (defun cider-tooling-eval-sync (input &optional ns)
   "Send the INPUT to the nREPL server using a tooling session synchronously.
 NS specifies the namespace in which to evaluate the request."
   (cider-eval-sync input ns (nrepl-current-tooling-session)))
-
-(defun cider-get-raw-value (eval-result)
-  "Get the raw value (as string) from EVAL-RESULT."
-  (plist-get eval-result :value))
-
-(defun cider-get-value (eval-result)
-  "Get the value from EVAL-RESULT."
-  (read (cider-get-raw-value eval-result)))
 
 (defun cider-send-op (op attributes handler)
   "Send the specified OP with ATTRIBUTES and response HANDLER."
@@ -168,34 +162,17 @@ loaded."
     (buffer-local-value 'nrepl-repl-buffer
                         (get-buffer (nrepl-current-connection-buffer)))))
 
-(defun cider--dict-to-alist (val)
-  "Transforms a nREPL bdecoded dict VAL into an alist.
-Simply returns it if it's not a dict."
-  (if (and (listp val)
-           (eq (car val) 'dict))
-      (-map '-cons-to-list (cdr val))
-    val))
-
-(defun cider--dict-to-plist (val)
-  "Transforms a nREPL bdecoded dict VAL into a plist with symbol keys.
-Simply returns it if it's not a dict."
-  (if (and (listp val)
-           (eq (car val) 'dict))
-      (-interleave (-map 'intern (-map 'car (cdr val)))
-                   (-map 'cdr (cdr val)))
-    val))
-
 (defun cider--var-choice (var-info)
   "Prompt to choose from among multiple VAR-INFO candidates, if required.
 This is needed only when the symbol queried is an unqualified host platform
 method, and multiple classes have a so-named member.  If VAR-INFO does not
 contain a `candidates' key, it is returned as is."
-  (let ((candidates (cdadr (assoc "candidates" var-info))))
+  (let ((candidates (nrepl-dict-get var-info "candidates")))
     (if candidates
-        (let* ((classes (mapcar (lambda (x) (cdr (assoc "class" x))) candidates))
+        (let* ((classes (nrepl-dict-keys candidates))
                (choice (completing-read "Member in class: " classes nil t))
-               (info (cdr (assoc choice candidates))))
-          (cider--dict-to-alist info))
+               (info (nrepl-dict-get candidates choice)))
+          info)
       var-info)))
 
 (defun cider-var-info (var &optional all)
@@ -210,25 +187,17 @@ unless ALL is truthy."
                                  "ns" (cider-current-ns)
                                  "symbol" var))
                           :value)))
-      (if all
-          (cider--dict-to-alist val)
-        (cider--var-choice
-         (cider--dict-to-alist val))))))
+      (if all val (cider--var-choice val)))))
 
 (defun cider-member-info (class member)
   "Return the CLASS MEMBER's info as an alist with list cdrs."
   (when (and class member)
-    (let ((val (plist-get (nrepl-send-sync-request
-                           (list "op" "info"
-                                 "session" (nrepl-current-session)
-                                 "class" class
-                                 "member" member))
-                          :value)))
-      (cider--dict-to-alist val))))
-
-(defun cider-get-var-attr (var-info attr)
-  "Return VAR-INFO's ATTR."
-  (cadr (assoc attr var-info)))
+    (plist-get (nrepl-send-sync-request
+                (list "op" "info"
+                      "session" (nrepl-current-session)
+                      "class" class
+                      "member" member))
+               :value)))
 
 (provide 'cider-client)
 
