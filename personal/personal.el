@@ -43,9 +43,6 @@
 ;; Allow emacs to access the x clipboard
 (setq x-select-enable-clipboard t)
 
-;; Set the GC limit to 80MB to avoid over GCage.
-(setq gc-cons-threshold 80000000)
-
 ;;  The variable vc-follow-symlinks controls what Emacs does if you
 ;;  try to visit a symbolic link pointing to a version-controlled
 ;;  file.
