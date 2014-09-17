@@ -1289,7 +1289,9 @@ This function is intended to be used as a value of `ring-bell-function'."
                             company nginx-mode
                             idle-highlight-mode hungry-delete
                             ws-butler mkdown ansible auto-dim-other-buffers
-                            flycheck-tip emmet-mode htmlize))
+                            flycheck-tip emmet-mode htmlize elmacro))
+
+(elmacro-mode 1)
 
 (require 'auto-highlight-symbol)
 
