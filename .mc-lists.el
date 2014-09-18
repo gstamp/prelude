@@ -3,6 +3,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        coffee-dedent-line-backspace
         end-of-visual-line
         go-mode-insert-and-indent
         kill-region
@@ -26,7 +27,9 @@
 
 (setq mc/cmds-to-run-once
       '(
+        eshell-previous-matching-input-from-input
         ns-handle-scroll-bar-event
         smex
         undo-tree-visualize
+        yas-expand
         ))
