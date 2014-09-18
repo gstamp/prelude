@@ -199,7 +199,7 @@ client process connection. Unless NO-BANNER is non-nil, insert a banner."
   "Insert REPL banner and REPL prompt in BUFFER."
   (with-current-buffer buffer
     (when (zerop (buffer-size))
-      (insert (propertize (cider-repl--banner) 'face 'font-lock-comment-face)))
+      (insert (propertize (cider-repl--banner) 'font-lock-face 'font-lock-comment-face)))
     (goto-char (point-max))
     (cider-repl--mark-output-start)
     (cider-repl--mark-input-start)
@@ -370,9 +370,9 @@ Return the position of the prompt beginning."
       (let ((prompt-start (point))
             (prompt (format "%s> " namespace)))
         (cider-propertize-region
-            '(face cider-repl-prompt-face read-only t intangible t
-                   cider-repl-prompt t
-                   rear-nonsticky (cider-repl-prompt read-only face intangible))
+            '(font-lock-face cider-repl-prompt-face read-only t intangible t
+                             cider-repl-prompt t
+                             rear-nonsticky (cider-repl-prompt read-only face intangible))
           (insert-before-markers prompt))
         (set-marker cider-repl-prompt-start-mark prompt-start)
         prompt-start))))
@@ -387,8 +387,8 @@ If BOL is non-nil insert at the beginning of line."
           (goto-char position)
           ;; TODO: Review the need for bol
           (when (and bol (not (bolp))) (insert-before-markers "\n"))
-          (cider-propertize-region `(face ,output-face
-                                          rear-nonsticky (face))
+          (cider-propertize-region `(font-lock-face ,output-face
+                                                    rear-nonsticky (face))
             (insert-before-markers string)
             (when (and (= (point) cider-repl-prompt-start-mark)
                        (not (bolp)))
@@ -447,11 +447,11 @@ If BOL is non-nil insert at the beginning of the line."
           (goto-char cider-repl-input-start-mark)
           (when (and bol (not (bolp)))
             (insert-before-markers "\n"))
-          (insert-before-markers (propertize cider-repl-result-prefix 'face 'font-lock-comment-face))
+          (insert-before-markers (propertize cider-repl-result-prefix 'font-lock-face 'font-lock-comment-face))
           (if cider-repl-use-clojure-font-lock
               (insert-before-markers (cider-font-lock-as-clojure string))
             (cider-propertize-region
-                '(face cider-repl-result-face rear-nonsticky (face))
+                '(font-lock-face cider-repl-result-face rear-nonsticky (face))
               (insert-before-markers string))))))
     (cider-repl--show-maximum-output)))
 
@@ -542,7 +542,7 @@ If NEWLINE is true then add a newline at the end of the input."
         ;; These properties are on an overlay so that they won't be taken
         ;; by kill/yank.
         (overlay-put overlay 'read-only t)
-        (overlay-put overlay 'face 'cider-repl-input-face))))
+        (overlay-put overlay 'font-lock-face 'cider-repl-input-face))))
   (let* ((input (cider-repl--current-input))
          (form (if (and (not (string-match "\\`[ \t\r\n]*\\'" input))
                         cider-repl-use-pretty-printing)
@@ -652,12 +652,7 @@ text property `cider-old-input'."
         (save-excursion
           (goto-char start)
           (insert
-           (propertize ";;; output cleared" 'face 'font-lock-comment-face)))))))
-
-(defun cider--all-ns ()
-  "Get a list of the available namespaces."
-  (cider-sync-eval-and-parse
-   "(clojure.core/map clojure.core/str (clojure.core/all-ns))"))
+           (propertize ";;; output cleared" 'font-lock-face 'font-lock-comment-face)))))))
 
 (defun cider-repl-set-ns (ns)
   "Switch the namespace of the REPL buffer to NS.
@@ -666,7 +661,7 @@ If invoked in a REPL buffer the command will prompt you for the name of the
 namespace to switch to."
   (interactive (list (if (derived-mode-p 'cider-repl-mode)
                          (completing-read "Switch to namespace: "
-                                          (cider--all-ns))
+                                          (cider-sync-request:ns-list))
                        (cider-current-ns))))
   (if ns
       (with-current-buffer (cider-current-repl-buffer)
@@ -945,29 +940,6 @@ constructs."
 
 
 ;;;;; CIDER REPL mode
-
-;;; Prevent paredit from inserting some inappropriate spaces.
-;;; C.f. clojure-mode.el
-(defun cider-space-for-delimiter-p (endp delim)
-  "Hook for paredit's `paredit-space-for-delimiter-predicates'.
-
-Decides if paredit should insert a space after/before (if/unless
-ENDP) DELIM."
-  (if (derived-mode-p 'cider-repl-mode)
-      (save-excursion
-        (backward-char)
-        (if (and (or (char-equal delim ?\()
-                     (char-equal delim ?\")
-                     (char-equal delim ?{))
-                 (not endp))
-            (if (char-equal (char-after) ?#)
-                (and (not (bobp))
-                     (or (char-equal ?w (char-syntax (char-before)))
-                         (char-equal ?_ (char-syntax (char-before)))))
-              t)
-          t))
-    t))
-
 (defvar cider-repl-mode-hook nil
   "Hook executed when entering `cider-repl-mode'.")
 
@@ -1057,19 +1029,14 @@ ENDP) DELIM."
   ;; Notice the interplay with `cider-repl-beginning-of-defun'.
   (setq-local beginning-of-defun-function 'cider-repl-mode-beginning-of-defun)
   (setq-local end-of-defun-function 'cider-repl-mode-end-of-defun)
+  (setq-local prettify-symbols-alist clojure--prettify-symbols-alist)
   (if (fboundp 'hack-dir-local-variables-non-file-buffer)
       (hack-dir-local-variables-non-file-buffer))
   (when cider-repl-history-file
     (cider-repl-history-load cider-repl-history-file)
     (add-hook 'kill-buffer-hook 'cider-repl-history-just-save t t)
     (add-hook 'kill-emacs-hook 'cider-repl-history-just-save))
-  (add-hook 'paredit-mode-hook
-            (lambda ()
-              (when (>= paredit-version 21)
-                (define-key cider-repl-mode-map "{" 'paredit-open-curly)
-                (define-key cider-repl-mode-map "}" 'paredit-close-curly)
-                (add-to-list 'paredit-space-for-delimiter-predicates
-                             'cider-space-for-delimiter-p)))))
+  (add-hook 'paredit-mode-hook 'clojure-paredit-setup))
 
 
 (provide 'cider-repl)

@@ -584,11 +584,11 @@
 ;;;; Setup: Git Gutter
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(git-gutter git-gutter-fringe))
+;; (prelude-require-packages '(git-gutter git-gutter-fringe))
 
-(require 'git-gutter-fringe)
+;; (require 'git-gutter-fringe)
 
-(global-git-gutter-mode +1)
+;; (global-git-gutter-mode +1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: General Keybindings
@@ -776,8 +776,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Clojure
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(prelude-require-packages '(clojure-mode cider cider-browse-ns cider-decompile cider-tracing align-cljlet company-cider))
+(prelude-require-packages '(clojure-mode cider align-cljlet cider-decompile cider-spy))
 
 (eval-after-load 'clojure-mode
   '(define-key clojure-mode-map (kbd "C-c C-a") 'align-cljlet))
@@ -1305,7 +1304,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 (add-hook 'visual-line-mode-hook 'adaptive-wrap-prefix-mode)
 (setq adaptive-wrap-extra-indent 4)
 
-(add-hook 'ruby-mode-hook 'company-mode)
+;;(add-hook 'ruby-mode-hook 'company-mode)
 
 ;; Smartline setup
 (setq sml/theme 'dark)

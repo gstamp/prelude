@@ -86,7 +86,7 @@ PROP is the name of a text property."
 
 (defun cider-insert (text &optional face break more-text)
   "Insert TEXT with FACE, optionally followed by a line BREAK and MORE-TEXT."
-  (insert (if face (propertize text 'face face) text))
+  (insert (if face (propertize text 'font-lock-face face) text))
   (when more-text (insert more-text))
   (when break (insert "\n")))
 
@@ -134,9 +134,14 @@ Unless you specify a BUFFER it will default to the current one."
         (dark (eq (frame-parameter nil 'background-mode) 'dark)))
     (cider-scale-color color (if dark 0.05 -0.05))))
 
-(defun cider-format-pprint-eval (form)
-  "Return a string of Clojure code that will eval and pretty-print FORM."
-  (format "(clojure.core/let [x %s] (clojure.pprint/pprint x) x)" form))
+(defun cider-format-pprint-eval (form &optional right-margin)
+  "Return a string of Clojure code that will eval and pretty-print FORM.
+Pretty printing will avoid going beyond column RIGHT-MARGIN which defaults
+to `fill-column'."
+  (format "(clojure.core/let [x %s]
+             (binding [clojure.pprint/*print-right-margin* %d]
+               (clojure.pprint/pprint x)) x)"
+          form (or right-margin fill-column)))
 
 (autoload 'pkg-info-version-info "pkg-info.el")
 

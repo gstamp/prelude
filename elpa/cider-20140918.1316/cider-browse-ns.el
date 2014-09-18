@@ -1,13 +1,8 @@
-;;; cider-browse-ns.el --- Browse Clojure namespaces with ease
+;;; cider-browse-ns.el --- CIDER namespace browser
 
 ;; Copyright © 2014 John Andrews
 
 ;; Author: John Andrews <john.m.andrews@gmail.com>
-;; Version: 20140725.2249
-;; X-Original-Version: 0.1.0
-;; Package-Requires: ((cider "0.7.0"))
-;; URL: https://github.com/jxa/cider-browse-ns
-;; Keywords: clojure, cider
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -26,15 +21,15 @@
 
 ;;; Commentary:
 
-;; cider-browse-ns-all
-;; Explore clojure namespaces by browsing a list of all namespaces.
-;; Pressing enter expands into a list of that namespace's vars as if by
-;; executing the command (cider-browse-ns my.ns)
-
-;; cider-browse-ns
+;; (cider-browse-ns)
 ;; Display a list of all vars in a namespace.
 ;; Pressing <enter> will take you to the cider-doc buffer for that var.
 ;; Pressing ^ will take you to a list of all namespaces (akin to dired mode)
+
+;; (cider-browse-ns-all)
+;; Explore clojure namespaces by browsing a list of all namespaces.
+;; Pressing enter expands into a list of that namespace's vars as if by
+;; executing the command (cider-browse-ns "my.ns")
 
 ;;; Code:
 
@@ -43,9 +38,19 @@
 (require 'cider-interaction)
 
 (defvar cider-browse-ns-buffer "*Browse NS*")
-(defvar cider-browse-ns-current-ns nil)
+(defvar-local cider-browse-ns-current-ns nil)
 
-(make-variable-buffer-local 'cider-browse-ns-current-ns)
+;; Utility Functions
+
+(defun cider-browse-ns-properties (text)
+  "Decorate TEXT with a clickable keymap and function face."
+  (propertize text
+              'font-lock-face 'font-lock-function-name-face
+              'mouse-face 'highlight
+              'keymap cider-browse-ns-mouse-map))
+
+
+;; Mode Definition
 
 (defvar cider-browse-ns-mode-map
   (let ((map (make-sparse-keymap)))
@@ -56,7 +61,7 @@
     (define-key map "p" 'previous-line)
     map))
 
-(define-derived-mode cider-browse-ns-mode fundamental-mode "browse-ns"
+(define-derived-mode cider-browse-ns-mode special-mode "browse-ns"
   "Major mode for browsing Clojure namespaces.
 
 \\{cider-browse-ns-mode-map}"
@@ -67,8 +72,7 @@
   (setq-local cider-browse-ns-current-ns nil))
 
 (defun cider-browse-ns-list (buffer title items)
-  "Reset BUFFER to contain elements of ITEMS.
-TITLE is displayed at the top and ITEMS are indented underneath."
+  "Reset contents of BUFFER.  Then display TITLE at the top and ITEMS are indented underneath."
   (with-current-buffer buffer
     (cider-browse-ns-mode)
     (let ((inhibit-read-only t))
@@ -80,40 +84,18 @@ TITLE is displayed at the top and ITEMS are indented underneath."
         (newline))
       (goto-char (point-min)))))
 
-;;;###autoload
-(defun cider-browse-ns-all ()
-  "List all loaded namespaces in BUFFER."
-  (interactive)
-  (with-current-buffer (cider-popup-buffer cider-browse-ns-buffer t)
-    (let ((names (cider-eval-and-get-value
-                  "(->> (all-ns)
-                        (map ns-name)
-                        (map name)
-                        (sort))")))
-      (cider-browse-ns-list (current-buffer)
-                            "All loaded namespaces"
-                            (mapcar (lambda (name)
-                                      (cider-browse-ns-properties name))
-                                    names))
-      (setq-local cider-browse-ns-current-ns nil))))
-
 (defvar cider-browse-ns-mouse-map (make-sparse-keymap))
 (define-key cider-browse-ns-mouse-map [mouse-1] 'cider-browse-ns-handle-mouse)
 
-(defun cider-browse-ns-properties (text)
-  "Decorate TEXT with a clickable keymap and function face."
-  (propertize text
-              'font-lock-face 'font-lock-function-name-face
-              'mouse-face 'highlight
-              'keymap cider-browse-ns-mouse-map))
+
+;; Interactive Functions
 
 ;;;###autoload
 (defun cider-browse-ns (namespace)
   "List all NAMESPACE's vars in BUFFER."
-  (interactive (list (completing-read "Switch to namespace: " (cider--all-ns))))
+  (interactive (list (completing-read "Browse namespace: " (cider-sync-request:ns-list))))
   (with-current-buffer (cider-popup-buffer cider-browse-ns-buffer t)
-    (let* ((form "(sort (map name (keys (ns-publics (quote %s)))))")
-           (vars (cider-eval-and-get-value (format form namespace))))
+    (let ((vars (cider-sync-request:ns-vars namespace)))
       (cider-browse-ns-list (current-buffer)
                             namespace
                             (mapcar (lambda (var)
@@ -122,12 +104,23 @@ TITLE is displayed at the top and ITEMS are indented underneath."
                                     vars))
       (setq-local cider-browse-ns-current-ns namespace))))
 
+;;;###autoload
+(defun cider-browse-ns-all ()
+  "List all loaded namespaces in BUFFER."
+  (interactive)
+  (with-current-buffer (cider-popup-buffer cider-browse-ns-buffer t)
+    (let ((names (cider-sync-request:ns-list)))
+      (cider-browse-ns-list (current-buffer)
+                            "All loaded namespaces"
+                            (mapcar (lambda (name)
+                                      (cider-browse-ns-properties name))
+                                    names))
+      (setq-local cider-browse-ns-current-ns nil))))
+
 (defun cider-browse-ns-operate-on-point ()
   "Expand browser according to thing at current point."
   (interactive)
-  (let* ((bol (line-beginning-position))
-         (eol (line-end-position))
-         (line (buffer-substring-no-properties bol eol)))
+  (let ((line (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
     (cond
      ((= 1 (line-number-at-pos))
       'nothing-to-do)
