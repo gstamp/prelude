@@ -206,6 +206,7 @@
 (add-to-list 'same-window-buffer-names "*Buffer List*")
 (add-to-list 'same-window-buffer-names "COMMIT_EDITMSG")
 (add-to-list 'same-window-buffer-names "*magit-process*")
+(add-to-list 'same-window-buffer-names "*Org Agenda*")
 
 ;; Don't auto add newline at EOF
 (setq require-final-newline nil)
