@@ -4,7 +4,7 @@
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
 ;;;### (autoloads nil nil ("smartrep-pkg.el" "smartrep.el" "test-smartrep.el")
-;;;;;;  (21456 11879 63883 0))
+;;;;;;  (21531 29206 930939 0))
 
 ;;;***
 

@@ -4,7 +4,7 @@
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
 ;;;### (autoloads nil "auto-dim-other-buffers" "auto-dim-other-buffers.el"
-;;;;;;  (21428 56588 0 0))
+;;;;;;  (21531 29881 0 0))
 ;;; Generated autoloads from auto-dim-other-buffers.el
 
 (defvar auto-dim-other-buffers-mode nil "\

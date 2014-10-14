@@ -1,18 +1,15 @@
 ;;; pcache-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-
+(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil nil ("pcache-pkg.el" "pcache.el") (21148 3423
-;;;;;;  348844 0))
+;;;### (autoloads nil nil ("pcache.el") (21531 29156 91758 0))
 
 ;;;***
 
-(provide 'pcache-autoloads)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
-;; coding: utf-8
 ;; End:
 ;;; pcache-autoloads.el ends here

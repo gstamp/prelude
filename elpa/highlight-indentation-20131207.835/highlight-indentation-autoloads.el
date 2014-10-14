@@ -1,11 +1,10 @@
 ;;; highlight-indentation-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-
+(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads (highlight-indentation-current-column-mode highlight-indentation-set-offset
-;;;;;;  highlight-indentation-mode) "highlight-indentation" "highlight-indentation.el"
-;;;;;;  (21222 62070 0 0))
+;;;### (autoloads nil "highlight-indentation" "highlight-indentation.el"
+;;;;;;  (21531 29864 0 0))
 ;;; Generated autoloads from highlight-indentation.el
 
 (autoload 'highlight-indentation-mode "highlight-indentation" "\
@@ -29,16 +28,9 @@ a vertical bar corresponding to the indentation of the current line
 
 ;;;***
 
-;;;### (autoloads nil nil ("highlight-indentation-pkg.el") (21222
-;;;;;;  62070 264883 0))
-
-;;;***
-
-(provide 'highlight-indentation-autoloads)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
-;; coding: utf-8
 ;; End:
 ;;; highlight-indentation-autoloads.el ends here

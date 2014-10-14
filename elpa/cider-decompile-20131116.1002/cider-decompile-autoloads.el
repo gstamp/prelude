@@ -4,7 +4,7 @@
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
 ;;;### (autoloads nil "cider-decompile" "cider-decompile.el" (21531
-;;;;;;  22652 0 0))
+;;;;;;  29831 0 0))
 ;;; Generated autoloads from cider-decompile.el
 
 (autoload 'cider-decompile-func "cider-decompile" "\

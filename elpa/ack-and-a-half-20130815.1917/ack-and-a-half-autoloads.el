@@ -3,8 +3,8 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "ack-and-a-half" "ack-and-a-half.el" (21102
-;;;;;;  53961 0 0))
+;;;### (autoloads nil "ack-and-a-half" "ack-and-a-half.el" (21531
+;;;;;;  29121 0 0))
 ;;; Generated autoloads from ack-and-a-half.el
 
 (autoload 'ack-and-a-half "ack-and-a-half" "\

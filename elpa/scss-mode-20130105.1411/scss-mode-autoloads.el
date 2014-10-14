@@ -1,10 +1,9 @@
 ;;; scss-mode-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-
+(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads (scss-mode) "scss-mode" "scss-mode.el" (21222 61953
-;;;;;;  0 0))
+;;;### (autoloads nil "scss-mode" "scss-mode.el" (21531 29802 0 0))
 ;;; Generated autoloads from scss-mode.el
 
 (autoload 'scss-mode "scss-mode" "\
@@ -18,16 +17,9 @@ Special commands:
 
 ;;;***
 
-;;;### (autoloads nil nil ("scss-mode-pkg.el") (21222 61953 393807
-;;;;;;  0))
-
-;;;***
-
-(provide 'scss-mode-autoloads)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
-;; coding: utf-8
 ;; End:
 ;;; scss-mode-autoloads.el ends here

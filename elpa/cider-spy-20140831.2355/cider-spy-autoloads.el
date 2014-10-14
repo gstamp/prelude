@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "cider-spy" "cider-spy.el" (21531 22734 0 0))
+;;;### (autoloads nil "cider-spy" "cider-spy.el" (21531 29832 0 0))
 ;;; Generated autoloads from cider-spy.el
 
 (autoload 'cider-spy-connect-to-hub "cider-spy" "\

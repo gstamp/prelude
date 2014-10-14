@@ -1,10 +1,9 @@
 ;;; bundler-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-
+(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads (bundle-update bundle-install bundle-check bundle-console
-;;;;;;  bundle-open) "bundler" "bundler.el" (21222 62166 0 0))
+;;;### (autoloads nil "bundler" "bundler.el" (21531 29845 0 0))
 ;;; Generated autoloads from bundler.el
 
 (autoload 'bundle-open "bundler" "\
@@ -34,16 +33,9 @@ Run bundle update for the current bundle.
 
 ;;;***
 
-;;;### (autoloads nil nil ("bundler-pkg.el") (21222 62166 616310
-;;;;;;  0))
-
-;;;***
-
-(provide 'bundler-autoloads)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
-;; coding: utf-8
 ;; End:
 ;;; bundler-autoloads.el ends here

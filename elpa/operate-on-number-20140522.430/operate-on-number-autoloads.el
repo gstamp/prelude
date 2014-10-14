@@ -4,7 +4,7 @@
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
 ;;;### (autoloads nil "operate-on-number" "operate-on-number.el"
-;;;;;;  (21456 11876 0 0))
+;;;;;;  (21531 29195 0 0))
 ;;; Generated autoloads from operate-on-number.el
 
 (autoload 'find-number-at-point "operate-on-number" "\
