@@ -843,6 +843,10 @@
      (define-key ruby-tools-mode-map (kbd "C-c C-.") 'ruby-tools-clear-string)
      ))
 
+(defun close-rspec-output-buffer()
+  (if (get-buffer "*rspec-compilation*")
+      (kill-buffer (get-buffer "*rspec-compilation*"))))
+
 (add-hook 'ruby-mode-hook
           (lambda ()
             (visual-line-mode)
@@ -883,8 +887,8 @@
               (add-hook 'compilation-finish-functions 'rspec-handle-complete nil t))
 
             (define-key ruby-mode-map (kbd "S-<f5>") 'rspec-run-and-arrange)
-            (define-key ruby-mode-map (kbd "<f5>") 'rspec-verify)
-            (define-key ruby-mode-map (kbd "M-<f5>") 'rspec-verify-all)
+            (define-key ruby-mode-map (kbd "<f5>") (lambda() (interactive) (close-rspec-output-buffer) (rspec-verify)))
+            (define-key ruby-mode-map (kbd "M-<f5>") (lambda() (interactive) (close-rspec-output-buffer) (rspec-verify-all)))
             ;; RSpec settings for greater good.
             (setq rspec-use-rake-flag nil)
             (setq rspec-use-bundler-when-possible 't)
