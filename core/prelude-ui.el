@@ -75,14 +75,14 @@
 (if (display-graphic-p)
     (progn
 
-      ;; use zenburn as the default theme
       (prelude-require-packages '(soothe-theme sublime-themes ample-theme))
       ;; (load-theme 'sanityinc-tomorrow-eighties t)
       ;; (load-theme 'clues t)
       ;; (load-theme 'brin t)
       ;; (load-theme 'ample t)
       ;; (load-theme 'spolsky t)
-      (load-theme 'zenburn t)
+      (load-theme prelude-theme t)
+      ;;(load-theme 'zenburn t)
       ))
 
 

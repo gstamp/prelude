@@ -40,7 +40,8 @@
      (defun prelude-haskell-mode-defaults ()
        (superword-mode +1)
        (turn-on-haskell-doc-mode)
-       (turn-on-haskell-indentation))
+       (turn-on-haskell-indentation)
+       (interactive-haskell-mode +1))
 
      (setq prelude-haskell-mode-hook 'prelude-haskell-mode-defaults)
 

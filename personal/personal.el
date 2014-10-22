@@ -866,8 +866,8 @@
                   (progn
                     (popwin:select-popup-window)
                     (popwin:one-window)
-                    (message "%s" (propertize "Oh noes!!! failures!" 'face '(:foreground "red")))
-                    ))))
+                    (message "%s" (propertize "Oh noes!!!
+                    failures!" 'face '(:foreground "red"))) ))))
             (define-derived-mode rspec-compilation-mode compilation-mode "RSpec Compilation"
               "Compilation mode for RSpec output."
               (set (make-local-variable 'compilation-error-regexp-alist)

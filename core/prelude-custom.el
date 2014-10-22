@@ -77,7 +77,7 @@ in the desired elisp file."
   :group 'prelude)
 
 (defcustom prelude-indent-sensitive-modes
-  '(coffee-mode python-mode slim-mode haml-mode)
+  '(conf-mode coffee-mode haml-mode python-mode slim-mode yaml-mode)
   "Modes for which auto-indenting is suppressed."
   :type 'list
   :group 'prelude)
@@ -91,6 +91,11 @@ Only modes that don't derive from `prog-mode' should be listed here."
 (defcustom prelude-yank-indent-threshold 1000
   "Threshold (# chars) over which indentation does not automatically occur."
   :type 'number
+  :group 'prelude)
+
+(defcustom prelude-theme 'zenburn
+  "The default color theme, change this in your /personal/preload config."
+  :type 'symbol
   :group 'prelude)
 
 (provide 'prelude-custom)
