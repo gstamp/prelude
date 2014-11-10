@@ -791,7 +791,7 @@
 ;;;; Setup: Ruby
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(rinari rspec-mode bundler ruby-mode ruby-tools company company-inf-ruby ruby-hash-syntax ruby-refactor projectile-rails adaptive-wrap))
+(prelude-require-packages '(rinari rspec-mode bundler ruby-mode ruby-tools ruby-hash-syntax ruby-refactor projectile-rails adaptive-wrap))
 
 (setq projectile-rails-keymap-prefix (kbd "C-c C-f"))
 
@@ -1218,7 +1218,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Go Language
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-require-packages '(go-mode go-eldoc go-projectile company-go))
+(prelude-require-packages '(go-mode go-eldoc go-projectile))
 
 (add-hook 'before-save-hook 'gofmt-before-save)
 
@@ -1288,11 +1288,11 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;; Setup: Misc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-require-packages '(cucumber-goto-step visual-regexp
-                            discover pig-mode nyan-mode
-                            company nginx-mode
-                            idle-highlight-mode hungry-delete
-                            ws-butler mkdown ansible auto-dim-other-buffers
-                            flycheck-tip emmet-mode htmlize elmacro))
+                                               discover pig-mode nyan-mode
+                                               nginx-mode
+                                               idle-highlight-mode hungry-delete
+                                               ws-butler mkdown ansible auto-dim-other-buffers
+                                               flycheck-tip emmet-mode htmlize elmacro))
 
 (elmacro-mode 1)
 
@@ -1307,8 +1307,6 @@ This function is intended to be used as a value of `ring-bell-function'."
 
 (add-hook 'visual-line-mode-hook 'adaptive-wrap-prefix-mode)
 (setq adaptive-wrap-extra-indent 4)
-
-;;(add-hook 'ruby-mode-hook 'company-mode)
 
 ;; Smartline setup
 (setq sml/theme 'dark)
