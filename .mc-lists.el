@@ -4,6 +4,7 @@
 (setq mc/cmds-to-run-for-all
       '(
         coffee-dedent-line-backspace
+        easy-kill
         end-of-visual-line
         go-mode-insert-and-indent
         kill-region
