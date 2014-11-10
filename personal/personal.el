@@ -1261,9 +1261,11 @@ This function is intended to be used as a value of `ring-bell-function'."
 
 (setq display-buffer-function 'popwin:display-buffer)
 
-(add-to-list 'popwin:special-display-config '("*ag search*" :noselect t))
 (add-to-list 'popwin:special-display-config '("*rspec-compilation*" :noselect t))
 (add-to-list 'popwin:special-display-config '("*Help*" :noselect t))
+(delete "*Shell Command Output*" popwin:special-display-config)
+(delete "*vc-diff*" popwin:special-display-config)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Shell
