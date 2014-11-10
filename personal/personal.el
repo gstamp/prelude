@@ -700,7 +700,7 @@
 (setq projectile-rails-expand-snippet nil)
 
 (global-set-key (kbd "C-x o") 'projectile-find-file)
-(global-set-key (kbd "C-x C-o") 'helm-prelude)
+(global-set-key (kbd "C-x C-o") 'projectile-find-file)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Bookmark Mode
@@ -1236,35 +1236,33 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;; Setup: Theme adjustments
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;(custom-theme-set-variables
-;; 'sanityinc-tomorrow-eighties
-;; '(fringe-mode 10 nil (fringe))
-;; '(linum-format     " %6d "  ))
+(custom-theme-set-variables
+ 'zenburn
+ '(fringe-mode 10 nil (fringe))
+ '(linum-format     " %6d "  ))
 
 
-;;(custom-theme-set-faces
-;; 'sanityinc-tomorrow-eighties
-;; '(linum                               ((t (:foreground "#ffffff"  :background "#6a6a6a" :height 120 :weight light))))
-;; '(minibuffer-prompt                   ((t (:foreground "#ffffff"  :background "#F20211" :height 180 ))))
-;; '(mode-line                           ((t (:foreground "#777777"  :background "#303030" :weight light :box nil :height 125 :inherit (variable-pitch) ))))
-;; '(fringe                              ((t (                       :background "#4a4a4a"                                               ))))
-;; )
+(custom-theme-set-faces
+ 'zenburn
+ '(region                              ((t (                       :background "#D0BF8F"))))
+ '(highlight                           ((t (                       :background "#D0BF8F"))))
+ '(linum                               ((t (:foreground "#ffffff"  :background "#6a6a6a" :height 120 :weight light))))
+ '(minibuffer-prompt                   ((t (:foreground "#ffffff"  :background "#F20211" :height 180 ))))
+ '(mode-line                           ((t (:foreground "#777777"  :background "#303030" :weight light :box nil :height 125 :inherit (variable-pitch) ))))
+ '(fringe                              ((t (                       :background "#4a4a4a"                                               ))))
+ )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; Setup: Popwin
+;;;; Setup: Flycheck
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-package 'popwin)
+(prelude-require-package 'flycheck)
 
-(require 'popwin)
-(popwin-mode)
+(defun set-flycheck-defaults()
+  (setq flycheck-check-syntax-automatically '(save idle-change))
+  (setq flycheck-idle-change-delay 4))
 
-(setq display-buffer-function 'popwin:display-buffer)
-
-(add-to-list 'popwin:special-display-config '("*rspec-compilation*" :noselect t))
-(add-to-list 'popwin:special-display-config '("*Help*" :noselect t))
-(delete "*Shell Command Output*" popwin:special-display-config)
-(delete "*vc-diff*" popwin:special-display-config)
+(add-hook 'flycheck-mode-hook 'set-flycheck-defaults)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1284,6 +1282,22 @@ This function is intended to be used as a value of `ring-bell-function'."
 (setq eshell-cmpl-ignore-case t)
 
 (setq eshell-prompt-regexp "^[^#$]*[$#] ")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Popwin
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(prelude-require-package 'popwin)
+
+(require 'popwin)
+(popwin-mode)
+
+(setq display-buffer-function 'popwin:display-buffer)
+
+(add-to-list 'popwin:special-display-config '("*rspec-compilation*" :noselect t))
+(add-to-list 'popwin:special-display-config '("*Help*" :noselect t))
+(delete "*Shell Command Output*" popwin:special-display-config)
+(delete "*vc-diff*" popwin:special-display-config)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
