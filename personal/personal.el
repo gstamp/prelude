@@ -1304,7 +1304,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;; Setup: Misc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-require-packages '(cucumber-goto-step visual-regexp
-                                               discover pig-mode nyan-mode
+                                               discover pig-mode
                                                nginx-mode
                                                idle-highlight-mode hungry-delete
                                                ws-butler mkdown ansible auto-dim-other-buffers
@@ -1329,9 +1329,6 @@ This function is intended to be used as a value of `ring-bell-function'."
 (require 'smart-mode-line)
 (setq sml/hidden-modes "yas\\|Golden\\|GitGutter\\|Projectile\\|RubyRef\\|rt\\|rails\\|,\\||\\|Pre")
 (sml/setup)
-
-;; Nyan cat scroll indicator!
-(nyan-mode)
 
 ;; Some smart parens options to make editing ruby less annoying
 (add-to-list 'sp-autoescape-string-quote-if-empty 'ruby-mode)
