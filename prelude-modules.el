@@ -7,6 +7,7 @@
 (require 'prelude-css)
 (require 'prelude-emacs-lisp)
 (require 'prelude-erc)
+;;(require 'prelude-evil)
 (require 'prelude-helm)
 (require 'prelude-ido)
 (require 'prelude-ido)
