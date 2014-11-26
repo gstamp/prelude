@@ -157,6 +157,17 @@ to `fill-column'."
   "Join all STRINGS using SEPARATOR."
   (mapconcat 'identity strings separator))
 
+(defun cider-join-into-alist (candidates &optional separator)
+  "Make an alist from CANDIDATES.
+The keys are the elements joined with SEPARATOR and values are the original
+elements. Useful for `completing-read' when candidates are complex
+objects."
+  (mapcar (lambda (el)
+            (if (listp el)
+                (cons (cider-string-join el (or separator ":")) el)
+              (cons el el)))
+          candidates))
+
 (provide 'cider-util)
 
 ;;; cider-util.el ends here

@@ -34,7 +34,7 @@
 
 (defconst cider-macroexpansion-buffer "*cider-macroexpansion*")
 
-(push cider-macroexpansion-buffer cider-ancilliary-buffers)
+(push cider-macroexpansion-buffer cider-ancillary-buffers)
 
 (defcustom cider-macroexpansion-display-namespaces 'tidy
   "Determines if namespaces are displayed in the macroexpansion buffer.
@@ -85,7 +85,7 @@ This variable specifies both what was expanded and the expander.")
 (defun cider-macroexpand-again ()
   "Repeat the last macroexpansion."
   (interactive)
-  (cider-initialize-macroexpansion-buffer cider-last-macroexpand-expression nrepl-buffer-ns))
+  (cider-initialize-macroexpansion-buffer cider-last-macroexpand-expression (cider-current-ns)))
 
 ;;;###autoload
 (defun cider-macroexpand-1 (&optional prefix)

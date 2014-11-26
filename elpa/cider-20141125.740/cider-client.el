@@ -41,11 +41,13 @@
     "A point of view is worth 80 IQ points. -Alan Kay"
     "Lisp isn't a language, it's a building material. -Alan Kay"
     "Simple things should be simple, complex things should be possible. -Alan Kay"
+    "Everything should be as simple as possible, but not simpler. -Albert Einstein"
     "Measuring programming progress by lines of code is like measuring aircraft building progress by weight. -Bill Gates"
     "Controlling complexity is the essence of computer programming. -Brian Kernighan"
     "The unavoidable price of reliability is simplicity. -C.A.R. Hoare"
     "You're bound to be unhappy if you optimize everything. -Donald Knuth"
     "Simplicity is prerequisite for reliability. -Edsger W. Dijkstra"
+    "Elegance is not a dispensable luxury but a quality that decides between success and failure. -Edsger W. Dijkstra"
     "Deleted code is debugged code. -Jeff Sickel"
     "The key to performance is elegance, not battalions of special cases. -Jon Bentley and Doug McIlroy"
     "First, solve the problem. Then, write the code. -John Johnson"
@@ -56,6 +58,7 @@
     "Code never lies, comments sometimes do. -Ron Jeffries"
     "The true delight is in the finding out rather than in the knowing.  -Isaac Asimov"
     "If paredit is not for you, then you need to become the sort of person that paredit is for. -Phil Hagelberg"
+    "Express Yourself. -Madonna"
     "Take this REPL, fellow hacker, and may it serve you well."
     "Let the hacking commence!"
     "Hacks and glory await!"
@@ -96,13 +99,7 @@ NS & SESSION specify the context in which to evaluate the request."
   ;; namespace forms are always evaluated in the "user" namespace
   (let ((ns (if (cider-ns-form-p input)
                 "user"
-              ns)))
-    ;; prevent forms from being evaluated in the wrong or a non-existing namespace
-    (when (and ns
-               (derived-mode-p 'clojure-mode)
-               (not (string= ns nrepl-buffer-ns))
-               (not (cider-ns-form-p input)))
-      (cider-eval-ns-form))
+              (or ns (cider-current-ns)))))
     (nrepl-request:eval input callback ns session)))
 
 (defun cider-tooling-eval (input callback &optional ns)
@@ -121,9 +118,8 @@ NS specifies the namespace in which to evaluate the request."
 
 (defun cider-current-repl-buffer ()
   "The current REPL buffer."
-  (when (nrepl-current-connection-buffer)
-    (buffer-local-value 'nrepl-repl-buffer
-                        (get-buffer (nrepl-current-connection-buffer)))))
+  (-when-let (repl-buf (nrepl-current-connection-buffer 'no-error))
+    (buffer-local-value 'nrepl-repl-buffer (get-buffer repl-buf))))
 
 (defun cider--var-choice (var-info)
   "Prompt to choose from among multiple VAR-INFO candidates, if required.
@@ -143,8 +139,8 @@ contain a `candidates' key, it is returned as is."
 When multiple matching vars are returned you'll be prompted to select one,
 unless ALL is truthy."
   (when (and var (not (string= var "")))
-    (let ((val (cider-sync-request:info var)))
-      (if all val (cider--var-choice val)))))
+    (let ((var-info (cider-sync-request:info var)))
+      (if all var-info (cider--var-choice var-info)))))
 
 (defun cider-member-info (class member)
   "Return the CLASS MEMBER's info as an alist with list cdrs."
@@ -154,16 +150,17 @@ unless ALL is truthy."
 
 ;;; Requests
 
-(defun cider-request:load-file (file-contents file-path file-name)
+(defun cider-request:load-file (file-contents file-path file-name &optional callback)
   "Perform the nREPL \"load-file\" op.
 FILE-CONTENTS, FILE-PATH and FILE-NAME are details of the file to be
-loaded."
+loaded. If CALLBACK is nil, use `cider-load-file-handler'."
   (nrepl-send-request (list "op" "load-file"
                             "session" (nrepl-current-session)
                             "file" file-contents
                             "file-path" file-path
                             "file-name" file-name)
-                      (cider-load-file-handler (current-buffer))))
+                      (or callback
+                          (cider-load-file-handler (current-buffer)))))
 
 
 ;;; Sync Requests
@@ -174,13 +171,15 @@ loaded."
 
 (defun cider-sync-request:apropos (query &optional search-ns docs-p privates-p case-sensitive-p)
   "Send \"apropos\" op with args SEARCH-NS, DOCS-P, PRIVATES-P, CASE-SENSITIVE-P."
-  (cider--sync-request-value `("op" "apropos"
-                               "ns" ,(cider-current-ns)
-                               "query" ,query
-                               ,@(when search-ns `("search-ns" ,search-ns))
-                               ,@(when docs-p '("docs?" "t"))
-                               ,@(when privates-p '("privates?" "t"))
-                               ,@(when case-sensitive-p '("case-sensitive?" "t")))))
+  (-> `("op" "apropos"
+        "ns" ,(cider-current-ns)
+        "query" ,query
+        ,@(when search-ns `("search-ns" ,search-ns))
+        ,@(when docs-p '("docs?" "t"))
+        ,@(when privates-p '("privates?" "t"))
+        ,@(when case-sensitive-p '("case-sensitive?" "t")))
+    (nrepl-send-sync-request)
+    (nrepl-dict-get "apropos-matches")))
 
 (defun cider-sync-request:classpath ()
   "Return a list of classpath entries."
@@ -192,20 +191,39 @@ loaded."
 
 (defun cider-sync-request:complete (str context)
   "Return a list of completions for STR using nREPL's \"complete\" op."
-  (cider--sync-request-value (list "op" "complete"
-                                   "session" (nrepl-current-session)
-                                   "ns" (cider-current-ns)
-                                   "symbol" str
-                                   "context" context)))
+  (-> (list "op" "complete"
+            "session" (nrepl-current-session)
+            "ns" (cider-current-ns)
+            "symbol" str
+            "context" context)
+    (nrepl-send-sync-request)
+    (nrepl-dict-get "completions")))
 
 (defun cider-sync-request:info (symbol &optional class member)
   "Send \"info\" op with parameters SYMBOL or CLASS and MEMBER."
-  (cider--sync-request-value `("op" "info"
-                               "session" ,(nrepl-current-session)
-                               "ns" ,(cider-current-ns)
-                               ,@(when symbol (list "symbol" symbol))
-                               ,@(when class (list "class" class))
-                               ,@(when member (list "member" member)))))
+  (let ((var-info (-> `("op" "info"
+                        "session" ,(nrepl-current-session)
+                        "ns" ,(cider-current-ns)
+                        ,@(when symbol (list "symbol" symbol))
+                        ,@(when class (list "class" class))
+                        ,@(when member (list "member" member)))
+                    (nrepl-send-sync-request))))
+    (if (member "no-info" (nrepl-dict-get var-info "status"))
+        nil
+      var-info)))
+
+(defun cider-sync-request:eldoc (symbol &optional class member)
+  "Send \"eldoc\" op with parameters SYMBOL or CLASS and MEMBER."
+  (let ((eldoc (-> `("op" "eldoc"
+                     "session" ,(nrepl-current-session)
+                     "ns" ,(cider-current-ns)
+                     ,@(when symbol (list "symbol" symbol))
+                     ,@(when class (list "class" class))
+                     ,@(when member (list "member" member)))
+                 (nrepl-send-sync-request))))
+    (if (member "no-eldoc" (nrepl-dict-get eldoc "status"))
+        nil
+      eldoc)))
 
 (defun cider-sync-request:macroexpand (expander expr &optional display-namespaces)
   "Macroexpand, using EXPANDER, the given EXPR.
@@ -221,7 +239,7 @@ The default for DISPLAY-NAMESPACES is taken from
                 (symbol-name cider-macroexpansion-display-namespaces)))
     (nrepl-send-sync-request)
     (nrepl-dict-get "expansion")))
-  
+
 (defun cider-sync-request:ns-list ()
   "Get a list of the available namespaces."
   (cider--sync-request-value (list "op" "ns-list"
