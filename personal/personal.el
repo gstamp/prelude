@@ -1355,7 +1355,8 @@ This function is intended to be used as a value of `ring-bell-function'."
                                                nginx-mode
                                                idle-highlight-mode hungry-delete
                                                ws-butler mkdown ansible auto-dim-other-buffers
-                                               flycheck-tip emmet-mode htmlize elmacro))
+                                               flycheck-tip emmet-mode htmlize elmacro
+                                               ibuffer-vc))
 
 (elmacro-mode 1)
 
@@ -1370,6 +1371,14 @@ This function is intended to be used as a value of `ring-bell-function'."
 
 (add-hook 'visual-line-mode-hook 'adaptive-wrap-prefix-mode)
 (setq adaptive-wrap-extra-indent 4)
+
+;; ibuffer-vc setup
+(add-hook 'ibuffer-hook
+          (lambda ()
+            (ibuffer-vc-set-filter-groups-by-vc-root)
+            (unless (eq ibuffer-sorting-mode 'alphabetic)
+              (ibuffer-do-sort-by-alphabetic))))
+
 
 ;; Smartline setup
 (setq sml/theme 'dark)
