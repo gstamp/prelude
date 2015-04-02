@@ -4,10 +4,10 @@
 
 ;; Author:            Adam Sokolnicki <adam.sokolnicki@gmail.com>
 ;; URL:               https://github.com/asok/projectile-rails
-;; Version: 20140901.239
-;; X-Original-Version:           0.5.0
+;; Package-Version: 20150222.1315
+;; Version:           0.5.0
 ;; Keywords:          rails, projectile
-;; Package-Requires:  ((projectile "1.0.0-cvs") (inflections "1.1") (inf-ruby "2.2.6") (f "0.13.0"))
+;; Package-Requires:  ((projectile "1.0.0-cvs") (inflections "1.1") (inf-ruby "2.2.6") (f "0.13.0") (rake "0.3.2"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -40,6 +40,7 @@
 (require 'inf-ruby)
 (require 'inflections)
 (require 'f)
+(require 'rake)
 
 (defgroup projectile-rails nil
   "Rails mode based on projectile"
@@ -138,10 +139,10 @@
   :type '(repeat string))
 
 (defcustom projectile-rails-font-lock-face-name 'font-lock-keyword-face
-  "Face to be used for higlighting rails the keywords")
+  "Face to be used for higlighting the rails keywords")
 
 (defcustom projectile-rails-views-re
-  "\\.\\(?:html\\|erb\\|haml\\|js\\|slim\\|json\\|coffee\\|css\\)$"
+  "\\.\\(?:html\\|erb\\|haml\\|js\\|slim\\|json\\|coffee\\|css\\|j?builder\\)$"
   "Regexp for filtering for view files"
   :group 'projectile-rails
   :type 'string)
@@ -197,6 +198,28 @@
 
 (defvar projectile-rails-server-buffer-name "*projectile-rails-server*")
 
+(defvar projectile-rails-fixture-dirs
+  '("test/fixtures/" "test/factories/" "test/fabricators/"
+    "spec/fixtures/" "spec/factories/" "spec/fabricators/"))
+
+(defvar-local projectile-rails-zeus-sock nil
+  "The path to the Zeus socket file")
+
+(defvar projectile-rails-generators
+  '(("assets" (("app/assets/"
+                "app/assets/\\(?:stylesheets\\|javascripts\\)/\\(.+?\\)\\..+$")))
+    ("controller" (("app/controllers/" "app/controllers/\\(.+\\)_controller\\.rb$")))
+    ("generator" (("lib/generator/" "lib/generators/\\(.+\\)$")))
+    ("helper" (("app/helpers/" "app/helpers/\\(.+\\)_helper.rb$")))
+    ("integration_test" (("test/integration/" "test/integration/\\(.+\\)_test\\.rb$")))
+    ("job" (("app/jobs/" "app/jobs/\\(.+\\)_job\\.rb$")))
+    ("mailer" (("app/mailers/" "app/mailers/\\(.+\\)\\.rb$")))
+    ("migration" (("db/migrate/" "db/migrate/[0-9]+_\\(.+\\)\\.rb$")))
+    ("model" (("app/models/" "app/models/\\(.+\\)\\.rb$")))
+    ("resource" (("app/models/" "app/models/\\(.+\\)\\.rb$")))
+    ("scaffold" (("app/models/" "app/models/\\(.+\\)\\.rb$")))
+    ("task" (("lib/tasks/" "lib/tasks/\\(.+\\)\\.rake$")))))
+
 (defmacro projectile-rails-with-preloader (&rest cases)
   `(cond ((projectile-rails-spring-p)
           ,(plist-get cases :spring))
@@ -212,34 +235,39 @@
 (defmacro projectile-rails-find-current-resource (dir re fallback)
   "RE will be the argument to `s-lex-format'.
 
-The binded variables are \"singular\" and \"plural\"."
+The bound variables are \"singular\" and \"plural\"."
   `(let* ((singular (projectile-rails-current-resource-name))
           (plural (pluralize-string singular))
           (abs-current-file (buffer-file-name (current-buffer)))
           (current-file (if abs-current-file
                             (file-relative-name abs-current-file
                                                 (projectile-project-root))))
-          (files (--filter
-                  (and (string-match-p (s-lex-format ,re) it)
-                       (not (string= current-file it)))
-                  (projectile-dir-files (projectile-expand-root ,dir)))))
-     (if (null files)
+          (choices (projectile-rails-choices
+                    (list (list ,dir (s-lex-format ,re)))))
+          (files (projectile-rails-hash-keys choices)))
+     (if (eq files ())
          (funcall ,fallback)
        (projectile-rails-goto-file
         (if (= (length files) 1)
-            (-first-item files)
-          (projectile-completing-read "Which exactly: " files))))))
+            (gethash (-first-item files) choices)
+          (gethash (projectile-completing-read "Which exactly: " files)
+                   choices))))))
 
 (defun projectile-rails-spring-p ()
-  (file-exists-p (f-canonical
-                  (concat
-                   temporary-file-directory
-                   "spring/"
-                   (md5 (projectile-project-root) 0 -1)
-                   ".pid"))))
+  (let ((path (concat temporary-file-directory "spring/%s"))
+        (ruby-version (shell-command-to-string "ruby -e 'print RUBY_VERSION'")))
+    (or
+     (file-exists-p (f-canonical
+                     (format path (concat (md5 (projectile-project-root) 0 -1) ".pid"))))
+     (file-exists-p (f-canonical
+                     (format path (md5 (concat ruby-version (projectile-project-root)) 0 -1)))))))
 
 (defun projectile-rails-zeus-p ()
-  (file-exists-p (projectile-expand-root ".zeus.sock")))
+  (unless projectile-rails-zeus-sock
+    (setq
+     projectile-rails-zeus-sock
+     (or (getenv "ZEUSSOCK") (projectile-expand-root ".zeus.sock"))))
+  (file-exists-p projectile-rails-zeus-sock))
 
 (defun projectile-rails-highlight-keywords (keywords)
   "Highlight the passed KEYWORDS in current buffer."
@@ -273,50 +301,102 @@ Returns a hash table with keys being short names and values being relative paths
     hash))
 
 (defun projectile-rails-hash-keys (hash)
-  (let (keys)
-    (maphash (lambda (key value) (setq keys (cons key keys))) hash)
-    keys))
+  (if (boundp 'hash-table-keys)
+      (hash-table-keys hash)
+    (let (keys)
+      (maphash (lambda (key value) (setq keys (cons key keys))) hash)
+      keys)))
 
-(defun projectile-rails-find-resource (prompt dirs)
-  (let ((choices (projectile-rails-choices dirs)))
-    (projectile-rails-goto-file
-     (gethash (projectile-completing-read prompt (projectile-rails-hash-keys choices)) choices))))
+(defmacro projectile-rails-find-resource (prompt dirs &optional newfile-template)
+  "Presents files from DIRS to the user using `projectile-completing-read'.
+
+If users chooses a non existant file and NEWFILE-TEMPLATE is not nil
+it will use that variable to interpolate the name for the new file.
+NEWFILE-TEMPLATE will be the argument for `s-lex-format'.
+The bound variable is \"filename\"."
+  `(let* ((choices (projectile-rails-choices ,dirs))
+          (filename (or
+                     (projectile-completing-read ,prompt (projectile-rails-hash-keys choices))
+                     (user-error "The completion system you're using does not allow inputting arbitrary value.")))
+          (filepath (gethash filename choices)))
+     (if filepath
+         (projectile-rails-goto-file filepath)
+       (when ,newfile-template
+         (projectile-rails-goto-file (s-lex-format ,newfile-template) t)))))
 
 (defun projectile-rails-find-model ()
   (interactive)
-  (projectile-rails-find-resource "model: " '(("app/models/" "/models/\\(.+\\)\\.rb$"))))
+  (projectile-rails-find-resource
+   "model: "
+   '(("app/models/" "/models/\\(.+\\)\\.rb$"))
+   "app/models/${filename}.rb"))
 
 (defun projectile-rails-find-controller ()
   (interactive)
-  (projectile-rails-find-resource "controller: " '(("app/controllers/" "/controllers/\\(.+\\)_controller\\.rb$"))))
+  (projectile-rails-find-resource
+   "controller: "
+   '(("app/controllers/" "/controllers/\\(.+\\)_controller\\.rb$"))
+   "app/controllers/${filename}_controller.rb"))
 
 (defun projectile-rails-find-view ()
   (interactive)
   (projectile-rails-find-resource
    "view: "
-   `(("app/views/" ,(concat "app/views/\\(.+\\)" projectile-rails-views-re)))))
+   `(("app/views/" ,(concat "app/views/\\(.+\\)" projectile-rails-views-re)))
+   "app/views/${filename}"))
 
 (defun projectile-rails-find-layout ()
   (interactive)
   (projectile-rails-find-resource
    "layout: "
-   `(("app/views/layouts/" ,(concat "app/views/layouts/\\(.+\\)" projectile-rails-views-re)))))
+   `(("app/views/layouts/" ,(concat "app/views/layouts/\\(.+\\)" projectile-rails-views-re)))
+   "app/views/layouts/${filename}"))
+
+(defun projectile-rails-find-rake-task (arg)
+  (interactive "P")
+  (rake-find-task arg))
 
 (defun projectile-rails-find-helper ()
   (interactive)
-  (projectile-rails-find-resource "helper: " '(("app/helpers/" "/helpers/\\(.+\\)_helper\\.rb$"))))
+  (projectile-rails-find-resource
+   "helper: "
+   '(("app/helpers/" "/helpers/\\(.+\\)_helper\\.rb$"))
+   "app/helpers/${filename}_helper.rb"))
 
 (defun projectile-rails-find-lib ()
   (interactive)
-  (projectile-rails-find-resource "lib: " '(("lib/" "lib/\\(.+\\)\\.rb$"))))
+  (projectile-rails-find-resource
+   "lib: "
+   '(("lib/" "lib/\\(.+\\)\\.rb$"))
+   "lib/${filename}.rb"))
 
 (defun projectile-rails-find-spec ()
   (interactive)
-  (projectile-rails-find-resource "spec: " '(("spec/" "spec/\\(.+\\)_spec\\.rb$"))))
+  (projectile-rails-find-resource
+   "spec: "
+   '(("spec/" "spec/\\(.+\\)_spec\\.rb$"))
+   "spec/${filename}_spec.rb"))
+
+(defun projectile-rails-find-test ()
+  (interactive)
+  (projectile-rails-find-resource
+   "test: "
+   '(("test/" "test/\\(.+\\)_test\\.rb$"))
+   "test/${filename}_test.rb"))
+
+(defun projectile-rails-find-fixture ()
+  (interactive)
+  (projectile-rails-find-resource
+   "fixture: "
+   (--map (list it (concat it "\\(.+?\\)\\(?:_fabricator\\)?\\.\\(?:rb\\|yml\\)$"))
+          projectile-rails-fixture-dirs)))
 
 (defun projectile-rails-find-feature ()
   (interactive)
-  (projectile-rails-find-resource "feature: " '(("features/" "features/\\(.+\\)\\.feature$"))))
+  (projectile-rails-find-resource
+   "feature: "
+   '(("features/" "features/\\(.+\\)\\.feature$"))
+   "features/${filename}.feature"))
 
 (defun projectile-rails-find-migration ()
   (interactive)
@@ -336,22 +416,31 @@ Returns a hash table with keys being short names and values being relative paths
 
 (defun projectile-rails-find-initializer ()
   (interactive)
-  (projectile-rails-find-resource "initializer: " '(("config/initializers/" "config/initializers/\\(.+\\)\\.rb$"))))
+  (projectile-rails-find-resource
+   "initializer: "
+   '(("config/initializers/" "config/initializers/\\(.+\\)\\.rb$"))
+   "config/initializers/${filename}.rb"))
 
 (defun projectile-rails-find-environment ()
   (interactive)
   (projectile-rails-find-resource
    "environment: "
-   '(("config/" "/\\(application\\|environment\\)\\.rb$")
-     ("config/environments/" "/\\([^/]+\\)\\.rb$"))))
+   '(("config/" "/\\(application\\|environment\\)\\.rb$") ("config/environments/" "/\\([^/]+\\)\\.rb$"))))
 
 (defun projectile-rails-find-locale ()
   (interactive)
-  (projectile-rails-find-resource "locale: " '(("config/locales/" "config/locales/\\(.+\\)\\.\\(?:rb\\|yml\\)$"))))
+  (projectile-rails-find-resource
+   "locale: "
+   '(("config/locales/"
+      "config/locales/\\(.+\\)\\.\\(?:rb\\|yml\\)$"))
+   "config/locales/${filename}"))
 
 (defun projectile-rails-find-mailer ()
   (interactive)
-  (projectile-rails-find-resource "mailer: " '(("app/mailers/" "app/mailers/\\(.+\\)\\.rb$"))))
+  (projectile-rails-find-resource
+   "mailer: "
+   '(("app/mailers/" "app/mailers/\\(.+\\)\\.rb$"))
+   "app/mailer/${filename}.rb"))
 
 (defun projectile-rails-find-current-model ()
   (interactive)
@@ -362,31 +451,31 @@ Returns a hash table with keys being short names and values being relative paths
 (defun projectile-rails-find-current-controller ()
   (interactive)
   (projectile-rails-find-current-resource "app/controllers/"
-                                          "/${plural}_controller\\.rb$"
+                                          "app/controllers/\\(.*${plural}\\)_controller\\.rb$"
                                           'projectile-rails-find-controller))
 
 (defun projectile-rails-find-current-view ()
   (interactive)
   (projectile-rails-find-current-resource "app/views/"
-                                          "/${plural}/.+$"
+                                          "/${plural}/\\(.+\\)$"
                                           'projectile-rails-find-view))
 
 (defun projectile-rails-find-current-helper ()
   (interactive)
   (projectile-rails-find-current-resource "app/helpers/"
-                                          "/${plural}_helper\\.rb$"
+                                          "/\\(${plural}_helper\\)\\.rb$"
                                           'projectile-rails-find-helper))
 
 (defun projectile-rails-find-current-javascript ()
   (interactive)
   (projectile-rails-find-current-resource "app/assets/javascripts/"
-                                          "/\\(?:.+/\\)*${plural}\\.\\(?:js\\|coffee\\)$"
+                                          "/\\(?:.+/\\)\\(*${plural}\\)\\.\\(?:js\\|coffee\\)$"
                                           'projectile-rails-find-javascript))
 
 (defun projectile-rails-find-current-stylesheet ()
   (interactive)
   (projectile-rails-find-current-resource "app/assets/stylesheets/"
-                                          "/\\(?:.+/\\)*${plural}\\.css\\(?:\\.scss\\)?$"
+                                          "/\\(?:.+/\\)\\(*${plural}\\)\\.css\\(?:\\.scss\\)?$"
                                           'projectile-rails-find-stylesheet))
 
 (defun projectile-rails-find-current-spec ()
@@ -394,6 +483,17 @@ Returns a hash table with keys being short names and values being relative paths
   (if (fboundp 'rspec-toggle-spec-and-target)
       (rspec-toggle-spec-and-target)
     (projectile-find-test-file)))
+
+(defun projectile-rails-find-current-test ()
+  (interactive)
+  (projectile-toggle-between-implementation-and-test))
+
+(defun projectile-rails-find-current-fixture ()
+  (interactive)
+  (projectile-rails-find-current-resource
+   (first projectile-rails-fixture-dirs)
+   "\\(?:test\\|spec\\)/\\(?:fixtures\\|factories\\|fabricators\\)/\\(?:${singular}\\(?:_fabricator\\)?\\|${plural}\\)\\.\\(?:yml\\|rb\\)"
+   'projectile-rails-find-fixture))
 
 (defun projectile-rails-find-current-migration ()
   (interactive)
@@ -413,7 +513,8 @@ Returns a hash table with keys being short names and values being relative paths
                            "app/assets/javascripts/\\(?:.+/\\)*\\(.+\\)\\.\\(?:js\\|coffee\\)$"
                            "app/assets/stylesheets/\\(?:.+/\\)*\\(.+\\)\\.css\\(?:\\.scss\\)$"
                            "db/migrate/.*create_\\(.+\\)\\.rb$"
-                           "spec/.*/\\([a-z_]+?\\)\\(?:_controller\\)?_spec\\.rb$")
+                           "spec/.*/\\([a-z_]+?\\)\\(?:_controller\\)?_spec\\.rb$"
+                           "\\(?:test\\|spec\\)/\\(?:fixtures\\|factories\\|fabricators\\)/\\(.+?\\)\\(?:_fabricator\\)?\\.\\(?:yml\\|rb\\)$")
                until (string-match re file-name)
                finally return (match-string 1 file-name))))))
 
@@ -436,55 +537,9 @@ Returns a hash table with keys being short names and values being relative paths
   (buffer-disable-undo)
   (projectile-rails-on))
 
-(defun projectile-rails-rake-tmp-file ()
-  (projectile-expand-root "tmp/rake-output"))
-
-(defun projectile-rails-rake-tasks ()
-  "Returns a content of tmp file with rake tasks."
-  (if (file-exists-p (projectile-rails-rake-tmp-file))
-      (with-temp-buffer
-        (insert-file-contents (projectile-rails-rake-tmp-file))
-        (buffer-string))
-    (projectile-rails-regenerate-rake)
-    (projectile-rails-rake-tasks)))
-
-;; Shamelessly stolen from ruby-starter-kit.el:
-;; https://github.com/technomancy/emacs-starter-kit/blob/v2/modules/starter-kit-ruby.el
-(defun projectile-rails-pcmpl-rake-tasks ()
-  "Return a list of all the rake tasks defined in the current projects."
-  (--keep it
-          (--map (if (string-match "rake \\([^ ]+\\)" it) (match-string 1 it))
-                 (split-string (projectile-rails-rake-tasks) "[\n]"))))
-
-(defun projectile-rails-regenerate-rake ()
-  "Generates rakes tasks file in the tmp within rails root directory."
-  (interactive)
-  (if (file-exists-p (projectile-rails-rake-tmp-file)) (delete-file (projectile-rails-rake-tmp-file)))
-  (with-temp-file (projectile-rails-rake-tmp-file)
-    (insert
-     (projectile-rails-with-root
-      (shell-command-to-string
-       (projectile-rails-with-preloader
-        :spring "spring rake -T -A"
-        :zeus "zeus rake -T -A"
-        :vanilla "bundle exec rake -T -A"))))))
-
-(defun projectile-rails-rake (task)
-  (interactive
-   (list
-    (projectile-completing-read
-     "Rake (default: default): "
-     (projectile-rails-pcmpl-rake-tasks))))
-  (let ((default-directory (projectile-rails-root)))
-    (projectile-rails-with-root
-     (compile
-      (concat
-       (projectile-rails-with-preloader
-        :spring "spring rake "
-        :zeus "zeus rake "
-        :vanilla "bundle exec rake ")
-       (if (= 0 (length task)) "default" task))
-      'projectile-rails-compilation-mode))))
+(defun projectile-rails-rake (arg)
+  (interactive "P")
+  (rake arg 'projectile-rails-compilation-mode))
 
 (defun projectile-rails-root ()
   "Returns rails root directory if this file is a part of a Rails application else nil"
@@ -498,7 +553,7 @@ Returns a hash table with keys being short names and values being relative paths
   (projectile-rails-with-root
    (with-current-buffer (run-ruby
                          (projectile-rails-with-preloader
-                          :spring "spring rails console"
+                          :spring "bundle exec spring rails console"
                           :zeus "zeus console"
                           :vanilla "bundle exec rails console"))
      (projectile-rails-mode +1))))
@@ -522,7 +577,11 @@ Returns a hash table with keys being short names and values being relative paths
 (defun projectile-rails-expand-corresponding-snippet ()
   (let ((name (buffer-file-name)))
     (yas-expand-snippet
-     (cond ((string-match "app/controllers/\\(.+\\)\\.rb$" name)
+     (cond ((string-match "app/[^/]+/concerns/\\(.+\\)\\.rb$" name)
+            (format
+             "module %s\n  extend ActiveSupport::Concern\n$1\nend"
+             (s-join "::" (projectile-rails-classify (match-string 1 name)))))
+           ((string-match "app/controllers/\\(.+\\)\\.rb$" name)
             (format
              "class %s < ${1:ApplicationController}\n$2\nend"
              (s-join "::" (projectile-rails-classify (match-string 1 name)))))
@@ -560,22 +619,65 @@ Returns a hash table with keys being short names and values being relative paths
   (if (member projectile-rails-server-buffer-name (mapcar 'buffer-name (buffer-list)))
       (switch-to-buffer projectile-rails-server-buffer-name)
     (projectile-rails-with-root
-     (compile (projectile-rails-with-preloader :spring "spring rails server"
+     (compile (projectile-rails-with-preloader :spring "bundle exec spring rails server"
                                                :zeus "zeus server"
                                                :vanilla "bundle exec rails server")
               'projectile-rails-server-mode))))
+
+(defun projectile-rails--completion-in-region ()
+  (interactive)
+  (let ((generators (--map (concat (car it) " ") projectile-rails-generators)))
+    (when (<= (minibuffer-prompt-end) (point))
+      (completion-in-region (minibuffer-prompt-end) (point-max)
+                            generators))))
+
+(defun projectile-rails--generate-with-completion (command)
+  (let ((keymap (copy-keymap minibuffer-local-map)))
+    (define-key keymap (kbd "<tab>") 'projectile-rails--completion-in-region)
+    (concat command (read-from-minibuffer command nil keymap))))
 
 (defun projectile-rails-generate ()
   "Runs rails generate command"
   (interactive)
   (projectile-rails-with-root
    (let ((command-prefix (projectile-rails-with-preloader
-                          :spring "spring rails generate "
+                          :spring "bundle exec spring rails generate "
                           :zeus "zeus generate "
                           :vanilla "bundle exec rails generate ")))
      (compile
-      (concat command-prefix (read-string command-prefix))
+      (projectile-rails--generate-with-completion command-prefix)
       'projectile-rails-generate-mode))))
+
+(defun projectile-rails--destroy-read (command)
+  (let ((keymap (copy-keymap minibuffer-local-map)))
+    (define-key keymap (kbd "<tab>") 'exit-minibuffer)
+    (read-from-minibuffer command nil keymap)))
+
+(defun projectile-rails--destroy-with-completion (command)
+  (let* ((user-input (projectile-rails--destroy-read command))
+         (completion (try-completion user-input
+                                     projectile-rails-generators))
+         (dirs (cdr (-flatten-n 2 (--filter (string= completion (car it))
+                                            projectile-rails-generators))))
+         (prompt (concat command completion " ")))
+    (if completion
+        (concat prompt
+                (projectile-completing-read
+                 prompt
+                 (projectile-rails-hash-keys (projectile-rails-choices dirs))))
+      (concat command user-input))))
+
+(defun projectile-rails-destroy ()
+  "Runs rails destroy command."
+  (interactive)
+  (projectile-rails-with-root
+   (let ((command-prefix (projectile-rails-with-preloader
+                          :spring "bundle exec spring rails destroy "
+                          :zeus "zeus destroy "
+                          :vanilla "bundle exec rails destroy ")))
+     (compile
+      (projectile-rails--destroy-with-completion command-prefix)
+      'projectile-rails-compilation-mode))))
 
 (defun projectile-rails-sanitize-and-goto-file (dir name &optional ext)
   "Calls `projectile-rails-goto-file' with passed arguments sanitizing them before."
@@ -583,9 +685,9 @@ Returns a hash table with keys being short names and values being relative paths
    (concat
     (projectile-rails-sanitize-dir-name dir) (projectile-rails-declassify name) ext)))
 
-(defun projectile-rails-goto-file (filepath)
+(defun projectile-rails-goto-file (filepath &optional ask)
   "Finds the FILEPATH after expanding root."
-  (projectile-rails-ff (projectile-expand-root filepath)))
+  (projectile-rails-ff (projectile-expand-root filepath) ask))
 
 (defun projectile-rails-goto-gem (gem)
   "Uses `bundle-open' to open GEM. If the function is not defined notifies user."
@@ -617,13 +719,28 @@ Returns a hash table with keys being short names and values being relative paths
           ((string-match-p "^\\s-*//= require .+\\s-*$" line)
            (projectile-rails-goto-asset-at-point projectile-rails-javascript-dirs))
 
+          ((string-match-p "^\\s-*\\#= require .+\\s-*$" line)
+           (projectile-rails-goto-asset-at-point projectile-rails-javascript-dirs))
+
+          ((string-match-p "\\_<javascript_include_tag\\_>" line)
+           (projectile-rails-goto-asset-at-point projectile-rails-javascript-dirs))
+
           ((string-match-p "^\\s-*\\*= require .+\\s-*$" line)
+           (projectile-rails-goto-asset-at-point projectile-rails-stylesheet-dirs))
+
+          ((string-match-p "^\\s-*\\@import .+\\s-*$" line)
+           (projectile-rails-goto-asset-at-point projectile-rails-stylesheet-dirs))
+
+          ((string-match-p "\\_<stylesheet_link_tag\\_>" line)
            (projectile-rails-goto-asset-at-point projectile-rails-stylesheet-dirs))
 
           ((string-match-p "\\_<require_relative\\_>" line)
            (projectile-rails-ff (expand-file-name (concat (thing-at-point 'filename) ".rb"))))
 
           ((string-match-p "\\_<require\\_>" line)
+           (projectile-rails-goto-gem (thing-at-point 'filename)))
+
+          ((string-match-p "\\_<gem\\_>" line)
            (projectile-rails-goto-gem (thing-at-point 'filename)))
 
           ((not (string-match-p "^[A-Z]" name))
@@ -717,6 +834,10 @@ Returns a hash table with keys being short names and values being relative paths
   (interactive)
   (projectile-rails-goto-file "db/schema.rb"))
 
+(defun projectile-rails-goto-seeds ()
+  (interactive)
+  (projectile-rails-goto-file "db/seeds.rb"))
+
 (defun projectile-rails-goto-routes ()
   (interactive)
   (projectile-rails-goto-file "config/routes.rb"))
@@ -807,12 +928,18 @@ If file does not exist and ASK in not nil it will ask user to proceed."
       (buffer-substring-no-properties beg (point)))))
 
 (defun projectile-rails-set-assets-dirs ()
-  (set
-   (make-local-variable 'projectile-rails-javascript-dirs)
+  (setq-local
+   projectile-rails-javascript-dirs
    (--filter (file-exists-p (projectile-expand-root it)) projectile-rails-javascript-dirs))
-  (set
-   (make-local-variable 'projectile-rails-stylesheet-dirs)
+  (setq-local
+   projectile-rails-stylesheet-dirs
    (--filter (file-exists-p (projectile-expand-root it)) projectile-rails-stylesheet-dirs)))
+
+
+(defun projectile-rails-set-fixture-dirs ()
+  (setq-local
+   projectile-rails-fixture-dirs
+   (--filter (file-exists-p (projectile-expand-root it)) projectile-rails-fixture-dirs)))
 
 (defvar projectile-rails-mode-goto-map
   (let ((map (make-sparse-keymap)))
@@ -820,7 +947,8 @@ If file does not exist and ASK in not nil it will ask user to proceed."
     (define-key map (kbd "g") 'projectile-rails-goto-gemfile)
     (define-key map (kbd "r") 'projectile-rails-goto-routes)
     (define-key map (kbd "d") 'projectile-rails-goto-schema)
-    (define-key map (kbd "s") 'projectile-rails-goto-spec-helper)
+    (define-key map (kbd "s") 'projectile-rails-goto-seeds)
+    (define-key map (kbd "h") 'projectile-rails-goto-spec-helper)
     map)
   "A goto map for `projectile-rails-mode'.")
 (fset 'projectile-rails-mode-goto-map projectile-rails-mode-goto-map)
@@ -831,6 +959,7 @@ If file does not exist and ASK in not nil it will ask user to proceed."
     (define-key map (kbd "s") 'projectile-rails-server)
     (define-key map (kbd "r") 'projectile-rails-rake)
     (define-key map (kbd "g") 'projectile-rails-generate)
+    (define-key map (kbd "d") 'projectile-rails-destroy)
     map)
   "A run map for `projectile-rails-mode'.")
 (fset 'projectile-rails-mode-run-map projectile-rails-mode-run-map)
@@ -858,11 +987,17 @@ If file does not exist and ASK in not nil it will ask user to proceed."
     (define-key map (kbd "p") 'projectile-rails-find-spec)
     (define-key map (kbd "P") 'projectile-rails-find-current-spec)
 
+    (define-key map (kbd "t") 'projectile-rails-find-test)
+    (define-key map (kbd "T") 'projectile-rails-find-current-test)
+
     (define-key map (kbd "n") 'projectile-rails-find-migration)
     (define-key map (kbd "N") 'projectile-rails-find-current-migration)
 
     (define-key map (kbd "r") 'projectile-rails-console)
     (define-key map (kbd "R") 'projectile-rails-server)
+
+    (define-key map (kbd "u") 'projectile-rails-find-fixture)
+    (define-key map (kbd "U") 'projectile-rails-find-current-fixture)
 
     (define-key map (kbd "l") 'projectile-rails-find-lib)
     (define-key map (kbd "f") 'projectile-rails-find-feature)
@@ -872,6 +1007,8 @@ If file does not exist and ASK in not nil it will ask user to proceed."
     (define-key map (kbd "a") 'projectile-rails-find-locale)
     (define-key map (kbd "@") 'projectile-rails-find-mailer)
     (define-key map (kbd "y") 'projectile-rails-find-layout)
+    (define-key map (kbd "k") 'projectile-rails-find-rake-task)
+
     (define-key map (kbd "x") 'projectile-rails-extract-region)
     (define-key map (kbd "RET") 'projectile-rails-goto-file-at-point)
 
@@ -897,7 +1034,10 @@ If file does not exist and ASK in not nil it will ask user to proceed."
     ["Find stylesheet"          projectile-rails-find-stylesheet]
     ["Find helper"              projectile-rails-find-helper]
     ["Find spec"                projectile-rails-find-spec]
+    ["Find test"                projectile-rails-find-test]
+    ["Find feature"             projectile-rails-find-feature]
     ["Find migration"           projectile-rails-find-migration]
+    ["Find fixture"             projectile-rails-find-fixture]
     ["Find lib"                 projectile-rails-find-lib]
     ["Find initializer"         projectile-rails-find-initializer]
     ["Find environment"         projectile-rails-find-environment]
@@ -905,12 +1045,14 @@ If file does not exist and ASK in not nil it will ask user to proceed."
     ["Find locale"              projectile-rails-find-locale]
     ["Find mailer"              projectile-rails-find-mailer]
     ["Find layout"              projectile-rails-find-layout]
+    ["Find rake task"           projectile-rails-find-rake-task]
     "--"
     ["Go to file at point"      projectile-rails-goto-file-at-point]
     "--"
     ["Go to Gemfile"            projectile-rails-goto-gemfile]
     ["Go to routes"             projectile-rails-goto-routes]
     ["Go to schema"             projectile-rails-goto-schema]
+    ["Go to seeds"              projectile-rails-goto-seeds]
     ["Go to spec helper"        projectile-rails-goto-spec-helper]
     "--"
     ["Go to current model"      projectile-rails-find-current-model]
@@ -919,14 +1061,17 @@ If file does not exist and ASK in not nil it will ask user to proceed."
     ["Go to current javascript" projectile-rails-find-current-javascript]
     ["Go to current stylesheet" projectile-rails-find-current-stylesheet]
     ["Go to current spec"       projectile-rails-find-current-spec]
+    ["Go to current test"       projectile-rails-find-current-test]
     ["Go to current migration"  projectile-rails-find-current-migration]
+    ["Go to current fixture"    projectile-rails-find-current-fixture]
     "--"
     ["Extract to partial"       projectile-rails-extract-region]
     "--"
     ["Run console"              projectile-rails-console]
     ["Run server"               projectile-rails-server]
     ["Run rake"                 projectile-rails-rake]
-    ["Run rails generate"       projectile-rails-generate]))
+    ["Run rails generate"       projectile-rails-generate]
+    ["Run rails destroy"        projectile-rails-destroy]))
 
 ;;;###autoload
 (define-minor-mode projectile-rails-mode
@@ -936,7 +1081,8 @@ If file does not exist and ASK in not nil it will ask user to proceed."
   (when projectile-rails-mode
     (and projectile-rails-expand-snippet (projectile-rails-expand-snippet-maybe))
     (and projectile-rails-add-keywords (projectile-rails-add-keywords-for-file-type))
-    (projectile-rails-set-assets-dirs)))
+    (projectile-rails-set-assets-dirs)
+    (projectile-rails-set-fixture-dirs)))
 
 ;;;###autoload
 (defun projectile-rails-on ()
@@ -992,12 +1138,12 @@ Killing the buffer will terminate to server's process."
 
   (discover-add-context-menu
    :context-menu '(projectile-rails-mode
-                  (description "Mode for Rails projects")
-                  (actions
-                   ("Available"
-                    ("f" "find resources"   projectile-rails--discover-find-submenu)
-                    ("g" "goto resources"   projectile-rails--discover-goto-submenu)
-                    ("r" "run and interact" projectile-rails--discover-run-submenu))))
+                   (description "Mode for Rails projects")
+                   (actions
+                    ("Available"
+                     ("f" "find resources"   projectile-rails--discover-find-submenu)
+                     ("g" "goto resources"   projectile-rails--discover-goto-submenu)
+                     ("r" "run and interact" projectile-rails--discover-run-submenu))))
    :bind projectile-rails-discover-bind
    :mode 'projectile-rails
    :mode-hook 'projectile-rails-mode-hook)
@@ -1015,12 +1161,15 @@ Killing the buffer will terminate to server's process."
                      ("j" "javascript"  projectile-rails-find-javascript)
                      ("s" "stylesheet"  projectile-rails-find-stylesheet)
                      ("p" "spec"        projectile-rails-find-spec)
+                     ("u" "fixture"     projectile-rails-find-fixture)
+                     ("t" "test"        projectile-rails-find-test)
                      ("f" "feature"     projectile-rails-find-feature)
                      ("i" "initializer" projectile-rails-find-initializer)
                      ("o" "log"         projectile-rails-find-log)
                      ("@" "mailer"      projectile-rails-find-mailer)
                      ("y" "layout"      projectile-rails-find-layout)
-                     ("n" "migration"   projectile-rails-find-migration))
+                     ("n" "migration"   projectile-rails-find-migration)
+                     ("k" "rake task"   projectile-rails-find-rake-task))
                     ("Find an associated resource"
                      ("M" "model"       projectile-rails-find-current-model)
                      ("V" "view"        projectile-rails-find-current-view)
@@ -1029,6 +1178,8 @@ Killing the buffer will terminate to server's process."
                      ("J" "javascript"  projectile-rails-find-current-javascript)
                      ("S" "stylesheet"  projectile-rails-find-current-stylesheet)
                      ("P" "spec"        projectile-rails-find-current-spec)
+                     ("U" "fixture"     projectile-rails-find-current-fixture)
+                     ("T" "test"        projectile-rails-find-current-test)
                      ("N" "migration"   projectile-rails-find-current-migration))))
    :bind "") ;;accessible only from the main context menu
 
@@ -1041,7 +1192,8 @@ Killing the buffer will terminate to server's process."
                      ("g" "Gemfile"       projectile-rails-goto-gemfile)
                      ("r" "routes"        projectile-rails-goto-routes)
                      ("d" "schema"        projectile-rails-goto-schema)
-                     ("s" "spec helper"   projectile-rails-goto-spec-helper))))
+                     ("s" "seeds"         projectile-rails-goto-seeds)
+                     ("h" "spec helper"   projectile-rails-goto-spec-helper))))
    :bind "") ;;accessible only from the main context menu
 
   (discover-add-context-menu
@@ -1052,7 +1204,8 @@ Killing the buffer will terminate to server's process."
                      ("r" "rake"           projectile-rails-rake)
                      ("c" "console"        projectile-rails-console)
                      ("s" "server"         projectile-rails-server)
-                     ("g" "generate"       projectile-rails-generate))
+                     ("g" "generate"       projectile-rails-generate)
+                     ("d" "destroy"        projectile-rails-destroy))
                     ("Interact"
                      ("x" "extract region" projectile-rails-extract-region))))
    :bind "") ;;accessible only from the main context menu
