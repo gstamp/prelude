@@ -48,6 +48,10 @@
 ;;  file.
 (setq vc-follow-symlinks t)
 
+;; JS indenting
+(setq js2-basic-offset 2)
+(setq js2-bounce-indent-p t)
+
 ;; flash instead of ding
 (setq visible-bell t)
 
