@@ -351,7 +351,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-ensure-module-deps '(ag wgrep-ag))
 
-(global-set-key [f2] 'helm-projectile-ag)
 (global-set-key [(control f2)] 'projectile-ag)
 (global-set-key [(meta f2)] 'ag-project)
 
@@ -645,7 +644,7 @@
 
 (prelude-require-package 'highlight-symbol)
 
-(global-set-key [f1] 'ido-switch-buffer)
+;; (global-set-key [f1] 'ido-switch-buffer)
 (global-set-key [f3] 'kmacro-start-macro-or-insert-counter)
 (global-set-key [f4] 'kmacro-end-or-call-macro)
 (global-set-key [f6] 'highlight-symbol-at-point)
@@ -687,6 +686,8 @@
 (global-set-key (kbd "C-S-b") (lambda () (interactive) (ignore-errors (backward-char 5))))
 
 (global-set-key (kbd "M-g M-i") 'prelude-indent-defun)
+
+(global-set-key (kbd "M-x") 'helm-M-x)
 
 ;; Use regex searches by default.
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
@@ -747,8 +748,17 @@
 ;; Appears to be buggy for me so switch off
 (setq projectile-rails-expand-snippet nil)
 
-(global-set-key (kbd "C-x o") 'projectile-find-file)
-(global-set-key (kbd "C-x C-o") 'projectile-find-file)
+;; (global-set-key (kbd "C-x o") 'projectile-find-file)
+;; (global-set-key (kbd "C-x C-o") 'projectile-find-file)
+
+(global-set-key (kbd "C-x o") 'helm-projectile-find-file)
+(global-set-key (kbd "C-x C-o") 'helm-projectile-find-file)
+
+;; max size of filename
+(setq helm-buffer-max-length 30)
+
+(global-set-key [f1] 'helm-projectile-switch-to-buffer)
+(global-set-key [f2] 'helm-projectile-ag)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Bookmark Mode

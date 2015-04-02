@@ -4,11 +4,11 @@
 
 ;; Author: Bozhidar Batsov
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20150315.527
+;; Package-Version: 20150329.6
 ;; Created: 2011-31-07
 ;; Keywords: project, convenience
-;; Version: 0.11.0
-;; Package-Requires: ((helm "1.4.0") (projectile "0.11.0") (dash "1.5.0") (cl-lib "0.3"))
+;; Version: 0.12.0
+;; Package-Requires: ((helm "1.4.0") (projectile "0.12.0") (dash "1.5.0") (cl-lib "0.3"))
 
 ;; This file is NOT part of GNU Emacs.
 
