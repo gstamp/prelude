@@ -1008,7 +1008,7 @@ This command calls the external script 'ruby-to-json.rb'."
 ;;;; Setup: Git/Magit
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(git-link magit-filenotify))
+(prelude-require-packages '(git-link))
 
 (setq magit-status-buffer-switch-function 'switch-to-buffer)
 
@@ -1034,13 +1034,6 @@ This command calls the external script 'ruby-to-json.rb'."
             (format "https://github.com/%s/compare/%s"
                     (git-link-remote-dir remote-name)
                     branch))))))
-
-;; Stop magit from warning about auto revert
-(setq magit-last-seen-setup-instructions "1.4.0")
-
-;; Auto refresh magit status
-(add-hook 'magit-status-mode-hook 'magit-filenotify-mode nil nil)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Dash and point
@@ -1360,6 +1353,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 
 (require 'popwin)
 (popwin-mode)
+
 (setq display-buffer-function 'popwin:display-buffer)
 
 (add-to-list 'popwin:special-display-config '("*rspec-compilation*" :noselect t))
