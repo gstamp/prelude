@@ -14,6 +14,10 @@
 ;; Ignore the case when sorting
 (setq sort-fold-case t)
 
+;; Use GPG for *.gpg files and *.asc files
+(setq epa-file-name-regexp "\\(\\.gpg\\(~\\|\\.~[0-9]+~\\)?\\'\\)\\|\\(\\.asc\\(~\\|\\.~[0-9]+~\\)?\\'\\)")
+(epa-file-name-regexp-update)
+
 ;; No thanks to flyspell mode being on by default
 (setq prelude-flyspell nil)
 
