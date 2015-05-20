@@ -757,6 +757,8 @@
 ;;;; Setup: Helm/Projectile
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(prelude-require-package 'helm)
+
 (setq projectile-completion-system 'ido)
 
 ;; Appears to be buggy for me so switch off
@@ -770,6 +772,12 @@
 
 ;; max size of filename
 (setq helm-buffer-max-length 30)
+
+;; Minimal helm - defaults are super chunky
+(setq helm-display-header-line nil)
+(set-face-attribute 'helm-source-header nil :height 0.1)
+(helm-autoresize-mode 1)
+(setq helm-split-window-in-side-p nil)
 
 (global-set-key [f1] 'helm-projectile-switch-to-buffer)
 (global-set-key [f2] 'helm-projectile-ag)
