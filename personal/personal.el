@@ -954,7 +954,7 @@
             ;; RSpec settings for greater good.
             (setq rspec-use-rake-flag nil)
             (setq rspec-use-bundler-when-possible 't)
-            (setq flycheck-disabled-checkers '(ruby-rubocop))))
+            ))
 
 ;; Use preludes beginning of line for virual-line-mode
 (define-key visual-line-mode-map [remap move-beginning-of-line] 'prelude-move-beginning-of-line)
@@ -1321,6 +1321,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 (prelude-require-package 'flycheck)
 
 (defun set-flycheck-defaults()
+  (setq flycheck-disabled-checkers '(ruby-rubocop json-jsonlint))
   (setq flycheck-check-syntax-automatically '(save idle-change))
   (setq flycheck-idle-change-delay 4))
 
