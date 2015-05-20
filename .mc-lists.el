@@ -29,8 +29,11 @@
 (setq mc/cmds-to-run-once
       '(
         eshell-previous-matching-input-from-input
+        helm-M-x
         ns-handle-scroll-bar-event
+        pop-global-mark
         smex
         undo-tree-visualize
+        wgrep-finish-edit
         yas-expand
         ))
