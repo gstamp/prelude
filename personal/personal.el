@@ -497,6 +497,7 @@
 ;;;; Setup: Helper Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
 ;; Modifed version of save-some-buffers that saves the buffers but doesn't
 ;; spit out rubbish to the message bage
 (defun simple-save-some-buffers ()
@@ -672,7 +673,6 @@
 
 ;; Turn on the menu bar for exploring new modes
 (global-set-key (kbd "C-<f10>") 'menu-bar-mode)
-
 
 (global-set-key (kbd "C-x f") 'recentf-ido-find-file)
 
@@ -930,8 +930,8 @@
               (save-excursion
                 (goto-char (point-max))
                 (if (save-excursion
-                        (forward-line -15)
-                        (search-forward "0 failures" nil t))
+                      (forward-line -15)
+                      (search-forward "0 failures" nil t))
                     (progn
                       (popwin:close-popup-window)
                       (message "%s" (propertize "All green. Super!" 'face '(:foreground "green"))))
