@@ -48,6 +48,12 @@
 ;;  file.
 (setq vc-follow-symlinks t)
 
+;; Ignore version control for tramp
+(setq vc-ignore-dir-regexp
+      (format "\\(%s\\)\\|\\(%s\\)"
+              vc-ignore-dir-regexp
+              tramp-file-name-regexp))
+
 ;; JS indenting
 (setq js2-basic-offset 2)
 (setq js2-bounce-indent-p t)
