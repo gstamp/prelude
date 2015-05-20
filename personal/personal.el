@@ -671,6 +671,9 @@
 (global-set-key [(control f4)] 'kill-this-buffer)
 (global-set-key [(control f5)] 'linum-mode)
 
+;; Switch buffer
+(global-set-key (kbd "C-x b") 'helm-buffers-list)
+
 ;; Turn on the menu bar for exploring new modes
 (global-set-key (kbd "C-<f10>") 'menu-bar-mode)
 
