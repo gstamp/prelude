@@ -677,7 +677,9 @@
 ;; Turn on the menu bar for exploring new modes
 (global-set-key (kbd "C-<f10>") 'menu-bar-mode)
 
-(global-set-key (kbd "C-x f") 'recentf-ido-find-file)
+;; Helm recent files
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x f") 'helm-recentf)
 
 ;; Selects the definition which encloses the point
 (global-set-key (kbd "C-M-h") 'mark-defun)
