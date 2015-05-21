@@ -33,25 +33,41 @@
 ;;; Code:
 
 (require 'prelude-programming)
-(prelude-require-packages '(js2-mode json-mode))
+(prelude-require-packages '(js3-mode json-mode))
 
-(require 'js2-mode)
+(require 'js3-mode)
 
-(add-to-list 'auto-mode-alist '("\\.js\\'"    . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.pac\\'"   . js2-mode))
-(add-to-list 'interpreter-mode-alist '("node" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'"    . js3-mode))
+(add-to-list 'auto-mode-alist '("\\.pac\\'"   . js3-mode))
+(add-to-list 'interpreter-mode-alist '("node" . js3-mode))
 
-(eval-after-load 'js2-mode
+;; (eval-after-load 'js2-mode
+;;   '(progn
+;;      (defun prelude-js-mode-defaults ()
+;;        ;; electric-layout-mode doesn't play nice with smartparens
+;;        (setq-local electric-layout-rules '((?\; . after)))
+;;        (setq mode-name "JS2")
+;;        (js2-imenu-extras-mode +1))
+
+;;      (setq prelude-js-mode-hook 'prelude-js-mode-defaults)
+
+;;      (add-hook 'js2-mode-hook (lambda () (run-hooks 'prelude-js-mode-hook)))))
+
+(eval-after-load 'js3-mode
   '(progn
      (defun prelude-js-mode-defaults ()
        ;; electric-layout-mode doesn't play nice with smartparens
        (setq-local electric-layout-rules '((?\; . after)))
-       (setq mode-name "JS2")
-       (js2-imenu-extras-mode +1))
+       (setq mode-name "JS3")
+       (setq js3-auto-indent-p t)
+       (setq js3-enter-indents-newline t)
+       (setq js3-indent-on-enter-key t)
+       )
 
      (setq prelude-js-mode-hook 'prelude-js-mode-defaults)
 
-     (add-hook 'js2-mode-hook (lambda () (run-hooks 'prelude-js-mode-hook)))))
+     (add-hook 'js3-mode-hook (lambda () (run-hooks 'prelude-js-mode-hook)))))
+
 
 (provide 'prelude-js)
 
