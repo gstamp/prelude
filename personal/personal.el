@@ -820,7 +820,7 @@
 
 ;; Don't use the standard org keys for todo and priority management
 ;; http://orgmode.org/manual/Conflicts.html
-(setq org-replace-disputed-keys 1)
+(setq org-replace-disputed-keys t)
 (setq org-confirm-babel-evaluate nil)
 
 ;; Define org-capture key - make sure org-default-notes-file is

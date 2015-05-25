@@ -37,6 +37,7 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 (setq org-log-done t)
+(setq org-replace-disputed-keys t)
 
 (defun prelude-org-mode-defaults ()
   (let ((oldmap (cdr (assoc 'prelude-mode minor-mode-map-alist)))
@@ -46,7 +47,7 @@
     (define-key newmap (kbd "C-c -") nil)
     (make-local-variable 'minor-mode-overriding-map-alist)
     (push `(prelude-mode . ,newmap) minor-mode-overriding-map-alist))
-)
+  )
 
 (setq prelude-org-mode-hook 'prelude-org-mode-defaults)
 
