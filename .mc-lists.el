@@ -22,6 +22,7 @@
         sp-forward-slurp-sexp
         sp-kill-hybrid-sexp
         sp-kill-word
+        sp-splice-sexp-killing-backward
         yaml-electric-backspace
         yaml-electric-dash-and-dot
         ))
