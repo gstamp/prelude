@@ -1395,7 +1395,7 @@ This function is intended to be used as a value of `ring-bell-function'."
                                                idle-highlight-mode hungry-delete
                                                ws-butler mkdown ansible auto-dim-other-buffers
                                                flycheck-tip emmet-mode htmlize elmacro
-                                               ibuffer-vc jade-mode))
+                                               ibuffer-vc jade-mode terraform-mode))
 
 (elmacro-mode 1)
 
