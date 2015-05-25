@@ -22,12 +22,13 @@
 ;; Copyright (C) 2012 Zhenlei Jia <zhenlei.jia@gmail.com>
 ;; Copyright (C) 2012 Peter Jones <pjones@pmade.com>
 ;; Copyright (C) 2013 Matus Goljer <dota.keys@gmail.com>
+;; Copyright (C) 2015 Google, Inc. (Contributor: Samuel Freilich <sfreilich@google.com>)
 
 ;; Author: Jason R. Blevins <jrblevin@sdf.org>
 ;; Maintainer: Jason R. Blevins <jrblevin@sdf.org>
 ;; Created: May 24, 2007
-;; Version: 20140914.1012
-;; X-Original-Version: 2.0
+;; Version: 2.0
+;; Package-Version: 20150523.2036
 ;; Keywords: Markdown, GitHub Flavored Markdown, itex
 ;; URL: http://jblevins.org/projects/markdown-mode/
 
@@ -63,15 +64,16 @@
 ;;    * [Release notes][]
 ;;
 ;;  [markdown-mode.el]: http://jblevins.org/projects/markdown-mode/markdown-mode.el
-;;  [screenshot]: http://jblevins.org/projects/markdown-mode/screenshots/20130131-002.png
-;;  [release notes]: http://jblevins.org/projects/markdown-mode/rev-2-0
+;;  [Screenshot]: http://jblevins.org/projects/markdown-mode/screenshots/20130131-002.png
+;;  [Release notes]: http://jblevins.org/projects/markdown-mode/rev-2-0
 ;;
 ;; [^theme]: The theme used in the screenshot is
-;;   [color-theme-twilight](https://github.com/crafterm/twilight-emacs).
+;;     [color-theme-twilight](https://github.com/crafterm/twilight-emacs).
 ;;
 ;; markdown-mode is also available in several package managers, including:
 ;;
-;;    * Debian and Ubuntu Linux: [emacs-goodies-el][]
+;;    * Debian Linux: [emacs-goodies-el][]
+;;    * Ubuntu Linux: [emacs-goodies-el][emacs-goodies-el-ubuntu]
 ;;    * RedHat and Fedora Linux: [emacs-goodies][]
 ;;    * NetBSD: [textproc/markdown-mode][]
 ;;    * Arch Linux (AUR): [emacs-markdown-mode-git][]
@@ -79,9 +81,10 @@
 ;;    * FreeBSD: [textproc/markdown-mode.el][freebsd-port]
 ;;
 ;;  [emacs-goodies-el]: http://packages.debian.org/emacs-goodies-el
-;;  [emacs-goodies]: https://admin.fedoraproject.org/pkgdb/acls/name/emacs-goodies
+;;  [emacs-goodies-el-ubuntu]: http://packages.ubuntu.com/search?keywords=emacs-goodies-el
+;;  [emacs-goodies]: https://apps.fedoraproject.org/packages/emacs-goodies
 ;;  [textproc/markdown-mode]: http://pkgsrc.se/textproc/markdown-mode
-;;  [emacs-markdown-mode-git]: http://aur.archlinux.org/packages.php?ID=30389
+;;  [emacs-markdown-mode-git]: https://aur.archlinux.org/packages/emacs-goodies-el/
 ;;  [macports-package]: https://trac.macports.org/browser/trunk/dports/editors/markdown-mode.el/Portfile
 ;;  [macports-ticket]: http://trac.macports.org/ticket/35716
 ;;  [freebsd-port]: http://svnweb.freebsd.org/ports/head/textproc/markdown-mode.el
@@ -213,7 +216,7 @@
 ;;     line is not blank, they use the text on the current line.
 ;;     Finally, the setext commands will prompt for heading text if
 ;;     there is no active region and the current line is blank.
-;;     
+;;
 ;;     `C-c C-t h` inserts a heading with automatically chosen type and
 ;;     level (both determined by the previous heading).  `C-c C-t H`
 ;;     behaves similarly, but uses setext (underlined) headings when
@@ -696,6 +699,7 @@
 ;;   * Gunnar Franke <Gunnar.Franke@gmx.de> for a completion bug report.
 ;;   * David Glasser <glasser@meteor.com> for a `paragraph-separate' fix.
 ;;   * Daniel Brotsky <dev@brotsky.com> for better auto-fill defaults.
+;;   * Samuel Freilich <sfreilich@google.com> for improved list item filling.
 
 ;;; Bugs:
 
@@ -1395,6 +1399,10 @@ extension support.")
 (defconst markdown-footnote-chars
   "[[:alnum:]-]"
   "Regular expression maching any character that is allowed in a footnote identifier.")
+
+(defconst markdown-regex-footnote-definition
+  (concat "^\\[\\(\\^" markdown-footnote-chars "*?\\)\\]:\\(?:[ \t]+\\|$\\)")
+  "Regular expression matching a footnote definition, capturing the label.")
 
 
 ;;; Compatibility =============================================================
@@ -2700,8 +2708,16 @@ NIL is returned instead."
                 (while (>= (markdown-next-line-indent) 4)
                   (backward-paragraph))
                 (forward-line)
-                (if (looking-at (concat "^\\[\\(\\^" markdown-footnote-chars "*?\\)\\]:"))
-                    (list (match-string 1) (point))))))
+                (let ((continue t)
+                      (result nil))
+                  (while (and continue (not result) (not (eobp)))
+                   (cond
+                    ((looking-at markdown-regex-footnote-definition)
+                     (setq result (list (match-string 1) (point))))
+                    ((looking-at paragraph-separate)
+                     (forward-line))
+                    (t (setq continue nil))))
+                  result))))
       (when fn
         (while (progn
                  (forward-paragraph)
@@ -4520,10 +4536,16 @@ This is an exact copy of `line-number-at-pos' for use in emacs21."
       (forward-line 0)
       (1+ (count-lines start (point))))))
 
-(defun markdown-nobreak-p ()
-  "Return nil if it is acceptable to break the current line at the point."
-  ;; inside in square brackets (e.g., link anchor text)
+(defun markdown-inside-link-text-p ()
+  "Return nil if not currently within link anchor text."
   (looking-back "\\[[^]]*"))
+
+(defun markdown-line-is-reference-definition-p ()
+  "Return whether the current line is a (non-footnote) reference defition."
+  (save-excursion
+    (move-beginning-of-line 1)
+    (and (looking-at-p markdown-regex-reference-definition)
+         (not (looking-at-p "[ \t]*\\[^")))))
 
 (defun markdown-adaptive-fill-function ()
   "Return prefix for filling paragraph or nil if not determined."
@@ -4538,8 +4560,24 @@ This is an exact copy of `line-number-at-pos' for use in emacs21."
    ;; List items
    ((looking-at markdown-regex-list)
     (match-string-no-properties 0))
+   ((looking-at markdown-regex-footnote-definition)
+    "    ") ; four spaces
    ;; No match
    (t nil)))
+
+(defun markdown-fill-forward-paragraph-function (&optional arg)
+  (let* ((arg (or arg 1))
+         (paragraphs-remaining (forward-paragraph arg))
+         (start (point)))
+    (when (< arg 0)
+      (while (and (not (eobp))
+                  (progn (move-to-left-margin) (not (eobp)))
+                  (looking-at paragraph-separate))
+        (forward-line 1))
+      (if (looking-at markdown-regex-list)
+          (forward-char (length (match-string 0)))
+        (goto-char start)))
+    paragraphs-remaining))
 
 
 ;;; Extensions ================================================================
@@ -4613,14 +4651,36 @@ if ARG is omitted or nil."
   (set (make-local-variable 'end-of-defun-function)
        'markdown-end-of-defun)
   ;; Paragraph filling
-  (set (make-local-variable 'paragraph-start)
-       "\f\\|[ \t]*$\\|[ \t]*[*+-] \\|[ \t]*[0-9]+\\.[ \t]\\|[ \t]*: ")
-  (set (make-local-variable 'paragraph-separate)
-       "\\(?:[ \t\f]*\\|.*  \\)$")
+  (set
+   ; Should match start of lines that start or seaprate paragraphs
+   (make-local-variable 'paragraph-start)
+       (mapconcat 'identity
+                  '(
+                    "\f" ; starts with a literal line-feed
+                    "[ \t\f]*$" ; space-only line
+                    "[ \t]*[*+-][ \t]+" ; unordered list item
+                    "[ \t]*[0-9]+\\.[ \t]+" ; ordered list item
+                    "[ \t]*\\[\\S-*\\]:[ \t]+" ; link ref def
+                    )
+                  "\\|"))
+  (set
+   ; Should match lines that separate paragraphs without being
+   ; part of any paragraph:
+   (make-local-variable 'paragraph-separate)
+   (mapconcat 'identity
+              '("[ \t\f]*$" ; space-only line
+                ; The following is not ideal, but the Fill customization
+                ; options really only handle paragraph-starting prefixes,
+                ; not paragraph-ending suffixes:
+                ".*  $" ; line ending in two spaces
+                "[ \t]*\\[\\^\\S-*\\]:[ \t]*$") ; just the start of a footnote def
+              "\\|"))
   (set (make-local-variable 'adaptive-fill-first-line-regexp)
        "\\`[ \t]*>[ \t]*?\\'")
   (set (make-local-variable 'adaptive-fill-function)
        'markdown-adaptive-fill-function)
+  (set (make-local-variable 'fill-forward-paragraph-function)
+       'markdown-fill-forward-paragraph-function)
   ;; Outline mode
   (make-local-variable 'outline-regexp)
   (setq outline-regexp markdown-regex-header)
@@ -4628,9 +4688,16 @@ if ARG is omitted or nil."
   (setq outline-level 'markdown-outline-level)
   ;; Cause use of ellipses for invisible text.
   (add-to-invisibility-spec '(outline . t))
-  ;; Indentation and filling
-  (make-local-variable 'fill-nobreak-predicate)
-  (add-hook 'fill-nobreak-predicate 'markdown-nobreak-p)
+
+  ;; Inhibiting line-breaking:
+  ;; Separating out each condition into a separate function so that users can
+  ;; override if desired (with remove-hook)
+  (add-hook 'fill-nobreak-predicate
+            'markdown-inside-link-text-p :local t)
+  (add-hook 'fill-nobreak-predicate
+            'markdown-line-is-reference-definition-p :local t)
+
+  ;; Indentation
   (setq indent-line-function markdown-indent-function)
 
   ;; Prepare hooks for XEmacs compatibility
@@ -4656,8 +4723,8 @@ if ARG is omitted or nil."
   (markdown-fontify-buffer-wiki-links))
 
 ;;;###autoload(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-;;;###autoload(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 ;;;###autoload(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
+;;;###autoload(add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
 
 
 ;;; GitHub Flavored Markdown Mode  ============================================
