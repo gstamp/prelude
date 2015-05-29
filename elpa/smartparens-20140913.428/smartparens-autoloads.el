@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "smartparens" "smartparens.el" (21864 1760
+;;;### (autoloads nil "smartparens" "smartparens.el" (21531 29199
 ;;;;;;  0 0))
 ;;; Generated autoloads from smartparens.el
 
@@ -25,18 +25,18 @@ better orientation.
 
 \(fn &optional ARG)" t nil)
 
-(defvar smartparens-mode-map (make-sparse-keymap) "\
+(defvar sp-keymap (make-sparse-keymap) "\
 Keymap used for `smartparens-mode'.")
 
 (autoload 'sp-use-paredit-bindings "smartparens" "\
-Initiate `smartparens-mode-map' with paredit-compatible bindings for
+Initiate `sp-keymap' with paredit-compatible bindings for
 corresponding functions provided by smartparens.  See variable
 `sp-paredit-bindings'.
 
 \(fn)" t nil)
 
 (autoload 'sp-use-smartparens-bindings "smartparens" "\
-Initiate `smartparens-mode-map' with smartparens bindings for navigation functions.
+Initiate `sp-keymap' with smartparens bindings for navigation functions.
 See variable `sp-smartparens-bindings'.
 
 \(fn)" t nil)
@@ -46,9 +46,9 @@ Toggle smartparens mode.
 
 You can enable pre-set bindings by customizing
 `sp-base-key-bindings' variable.  The current content of
-`smartparens-mode-map' is:
+`sp-keymap' is:
 
- \\{smartparens-mode-map}
+ \\{sp-keymap}
 
 \(fn &optional ARG)" t nil)
 
@@ -167,10 +167,9 @@ Turn off `show-smartparens-mode'.
 
 ;;;***
 
-;;;### (autoloads nil nil ("smartparens-config.el" "smartparens-haskell.el"
-;;;;;;  "smartparens-html.el" "smartparens-latex.el" "smartparens-lua.el"
-;;;;;;  "smartparens-pkg.el" "smartparens-python.el" "smartparens-ruby.el")
-;;;;;;  (21864 1760 944996 0))
+;;;### (autoloads nil nil ("smartparens-config.el" "smartparens-html.el"
+;;;;;;  "smartparens-latex.el" "smartparens-lua.el" "smartparens-pkg.el"
+;;;;;;  "smartparens-ruby.el") (21531 29200 135368 0))
 
 ;;;***
 
