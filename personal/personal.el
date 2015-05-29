@@ -1450,10 +1450,13 @@ This function is intended to be used as a value of `ring-bell-function'."
 
 
 ;; Smartline setup
-(setq sml/theme 'dark)
-(require 'smart-mode-line)
-(setq sml/hidden-modes "yas\\|Golden\\|GitGutter\\|Projectile\\|RubyRef\\|rt\\|rails\\|,\\||\\|Pre")
-(sml/setup)
+;; (setq sml/theme 'dark)
+;; (require 'smart-mode-line)
+;; (setq sml/hidden-modes "yas\\|Golden\\|GitGutter\\|Projectile\\|RubyRef\\|rt\\|rails\\|,\\||\\|Pre")
+;; (sml/setup)
+(ocodo-svg-modelines-init)
+(setq smt/current-theme 'ocodo-kawaii-light-smt)
+(force-mode-line-update)
 
 ;; Some smart parens options to make editing ruby less annoying
 (add-to-list 'sp-autoescape-string-quote-if-empty 'ruby-mode)
