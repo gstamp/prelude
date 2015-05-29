@@ -692,6 +692,15 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 (global-set-key [(control f4)] 'kill-this-buffer)
 (global-set-key [(control f5)] 'linum-mode)
 
+;; Navigate backward and forward through buffers
+(global-set-key [(super left)] 'previous-buffer)
+(global-set-key [(super right)] 'next-buffer)
+(defun my-switch-to-other-buffer ()
+  "Switch to other buffer"
+  (interactive)
+  (switch-to-buffer (other-buffer)))
+(global-set-key [C-tab] 'my-switch-to-other-buffer)
+
 ;; Switch buffer
 (global-set-key (kbd "C-x b") 'helm-buffers-list)
 
