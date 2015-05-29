@@ -493,6 +493,27 @@
 (global-set-key [remap kill-whole-line] 'smart-kill-whole-line)
 
 
+(defun switch-to-scratch-and-back (arg)
+  "Toggle between *scratch-MODE* buffer and the current buffer.
+If a scratch buffer does not exist, create it with the major mode set to that
+of the buffer from where this function is called.
+
+    C-u COMMAND -> Open/switch to a scratch buffer in `org-mode'
+C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
+  (interactive "P")
+  (if (and (null arg)
+           (string-match "\*scratch" (buffer-name)))
+      (switch-to-buffer (other-buffer))
+    (let (mode-str)
+      (cl-case (car arg)
+        (4  (setq mode-str "org-mode"))
+        (16 (setq mode-str "emacs-lisp-mode"))
+        (t  (setq mode-str (format "%s" major-mode))))
+      (switch-to-buffer (get-buffer-create
+                         (concat "*scratch-" mode-str "*")))
+      (funcall (intern mode-str)))))
+(global-set-key (kbd "C-c `") 'switch-to-scratch-and-back)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Helper Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
