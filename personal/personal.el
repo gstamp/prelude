@@ -1124,8 +1124,7 @@ This command calls the external script 'ruby-to-json.rb'."
 (require 'org-drill)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; Setup: Smart scan. Use M-n M-p to move forward and backward
-;;;;        for symbol at point
+;;;; Setup: Smart scan. Use M-n M-p to move forward and backward for symbol at point
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar smart-use-extended-syntax nil
@@ -1415,6 +1414,29 @@ This function is intended to be used as a value of `ring-bell-function'."
 (delete "*Shell Command Output*" popwin:special-display-config)
 (delete "*vc-diff*" popwin:special-display-config)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Smart parens & corral
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(prelude-require-package 'corral)
+
+(global-set-key (kbd "M-9") 'corral-parentheses-backward)
+(global-set-key (kbd "M-0") 'corral-parentheses-forward)
+(global-set-key (kbd "M-[") 'corral-brackets-backward)
+(global-set-key (kbd "M-]") 'corral-brackets-forward)
+(global-set-key (kbd "M-{") 'corral-braces-backward)
+(global-set-key (kbd "M-}") 'corral-braces-forward)
+(global-set-key (kbd "M-\"") 'corral-double-quotes-backward)
+
+;; Use a more subtle colour for smartparens overlays
+(custom-set-faces
+ '(sp-pair-overlay-face ((t (:inherit highlight :background "gray16")))))
+
+;; Some smart parens options to make editing ruby less annoying
+(add-to-list 'sp-autoescape-string-quote-if-empty 'ruby-mode)
+(setq sp-autoescape-string-quote nil)
+(setq sp-autoinsert-if-followed-by-same 3)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Misc
@@ -1458,11 +1480,6 @@ This function is intended to be used as a value of `ring-bell-function'."
 (setq smt/current-theme 'ocodo-kawaii-light-smt)
 (force-mode-line-update)
 
-;; Some smart parens options to make editing ruby less annoying
-(add-to-list 'sp-autoescape-string-quote-if-empty 'ruby-mode)
-(setq sp-autoescape-string-quote nil)
-(setq sp-autoinsert-if-followed-by-same 3)
-
 (define-key global-map (kbd "M-g M-r") 'vr/replace)
 (define-key global-map (kbd "M-g r") 'vr/query-replace)
 
@@ -1471,10 +1488,6 @@ This function is intended to be used as a value of `ring-bell-function'."
   (interactive)
   (simple-save-some-buffers))
 (add-hook 'focus-out-hook 'save-all)
-
-;; Use a more subtle colour for smartparens overlays
-(custom-set-faces
- '(sp-pair-overlay-face ((t (:inherit highlight :background "gray16")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: IMenu Sections
