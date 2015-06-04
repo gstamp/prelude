@@ -9,6 +9,7 @@
         go-mode-insert-and-indent
         kill-region
         org-delete-char
+        org-end-of-line
         org-force-self-insert
         org-self-insert-command
         orgtbl-self-insert-command
