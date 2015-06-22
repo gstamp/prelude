@@ -1463,15 +1463,22 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Misc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-require-packages '(cucumber-goto-step visual-regexp
-                                               discover pig-mode
-                                               nginx-mode
-                                               idle-highlight-mode hungry-delete
-                                               ws-butler mkdown ansible auto-dim-other-buffers
-                                               flycheck-tip emmet-mode htmlize elmacro
-                                               ibuffer-vc jade-mode terraform-mode))
-
-(elmacro-mode 1)
+(prelude-require-packages '(cucumber-goto-step
+                            visual-regexp
+                            discover
+                            pig-mode
+                            nginx-mode
+                            idle-highlight-mode
+                            ws-butler
+                            mkdown
+                            ansible
+                            auto-dim-other-buffers
+                            flycheck-tip
+                            emmet-mode
+                            htmlize
+                            ibuffer-vc
+                            jade-mode
+                            terraform-mode))
 
 (require 'auto-highlight-symbol)
 
