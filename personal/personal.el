@@ -1501,13 +1501,10 @@ This function is intended to be used as a value of `ring-bell-function'."
 
 
 ;; Smartline setup
-;; (setq sml/theme 'dark)
-;; (require 'smart-mode-line)
-;; (setq sml/hidden-modes "yas\\|Golden\\|GitGutter\\|Projectile\\|RubyRef\\|rt\\|rails\\|,\\||\\|Pre")
-;; (sml/setup)
-(ocodo-svg-modelines-init)
-(setq smt/current-theme 'ocodo-kawaii-light-smt)
-(force-mode-line-update)
+(setq sml/theme 'dark)
+(require 'smart-mode-line)
+(setq sml/hidden-modes "yas\\|Golden\\|GitGutter\\|Projectile\\|RubyRef\\|rt\\|rails\\|,\\||\\|Pre")
+(sml/setup)
 
 (define-key global-map (kbd "M-g M-r") 'vr/replace)
 (define-key global-map (kbd "M-g r") 'vr/query-replace)
