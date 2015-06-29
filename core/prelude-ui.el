@@ -1,6 +1,6 @@
 ;;; prelude-ui.el --- Emacs Prelude: UI optimizations and tweaks.
 ;;
-;; Copyright © 2011-2013 Bozhidar Batsov
+;; Copyright © 2011-2015 Bozhidar Batsov
 ;;
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/prelude
@@ -57,11 +57,6 @@
 (column-number-mode t)
 (size-indication-mode t)
 
-;; make the fringe (gutter) smaller
-;; the argument is a width in pixels (the default is 8)
-(if (fboundp 'fringe-mode)
-    (fringe-mode 4))
-
 ;; enable y/n answers
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -69,29 +64,14 @@
 ;; buffer name (if the buffer isn't visiting a file)
 (setq frame-title-format
       '("" invocation-name " Prelude - " (:eval (if (buffer-file-name)
-                                            (abbreviate-file-name (buffer-file-name))
-                                          "%b"))))
+                                                    (abbreviate-file-name (buffer-file-name))
+                                                  "%b"))))
 
-(if (display-graphic-p)
-    (progn
+(prelude-require-packages '(soothe-theme sublime-themes ample-theme))
 
-      (prelude-require-packages '(soothe-theme sublime-themes ample-theme))
-      ;; (load-theme 'sanityinc-tomorrow-eighties t)
-      ;; (load-theme 'clues t)
-      ;; (load-theme 'brin t)
-      ;; (load-theme 'ample t)
-      ;; (load-theme 'spolsky t)
-      (load-theme prelude-theme t)
-      ;;(load-theme 'zenburn t)
-      ))
-
-
-;; (require 'desktop)
-;; (setq desktop-save t)
-;; (setq desktop-path (list prelude-savefile-dir))
-;; (setq desktop-dirname prelude-savefile-dir)
-
-;; (desktop-save-mode +1)
+;; use zenburn as the default theme
+(when prelude-theme
+  (load-theme prelude-theme t))
 
 (provide 'prelude-ui)
 ;;; prelude-ui.el ends here
