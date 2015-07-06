@@ -897,6 +897,9 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 (setq org-replace-disputed-keys t)
 (setq org-confirm-babel-evaluate nil)
 
+;; Inline images displayed by default
+(setq org-startup-with-inline-images t)
+
 ;; Define org-capture key - make sure org-default-notes-file is
 ;; defined for local machine
 (define-key global-map "\C-cc" 'org-capture)
