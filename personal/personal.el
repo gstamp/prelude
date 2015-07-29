@@ -879,7 +879,7 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 ;;;; Setup: Multiple Cursors
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-package 'multiple-cursors)
+(prelude-require-packages '(multiple-cursors phi-search))
 
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
@@ -887,6 +887,8 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 (global-unset-key (kbd "M-<down-mouse-1>"))
 (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
 
+(global-set-key (kbd "C-s") 'phi-search)
+(global-set-key (kbd "C-r") 'phi-search-backward)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Org mode
@@ -939,7 +941,7 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Clojure
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-require-packages '(clojure-mode cider align-cljlet cider-decompile cider-spy))
+(prelude-require-packages '(clojure-mode cider align-cljlet cider-decompile cider-spy clojure-quick-repls))
 
 (eval-after-load 'clojure-mode
   '(define-key clojure-mode-map (kbd "C-c C-a") 'align-cljlet))
@@ -1096,7 +1098,11 @@ This command calls the external script 'ruby-to-json.rb'."
     (shell-command-on-region start-pos end-pos script-name nil t nil t))
   (indent-region start-pos end-pos))
 
-
+;; Make ruby work with hideshow mode
+(add-to-list 'hs-special-modes-alist
+             '(ruby-mode
+               "\\(def\\|do\\|{\\)" "\\(end\\|end\\|}\\)" "#"
+               (lambda (arg) (ruby-end-of-block)) nil))
 
 
 ;; Tell Riniari about extra prompt patterns
@@ -1503,7 +1509,9 @@ This function is intended to be used as a value of `ring-bell-function'."
                             htmlize
                             ibuffer-vc
                             jade-mode
-                            terraform-mode))
+                            terraform-mode
+                            hideshowvis
+                            ))
 
 (require 'auto-highlight-symbol)
 

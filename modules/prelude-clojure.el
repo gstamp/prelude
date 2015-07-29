@@ -33,7 +33,9 @@
 ;;; Code:
 
 (require 'prelude-lisp)
-(prelude-require-packages '(clojure-mode cider))
+(prelude-require-packages '(clojure-mode cider clojure-quick-repls))
+
+(setq cider-switch-to-repl-command (quote clojure-quick-repls-switch-to-relevant-repl))
 
 (eval-after-load 'clojure-mode
   '(progn

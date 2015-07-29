@@ -4,6 +4,8 @@
 (setq mc/cmds-to-run-for-all
       '(
         coffee-dedent-line-backspace
+        corral-braces-backward
+        corral-braces-forward
         easy-kill
         end-of-visual-line
         go-mode-insert-and-indent
