@@ -6,6 +6,7 @@
         coffee-dedent-line-backspace
         corral-braces-backward
         corral-braces-forward
+        delete-horizontal-space
         easy-kill
         end-of-visual-line
         go-mode-insert-and-indent
