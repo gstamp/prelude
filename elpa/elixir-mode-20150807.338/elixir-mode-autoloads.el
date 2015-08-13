@@ -3,15 +3,9 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "elixir-mode" "elixir-mode.el" (21535 25895
+;;;### (autoloads nil "elixir-mode" "elixir-mode.el" (21962 52695
 ;;;;;;  0 0))
 ;;; Generated autoloads from elixir-mode.el
-
-(autoload 'elixir-mode-iex "elixir-mode" "\
-Elixir mode interactive REPL.
-Optional argument ARGS-P .
-
-\(fn &optional ARGS-P)" t nil)
 
 (autoload 'elixir-mode-open-modegithub "elixir-mode" "\
 Elixir mode open GitHub page.
@@ -33,10 +27,20 @@ Elixir mode go to stable documentation.
 
 \(fn)" t nil)
 
-(autoload 'elixir-mode-show-version "elixir-mode" "\
-Elixir mode print version.
+(autoload 'elixir-mode-version "elixir-mode" "\
+Get the Elixir-Mode version as string.
 
-\(fn)" t nil)
+If called interactively or if SHOW-VERSION is non-nil, show the
+version in the echo area and the messages buffer.
+
+The returned string includes both, the version from package.el
+and the library version, if both a present and different.
+
+If the version number could not be determined, signal an error,
+if called interactively, or if SHOW-VERSION is non-nil, otherwise
+just return nil.
+
+\(fn &optional SHOW-VERSION)" t nil)
 
 (autoload 'elixir-mode "elixir-mode" "\
 Major mode for editing Elixir code.
@@ -54,7 +58,7 @@ Major mode for editing Elixir code.
 ;;;***
 
 ;;;### (autoloads nil nil ("elixir-mode-pkg.el" "elixir-smie.el")
-;;;;;;  (21535 25896 6006 0))
+;;;;;;  (21962 52695 838391 0))
 
 ;;;***
 

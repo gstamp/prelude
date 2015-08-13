@@ -6,6 +6,7 @@
 (require 'prelude-coffee)
 ;;(require 'prelude-company)
 (require 'prelude-css)
+(require 'prelude-elixir)
 (require 'prelude-emacs-lisp)
 (require 'prelude-erc)
 ;;(require 'prelude-evil)
