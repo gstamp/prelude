@@ -171,7 +171,7 @@ therefore does not have to be reverted."
 If this is non-nil then all modified file-visiting buffers
 belonging to the current repository may be saved before running
 commands, before creating new Magit buffers, and before
-explicitly refreshing such buffers.  It this is `dontask' then
+explicitly refreshing such buffers.  If this is `dontask' then
 this is done without user intervention, if it is t then the user
 has to confirm each save."
   :group 'magit
@@ -208,6 +208,7 @@ has to confirm each save."
     (define-key map "G" 'magit-refresh-all)
     (define-key map "q" 'magit-mode-bury-buffer)
     (define-key map "$" 'magit-process)
+    (define-key map "a" 'magit-cherry-apply)
     (define-key map "A" 'magit-cherry-pick-popup)
     (define-key map "b" 'magit-branch-popup)
     (define-key map "B" 'magit-bisect-popup)
@@ -224,15 +225,20 @@ has to confirm each save."
     (define-key map "F" 'magit-pull-popup)
     (define-key map "i" 'magit-gitignore)
     (define-key map "I" 'magit-gitignore-locally)
+    (define-key map "k" 'magit-delete-thing)
+    (define-key map "K" 'magit-file-untrack)
     (define-key map "l" 'magit-log-popup)
-    (define-key map "L" 'magit-toggle-margin)
+    (define-key map "L" 'magit-log-refresh-popup)
     (define-key map "m" 'magit-merge-popup)
     (define-key map "M" 'magit-remote-popup)
     (define-key map "o" 'magit-submodule-popup)
     (define-key map "P" 'magit-push-popup)
     (define-key map "r" 'magit-rebase-popup)
+    (define-key map "R" 'magit-file-rename)
     (define-key map "t" 'magit-tag-popup)
     (define-key map "T" 'magit-notes-popup)
+    (define-key map "\r"       'magit-visit-thing)
+    (define-key map [C-return] 'magit-visit-thing)
     (define-key map [M-return] 'magit-dired-jump)
     (define-key map "\s"       'magit-diff-show-or-scroll-up)
     (define-key map "\d"       'magit-diff-show-or-scroll-down)
@@ -240,6 +246,7 @@ has to confirm each save."
     (define-key map "S" 'magit-stage-modified)
     (define-key map "u" 'magit-unstage-file)
     (define-key map "U" 'magit-reset-index)
+    (define-key map "v" 'magit-revert-no-commit)
     (define-key map "V" 'magit-revert-popup)
     (define-key map "w" 'magit-am-popup)
     (define-key map "W" 'magit-patch-popup)
@@ -258,6 +265,20 @@ has to confirm each save."
     (define-key map [remap evil-next-line] 'evil-next-visual-line)
     map)
   "Parent keymap for all keymaps of modes derived from `magit-mode'.")
+
+(defun magit-delete-thing ()
+  "This is a placeholder command.
+Where applicable, section-specific keymaps bind another command
+which deletes the thing at point."
+  (interactive)
+  (user-error "There is no thing at point that could be deleted"))
+
+(defun magit-visit-thing ()
+  "This is a placeholder command.
+Where applicable, section-specific keymaps bind another command
+which visits the thing at point."
+  (interactive)
+  (user-error "There is no thing at point that could be visited"))
 
 (easy-menu-define magit-mode-menu magit-mode-map
   "Magit menu"
@@ -298,7 +319,7 @@ has to confirm each save."
     "---"
     ["Push" magit-push t]
     ["Pull" magit-pull t]
-    ["Remote update" magit-remote-update t]
+    ["Remote update" magit-fetch-all t]
     ("Submodule"
      ["Submodule update" magit-submodule-update t]
      ["Submodule update and init" magit-submodule-update-init t]
@@ -319,6 +340,7 @@ has to confirm each save."
 
 (define-derived-mode magit-mode special-mode "Magit"
   "Parent major mode from which Magit major modes inherit.
+
 Magit is documented in info node `(magit)'."
   :group 'magit-modes
   (buffer-disable-undo)
@@ -362,6 +384,11 @@ The value is usually set using `magit-mode-setup'.")
 The value is usually set using `magit-mode-setup'.")
 (put 'magit-refresh-args 'permanent-local t)
 
+;; Kludge.  We use this instead of adding a new, optional argument to
+;; `magit-setup-mode' in order to avoid breaking third-party packages.
+;; See #2054 and #2060.
+(defvar magit-mode-setup--topdir nil)
+
 (defmacro magit-mode-setup
   (buffer switch-func mode refresh-func &rest refresh-args)
   "Display and select BUFFER, turn on MODE, and refresh a first time.
@@ -377,10 +404,13 @@ before switching to BUFFER."
         (sargs (cl-gensym "args"))
         (sbuf  (cl-gensym "buffer")))
     `(let* ((,smode ,mode)
-            (,sroot (magit-toplevel))
+            (,sroot (let ((default-directory (or magit-mode-setup--topdir
+                                                 default-directory)))
+                      (magit-toplevel)))
             (,sfunc ,refresh-func)
             (,sargs (list ,@refresh-args))
-            (,sbuf  (magit-mode-display-buffer ,buffer ,smode ,switch-func)))
+            (,sbuf  (magit-mode-display-buffer
+                     ,buffer ,smode ,switch-func ,sroot)))
        (when find-file-visit-truename
          (setq ,sroot (file-truename ,sroot)))
        (if ,sroot
@@ -407,7 +437,7 @@ before switching to BUFFER."
 (defvar-local magit-previous-section nil)
 (put 'magit-previous-section 'permanent-local t)
 
-(defun magit-mode-display-buffer (buffer mode &optional switch-function)
+(defun magit-mode-display-buffer (buffer mode &optional switch-function topdir)
   "Display BUFFER in some window and select it.
 BUFFER may be a buffer or a string, the name of a buffer.  Return
 the buffer.
@@ -418,13 +448,17 @@ can later be restored by `magit-mode-bury-buffer'.
 
 Then display and select BUFFER using SWITCH-FUNCTION.  If that is
 nil either use `pop-to-buffer' if the current buffer's major mode
-derives from Magit mode; or else use `switch-to-buffer'."
+derives from Magit mode; or else use `switch-to-buffer'.
+
+When optional TOPDIR is specified, then it has to be the top-level
+directory of the repository.  Otherwise that is determined using
+the function `magit-toplevel'."
   (cond ((stringp buffer)
-         (setq buffer (magit-mode-get-buffer-create buffer mode)))
+         (setq buffer (magit-mode-get-buffer-create buffer mode topdir)))
         ((not (bufferp buffer))
          (signal 'wrong-type-argument (list 'bufferp nil))))
   (let ((section (magit-current-section)))
-    (with-current-buffer (get-buffer-create buffer)
+    (with-current-buffer buffer
       (setq magit-previous-section section)
       (if magit-inhibit-save-previous-winconf
           (when (eq magit-inhibit-save-previous-winconf 'unset)
@@ -439,36 +473,39 @@ derives from Magit mode; or else use `switch-to-buffer'."
            buffer)
   buffer)
 
-(defun magit-mode-get-buffers (&optional topdir)
-  (unless topdir
-    (setq topdir (magit-toplevel)))
-  (--filter (with-current-buffer it
-              (and (derived-mode-p 'magit-mode)
-                   (equal default-directory topdir)))
-            (buffer-list)))
+(defun magit-mode-get-buffers ()
+  (let ((topdir (magit-toplevel)))
+    (--filter (with-current-buffer it
+                (and (derived-mode-p 'magit-mode)
+                     (equal default-directory topdir)))
+              (buffer-list))))
 
-(defun magit-mode-get-buffer (format mode &optional topdir create)
-  (if (not (string-match-p "%[ab]" format))
-      (funcall (if create #'get-buffer-create #'get-buffer) format)
-    (unless topdir
-      (setq topdir (magit-toplevel)))
-    (let ((name (format-spec format
-                             `((?a . ,(abbreviate-file-name (or topdir "-")))
-                               (?b . ,(if topdir
-                                          (file-name-nondirectory
-                                           (directory-file-name topdir))
-                                        "-"))))))
-      (or (--first (with-current-buffer it
-                     (and (or (not topdir)
-                              (equal (expand-file-name default-directory)
-                                     topdir))
-                          (string-match-p (format "^%s$" (regexp-quote name))
-                                          (buffer-name))))
-                   (buffer-list))
-          (and create (generate-new-buffer name))))))
+(defun magit-mode-get-buffer (format mode &optional pwd create)
+  (unless format
+    (setq format (symbol-value
+                  (intern (format "%s-buffer-name-format"
+                                  (substring (symbol-name mode) 0 -5))))))
+  (setq pwd (expand-file-name (or pwd default-directory)))
+  (let* ((topdir (let ((default-directory pwd))
+                   (magit-toplevel)))
+         (name (format-spec
+                format (if topdir
+                           `((?a . ,(abbreviate-file-name topdir))
+                             (?b . ,(file-name-nondirectory
+                                     (directory-file-name topdir))))
+                         '((?a . "-") (?b . "-"))))))
+    (or (--first (with-current-buffer it
+                   (and (equal (buffer-name) name)
+                        (or (not topdir)
+                            (equal (expand-file-name default-directory)
+                                   topdir))))
+                 (buffer-list))
+        (and create
+             (let ((default-directory (or topdir pwd)))
+               (generate-new-buffer name))))))
 
-(defun magit-mode-get-buffer-create (format mode &optional topdir)
-  (magit-mode-get-buffer format mode topdir t))
+(defun magit-mode-get-buffer-create (format mode &optional directory)
+  (magit-mode-get-buffer format mode directory t))
 
 (defun magit-mode-bury-buffer (&optional kill-buffer)
   "Bury the current buffer.
@@ -696,18 +733,20 @@ When called interactively then the revert is forced."
 Like `vc-mode-line' but simpler, more efficient, and less buggy."
   (setq vc-mode
         (if vc-display-status
-            (let* ((rev (or (magit-get-current-branch)
-                            (magit-rev-parse "--short" "HEAD")))
-                   (msg (cl-letf (((symbol-function #'vc-working-revision)
-                                   (lambda (&rest _) rev)))
-                          (vc-default-mode-line-string 'Git buffer-file-name))))
-              (propertize
-               (concat " " msg)
-               'mouse-face 'mode-line-highlight
-               'help-echo (concat (get-text-property 0 'help-echo msg)
-                                  "\nCurrent revision: " rev
-                                  "\nmouse-1: Version Control menu")
-               'local-map vc-mode-line-map))
+            (magit-with-toplevel
+              (let* ((rev (or (magit-get-current-branch)
+                              (magit-rev-parse "--short" "HEAD")))
+                     (msg (cl-letf (((symbol-function #'vc-working-revision)
+                                     (lambda (&rest _) rev)))
+                            (vc-default-mode-line-string
+                             'Git buffer-file-name))))
+                (propertize
+                 (concat " " msg)
+                 'mouse-face 'mode-line-highlight
+                 'help-echo (concat (get-text-property 0 'help-echo msg)
+                                    "\nCurrent revision: " rev
+                                    "\nmouse-1: Version Control menu")
+                 'local-map vc-mode-line-map)))
           " Git"))
   (force-mode-line-update))
 
