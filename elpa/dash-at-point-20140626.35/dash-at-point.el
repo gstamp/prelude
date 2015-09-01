@@ -3,8 +3,8 @@
 ;; Copyright (C) 2013 Shinji Tanaka
 ;; Author:  Shinji Tanaka <shinji.tanaka@gmail.com>
 ;; Created: 17 Feb 2013
-;; Version: 20140626.35
-;; X-Original-Version: 0.0.5
+;; Version: 0.0.5
+;; Package-Version: 20140626.35
 ;; URL: https://github.com/stanaka/dash-at-point
 ;;
 ;; This file is NOT part of GNU Emacs.

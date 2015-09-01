@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "corral" "corral.el" (21870 11187 0 0))
+;;;### (autoloads nil "corral" "corral.el" (21990 29539 0 0))
 ;;; Generated autoloads from corral.el
 
 (autoload 'corral-parentheses-backward "corral" "\

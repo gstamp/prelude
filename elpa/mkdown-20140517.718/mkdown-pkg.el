@@ -2,3 +2,6 @@
   '((markdown-mode "2.0"))
   :url "https://github.com/ajtulloch/mkdown.el" :keywords
   '("markdown"))
+;; Local Variables:
+;; no-byte-compile: t
+;; End:

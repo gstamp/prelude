@@ -814,10 +814,10 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 
 (prelude-require-package 'helm)
 
-(setq projectile-completion-system 'ido)
+;; (setq projectile-completion-system 'ido)
 
 ;; Appears to be buggy for me so switch off
-(setq projectile-rails-expand-snippet nil)
+;; (setq projectile-rails-expand-snippet nil)
 
 ;; (global-set-key (kbd "C-x o") 'projectile-find-file)
 ;; (global-set-key (kbd "C-x C-o") 'projectile-find-file)
@@ -970,6 +970,11 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 
 ;; 'Fix' 'WARNING: terminal is not fully functional' from less/etc.
 (setenv "PAGER" "cat")
+
+;; Avoid smart paren being too clever in ruby mode
+(sp-local-pair 'ruby-mode "(" ")" :unless '(sp-point-before-word-p))
+(sp-local-pair 'ruby-mode "[" "]" :unless '(sp-point-before-word-p))
+(sp-local-pair 'ruby-mode "\"" "\"" :unless '(sp-point-before-word-p))
 
 ;; Fix problem with running rspec with zsh
 (defadvice rspec-compile (around rspec-compile-around)

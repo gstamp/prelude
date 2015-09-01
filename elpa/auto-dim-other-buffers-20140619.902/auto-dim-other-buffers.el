@@ -8,8 +8,8 @@
 ;;	Michal Nazarewicz <mina86@mina86.com>
 ;; Maintainer: Michal Nazarewicz <mina86@mina86.com>
 ;; URL: https://github.com/mina86/auto-dim-other-buffers.el
-;; Version: 20140619.902
-;; X-Original-Version: 1.6.4
+;; Package-Version: 20140619.902
+;; Version: 1.6.4
 
 ;; This file is not part of GNU Emacs.
 

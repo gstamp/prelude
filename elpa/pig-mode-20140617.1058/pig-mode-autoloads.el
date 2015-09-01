@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "pig-mode" "pig-mode.el" (21531 29873 0 0))
+;;;### (autoloads nil "pig-mode" "pig-mode.el" (21990 29545 0 0))
 ;;; Generated autoloads from pig-mode.el
 
 (add-to-list 'auto-mode-alist '("\\.pig\\'" . pig-mode))

@@ -3,8 +3,8 @@
 
 ;;; Author: Glen Stampoultzis <gstamp@gmail.com>
 ;;; Homepage: http://orthogonal.me
-;; Version: 20131209.2119
-;;; X-Original-Version: 0.0.1
+;;; Version: 0.0.1
+;; Package-Version: 20131209.2119
 ;;; Package-Requires: ((pcre2el "1.5"))
 ;;; URL: https://github.com/gstamp/cucumber-goto-step
 
