@@ -30,6 +30,8 @@
 ;; JS indent levels
 (setq js-indent-level 2)
 (setq js2-basic-offset 2)
+(setq js2-bounce-indent-p t)
+
 
 ;; By default, Emacs inserts tabs in place of multiple spaces when it
 ;; formats a region. We want spaces.
@@ -57,10 +59,6 @@
       (format "\\(%s\\)\\|\\(%s\\)"
               vc-ignore-dir-regexp
               tramp-file-name-regexp))
-
-;; JS indenting
-(setq js2-basic-offset 2)
-(setq js2-bounce-indent-p t)
 
 ;; flash instead of ding
 (setq visible-bell t)
