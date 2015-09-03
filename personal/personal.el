@@ -880,6 +880,7 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 (prelude-require-packages '(multiple-cursors phi-search))
 
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-.") 'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-*") 'mc/mark-all-dwim)
 (global-unset-key (kbd "M-<down-mouse-1>"))
