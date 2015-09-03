@@ -1126,28 +1126,30 @@ This command calls the external script 'ruby-to-json.rb'."
 
 (setq magit-push-always-verify nil)
 
-(defun github-pr (&optional prompt)
-  (interactive "P")
-  (git-link)  ;; this is just here to force autoloading of git-link
-  (let* ((remote-name (if prompt (read-string "Remote: " nil nil git-link-default-remote)
-                        git-link-default-remote))
-         (remote-host (git-link-remote-host remote-name))
-         (branch      (git-link-current-branch))
-         (commit      (git-link-last-commit))
-         (handler     (nth 1 (assoc remote-host git-link-remote-alist))))
 
-    (cond ((null remote-host)
-           (message "Unknown remote '%s'" remote-name))
-          ((and (null commit) (null branch))
-           (message "Not on a branch, and repo does not have commits"))
-          ;; functionp???
-          ((null handler)
-           (message "No handler for %s" remote-host))
-          ;; null ret val
-          ((browse-url
-            (format "https://github.com/%s/compare/%s"
-                    (git-link-remote-dir remote-name)
-                    branch))))))
+;; Currently broken :-(
+;; (defun github-pr (&optional prompt)
+;;   (interactive "P")
+;;   (git-link)  ;; this is just here to force autoloading of git-link
+;;   (let* ((remote-name (if prompt (read-string "Remote: " nil nil git-link-default-remote)
+;;                         git-link-default-remote))
+;;          (remote-host (git-link-remote-host remote-name))
+;;          (branch      (git-link-current-branch))
+;;          (commit      (git-link-last-commit))
+;;          (handler     (nth 1 (assoc remote-host git-link-remote-alist))))
+
+;;     (cond ((null remote-host)
+;;            (message "Unknown remote '%s'" remote-name))
+;;           ((and (null commit) (null branch))
+;;            (message "Not on a branch, and repo does not have commits"))
+;;           ;; functionp???
+;;           ((null handler)
+;;            (message "No handler for %s" remote-host))
+;;           ;; null ret val
+;;           ((browse-url
+;;             (format "https://github.com/%s/compare/%s"
+;;                     (git-link-remote-dir remote-name)
+;;                     branch))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Dash and point
