@@ -814,9 +814,6 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 
 (prelude-require-package 'helm)
 
-;; Use helm for completing reads
-(setq magit-completing-read-function 'helm-completing-read-with-cands-in-buffer)
-
 ;; (setq projectile-completion-system 'ido)
 
 ;; Appears to be buggy for me so switch off
