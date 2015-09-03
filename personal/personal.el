@@ -832,10 +832,6 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
       helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
       helm-ff-file-name-history-use-recentf t)
 
-;; Minimal helm - defaults are super chunky
-;; (setq helm-display-header-line nil)
-;; (set-face-attribute 'helm-source-header nil :height 0.1)
-
 ;; Resize automatically
 (helm-autoresize-mode 1)
 
