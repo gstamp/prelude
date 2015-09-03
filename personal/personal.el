@@ -812,15 +812,10 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 ;;;; Setup: Helm/Projectile
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-package 'helm)
+(prelude-require-packages '(helm helm-swoop))
 
-;; (setq projectile-completion-system 'ido)
-
-;; Appears to be buggy for me so switch off
-;; (setq projectile-rails-expand-snippet nil)
-
-;; (global-set-key (kbd "C-x o") 'projectile-find-file)
-;; (global-set-key (kbd "C-x C-o") 'projectile-find-file)
+;; while in swoop mode C-c C-e to edit
+(global-set-key (kbd "C-c C-/") 'helm-swoop)
 
 (global-set-key (kbd "C-x o") 'helm-projectile-find-file)
 (global-set-key (kbd "C-x C-o") 'helm-projectile-find-file)
