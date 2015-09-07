@@ -11,6 +11,7 @@
         end-of-visual-line
         go-mode-insert-and-indent
         kill-region
+        org-ctrl-c-ctrl-c
         org-delete-char
         org-end-of-line
         org-force-self-insert
