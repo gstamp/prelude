@@ -1541,7 +1541,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;; Smartline setup
 (setq sml/theme 'dark)
 (require 'smart-mode-line)
-(setq sml/hidden-modes "yas\\|Golden\\|GitGutter\\|Projectile\\|RubyRef\\|rt\\|rails\\|,\\||\\|Pre")
+(setq sml/hidden-modes "yas\\|Golden\\|GitGutter\\|Projectile\\|RubyRef\\|rt\\|rails\\|,\\||\\|Pre\\|Dim\\|HS\\|wb")
 (sml/setup)
 
 (define-key global-map (kbd "M-g M-r") 'vr/replace)
