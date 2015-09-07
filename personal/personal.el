@@ -881,8 +881,13 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 (global-set-key (kbd "C-r") 'phi-search-backward)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; Setup: Org mode
+;;;; Setup: Org Mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(prelude-require-packages '(org-bullets))
+
+;; Start up bullets mode when org is loaded.
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 't)))
 
 ;; Don't use the standard org keys for todo and priority management
 ;; http://orgmode.org/manual/Conflicts.html
