@@ -1514,7 +1514,10 @@ This function is intended to be used as a value of `ring-bell-function'."
                             terraform-mode
                             hideshowvis
                             restclient
+                            rainbow-identifiers
                             ))
+
+(add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
 
 (require 'auto-highlight-symbol)
 
