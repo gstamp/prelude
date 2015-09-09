@@ -11,8 +11,8 @@
 (require 'prelude-erc)
 ;;(require 'prelude-evil)
 (require 'prelude-helm)
-(require 'prelude-ido)
-(require 'prelude-ido)
+(require 'prelude-helm-everywhere)
+;;(require 'prelude-ido)
 (require 'prelude-js)
 (require 'prelude-lisp)
 (require 'prelude-perl)
@@ -28,7 +28,6 @@
 ;; (require 'prelude-common-lisp)
 ;; (require 'prelude-erlang)
 ;; (require 'prelude-go) seems broken because of projectile-go
-;; (require 'prelude-helm-everywhere)
 ;; (require 'prelude-key-chord)
 ;; (require 'prelude-latex)
 ;; (require 'prelude-mediawiki)
