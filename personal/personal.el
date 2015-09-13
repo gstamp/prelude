@@ -812,7 +812,7 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 ;;;; Setup: Helm/Projectile
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(helm helm-swoop))
+(prelude-require-packages '(helm helm-swoop helm-ls-git))
 
 ;; while in swoop mode C-c C-e to edit
 (global-set-key (kbd "C-c C-/") 'helm-swoop)
@@ -848,6 +848,7 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 
 
 (global-set-key [f1] 'helm-projectile-switch-to-buffer)
+(global-set-key (kbd "C-<f1>") 'helm-ls-git-ls)
 (global-set-key [f2] 'helm-projectile-ag)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
