@@ -162,21 +162,6 @@
 
     (setenv "LANG" "en_AU.UTF-8")
 
-    (defadvice ansi-term (after advise-ansi-term-coding-system)
-      (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
-    (ad-activate 'ansi-term)
-    (defadvice multi-term (after advise-multi-term-coding-system)
-      (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
-    (ad-activate 'multi-term)
-
-    ;; Fixes multiterm problems I'm having
-    (setq locale-coding-system 'utf-8)
-    (set-selection-coding-system 'utf-8)
-    (prefer-coding-system 'utf-8)
-    (set-default-coding-systems 'utf-8)
-    (set-terminal-coding-system 'utf-8)
-    (set-keyboard-coding-system 'utf-8)
-
     ;; mac friendly font
     (if window-system
         (progn
@@ -946,6 +931,48 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 (defadvice cider-load-current-buffer (before save-before-cider-compile activate compile)
   (save-buffer))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Terminal
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; 'Fix' 'WARNING: terminal is not fully functional' from less/etc.
+(setenv "PAGER" "cat")
+
+(when (equal system-type 'darwin)
+  (progn
+    (defadvice ansi-term (after advise-ansi-term-coding-system)
+      (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
+    (ad-activate 'ansi-term)
+    (defadvice multi-term (after advise-multi-term-coding-system)
+      (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
+    (ad-activate 'multi-term)
+
+    ;; Fixes multiterm problems I'm having
+    (setq locale-coding-system 'utf-8)
+    (set-selection-coding-system 'utf-8)
+    (prefer-coding-system 'utf-8)
+    (set-default-coding-systems 'utf-8)
+    (set-terminal-coding-system 'utf-8)
+    (set-keyboard-coding-system 'utf-8)
+    ))
+
+(defun send-to-iterm (str)
+  "Send STR to the front window/session in iTerm. STR may contain
+multiple lines separated by `\n'."
+  (interactive "siTerm input: ")
+  (let ((lines (split-string
+                (replace-regexp-in-string "\"" "\\\"" str t t)
+                "\n")))
+    (do-applescript (concat
+                     "tell application \"iTerm\"\n"
+                     "	tell the current terminal\n"
+                     "    tell the current session\n"
+                     (mapconcat (lambda (s) (concat "write text \"" s "\"\n")) lines "")
+                     "    end tell\n"
+                     "	end tell\n"
+                     "end tell\n"
+                     ))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Ruby
@@ -965,9 +992,6 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 
 ;; Projecttile rails setup
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
-
-;; 'Fix' 'WARNING: terminal is not fully functional' from less/etc.
-(setenv "PAGER" "cat")
 
 ;; Avoid smart paren being too clever in ruby mode
 (sp-local-pair 'ruby-mode "(" ")" :unless '(sp-point-before-word-p))
