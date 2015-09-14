@@ -1417,7 +1417,7 @@ This function is intended to be used as a value of `ring-bell-function'."
  '(region                              ((t (                       :background "#D0BF8F"))))
  '(highlight                           ((t (                       :background "#D0BF8F"))))
  '(linum                               ((t (:foreground "#ffffff"  :background "#6a6a6a" :height 120 :weight light))))
- '(minibuffer-prompt                   ((t (:foreground "#ffffff"  :background "#F20211" :height 180 ))))
+ '(minibuffer-prompt                   ((t (:foreground "#ffffff"  :background "#F20211"))))
  '(mode-line                           ((t (:foreground "#777777"  :background "#303030" :weight light :box nil :height 125 :inherit (variable-pitch) ))))
  '(fringe                              ((t (                       :background "#4a4a4a"                                               ))))
  )
