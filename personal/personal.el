@@ -1516,7 +1516,13 @@ This function is intended to be used as a value of `ring-bell-function'."
                             hideshowvis
                             restclient
                             rainbow-identifiers
+                            alchemist
                             ))
+
+(add-hook 'alchemist-mode-hook 'company-mode)
+(defun custom-erlang-mode-hook ()
+  (define-key erlang-mode-map (kbd "M-,") 'alchemist-goto-jump-back))
+(add-hook 'erlang-mode-hook 'custom-erlang-mode-hook)
 
 (add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
 
