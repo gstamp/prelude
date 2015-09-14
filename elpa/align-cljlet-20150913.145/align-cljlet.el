@@ -4,7 +4,7 @@
 
 ;; Author: Glen Stampoultzis <gstamp(at)gmail.com>
 ;; Version: 0.3
-;; Package-Version: 20131016.2356
+;; Package-Version: 20150913.145
 ;; Package-Requires: ((clojure-mode "1.11.5"))
 ;; Keywords; clojure, align, let
 ;; URL: https://github.com/gstamp/align-cljlet
@@ -100,7 +100,8 @@
              (string-match " *cond" name)
              (string-match " *condp" name)
              (string-match " *defroutes" name)
-             )))
+             (string-match " *case" name)
+             (string-match " *alt" name))))
       (if (looking-at "{")
           t))))
 
@@ -278,10 +279,20 @@ positioned on the defroute form."
           (down-list 1)
           (forward-sexp 4)
           (backward-sexp))
-      (if (not (looking-at "{"))
-          ;; move to start of [
-          (down-list 2)
-        (down-list 1)))))
+      (if (looking-at "( *case\\b")
+          (progn
+            (down-list 1)
+            (forward-sexp 3)
+            (backward-sexp))
+        (if (looking-at "( *alt!")
+            (progn
+              (down-list 1)
+              (forward-sexp 2)
+              (backward-sexp))
+          (if (not (looking-at "{"))
+              ;; move to start of [
+              (down-list 2)
+            (down-list 1)))))))
 
 (defun acl-align-form ()
   "Determine what type of form we are currently positioned at and align it"

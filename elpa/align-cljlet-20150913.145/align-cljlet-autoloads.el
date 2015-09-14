@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "align-cljlet" "align-cljlet.el" (21990 29504
+;;;### (autoloads nil "align-cljlet" "align-cljlet.el" (22005 62164
 ;;;;;;  0 0))
 ;;; Generated autoloads from align-cljlet.el
 
