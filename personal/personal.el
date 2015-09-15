@@ -1541,9 +1541,12 @@ This function is intended to be used as a value of `ring-bell-function'."
                             restclient
                             rainbow-identifiers
                             alchemist
+                            csv-mode
                             ))
 
 (add-hook 'alchemist-mode-hook 'company-mode)
+(add-hook 'elixir-mode-hook 'alchemist-mode)
+
 (defun custom-erlang-mode-hook ()
   (define-key erlang-mode-map (kbd "M-,") 'alchemist-goto-jump-back))
 (add-hook 'erlang-mode-hook 'custom-erlang-mode-hook)
