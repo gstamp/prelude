@@ -997,6 +997,7 @@ multiple lines separated by `\n'."
 
 ;; Avoid smart paren being too clever in ruby mode
 (sp-local-pair 'ruby-mode "(" ")" :unless '(sp-point-before-word-p))
+(sp-local-pair 'ruby-mode "{" "}" :unless '(sp-point-before-word-p))
 (sp-local-pair 'ruby-mode "[" "]" :unless '(sp-point-before-word-p))
 (sp-local-pair 'ruby-mode "\"" "\"" :unless '(sp-point-before-word-p))
 
