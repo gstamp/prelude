@@ -1556,6 +1556,21 @@ This function is intended to be used as a value of `ring-bell-function'."
   (define-key erlang-mode-map (kbd "M-,") 'alchemist-goto-jump-back))
 (add-hook 'erlang-mode-hook 'custom-erlang-mode-hook)
 
+(defun iex-phoenix ()
+  "Start an IEx process with mix 'iex -S mix phoenix.server' in the
+context of an Elixir project.
+Show the IEx buffer if an IEx process is already run."
+  (interactive)
+  (let ((old-directory default-directory))
+    (if (alchemist-project-p)
+        (progn
+          (alchemist-project--establish-root-directory)
+          (let ((proc (alchemist-iex-process " -S mix phoenix.server")))
+            (cd old-directory)
+            (pop-to-buffer (process-buffer proc))))
+      (message "No mix.exs file available. Please use `alchemist-iex-run' instead."))))
+(global-set-key (kbd "M-=") 'iex-phoenix)
+
 (add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
 
 (require 'auto-highlight-symbol)
