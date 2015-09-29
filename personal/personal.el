@@ -1547,6 +1547,8 @@ This function is intended to be used as a value of `ring-bell-function'."
                             csv-mode
                             ))
 
+(add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode))
+
 (add-hook 'alchemist-mode-hook 'company-mode)
 (add-hook 'elixir-mode-hook 'alchemist-mode)
 
