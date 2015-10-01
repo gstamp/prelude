@@ -1549,6 +1549,11 @@ This function is intended to be used as a value of `ring-bell-function'."
 
 (add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode))
 
+;; Customize auto dim other buffers
+(setq auto-dim-other-buffers-dim-on-focus-out nil)
+(custom-set-faces
+ '(auto-dim-other-buffers-face ((t (:background "dim gray")))))
+
 (add-hook 'alchemist-mode-hook 'company-mode)
 (add-hook 'elixir-mode-hook 'alchemist-mode)
 
