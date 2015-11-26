@@ -733,6 +733,9 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
   (lambda ()
     (define-key ag-mode-map (kbd "e") 'wgrep-change-to-wgrep-mode)))
 
+;; Makes dired jump up directory when pressing ctrl-l - same as helm
+(define-key dired-mode-map (kbd "C-l") 'dired-up-directory)
+
 ;; Move more quickly
 (global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (line-move 5))))
 (global-set-key (kbd "C-S-p") (lambda () (interactive) (ignore-errors (line-move -5))))
