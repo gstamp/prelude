@@ -1485,9 +1485,12 @@ This function is intended to be used as a value of `ring-bell-function'."
 (eval-after-load "em-alias"
   '(progn (eshell/alias "ll" "ls -la $*")
           (eshell/alias "g" "git $*")
+          (eshell/alias "bi" "bundle install $*")
+          (eshell/alias "bil" "bundle install --local $*")
           (eshell/alias "be" "bundle exec $*")
           (eshell/alias "gs" "git status")
           (eshell/alias "gco" "git checkout $*")
+          (eshell/alias "rspec" "bundle exec rspec $*")
           ))
 
 ;; Case? It matters not.
