@@ -1484,6 +1484,8 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;; alias
 (eval-after-load "em-alias"
   '(progn (eshell/alias "ll" "ls -la $*")
+          (eshell/alias "ff" "find-file $*")
+          (eshell/alias "ec" "find-file $*")
           (eshell/alias "g" "git $*")
           (eshell/alias "bi" "bundle install $*")
           (eshell/alias "bil" "bundle install --local $*")
@@ -1491,6 +1493,7 @@ This function is intended to be used as a value of `ring-bell-function'."
           (eshell/alias "gs" "git status")
           (eshell/alias "gco" "git checkout $*")
           (eshell/alias "rspec" "bundle exec rspec $*")
+          (eshell/alias "d" "dired")
           ))
 
 ;; Case? It matters not.
