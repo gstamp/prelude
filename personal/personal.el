@@ -938,7 +938,7 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Clojure
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-require-packages '(clojure-mode cider align-cljlet cider-decompile cider-spy clojure-quick-repls))
+(prelude-require-packages '(clojure-mode cider align-cljlet cider-decompile cider-spy clojure-quick-repls cider-eval-sexp-fu))
 
 (eval-after-load 'clojure-mode
   '(define-key clojure-mode-map (kbd "C-c C-a") 'align-cljlet))
