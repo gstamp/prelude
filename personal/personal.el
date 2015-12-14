@@ -374,6 +374,60 @@
 ;;;; Setup: Editor helpers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
+(defun current-quotes-char ()
+  (nth 3 (syntax-ppss)))
+
+(defalias 'point-is-in-string-p 'current-quotes-char)
+
+(defun move-forward-out-of-param ()
+  (while (not (looking-at ")\\|, \\| ?}\\| ?\\]"))
+    (cond
+     ((point-is-in-string-p) (move-point-forward-out-of-string))
+     ((looking-at "(\\|{\\|\\[") (forward-list))
+     (t (forward-char)))))
+
+(defun move-backward-out-of-param ()
+  (while (not (looking-back "(\\|, \\|{ ?\\|\\[ ?"))
+    (cond
+     ((point-is-in-string-p) (move-point-backward-out-of-string))
+     ((looking-back ")\\|}\\|\\]") (backward-list))
+     (t (backward-char)))))
+
+(defun new-line-dwim ()
+  (interactive)
+  (let ((break-open-pair (or (and (looking-back "{" 1) (looking-at "}"))
+                             (and (looking-back ">" 1) (looking-at "<"))
+                             (and (looking-back "(" 1) (looking-at ")"))
+                             (and (looking-back "\\[" 1) (looking-at "\\]")))))
+    (newline)
+    (when break-open-pair
+      (save-excursion
+        (newline)
+        (indent-for-tab-command)))
+    (indent-for-tab-command)))
+(global-set-key (kbd "<M-return>") 'new-line-dwim)
+
+(defun transpose-params ()
+  "Presumes that params are in the form (p, p, p) or {p, p, p} or [p, p, p]"
+  (interactive)
+  (let* ((end-of-first (cond
+                        ((looking-at ", ") (point))
+                        ((and (looking-back ",") (looking-at " ")) (- (point) 1))
+                        ((looking-back ", ") (- (point) 2))
+                        (t (error "Place point between params to transpose."))))
+         (start-of-first (save-excursion
+                           (goto-char end-of-first)
+                           (move-backward-out-of-param)
+                           (point)))
+         (start-of-last (+ end-of-first 2))
+         (end-of-last (save-excursion
+                        (goto-char start-of-last)
+                        (move-forward-out-of-param)
+                        (point))))
+    (transpose-regions start-of-first end-of-first start-of-last end-of-last)))
+;; TODO: Find good keybind for this
+
 (defun auto-align (align-to mark-f)
   (save-excursion
     (unless mark-active
@@ -487,6 +541,9 @@
 ;;;; Setup: Helper Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun untabify-buffer ()
+  (interactive)
+  (untabify (point-min) (point-max)))
 
 (defun ediff-marked-pair ()
   "Run ediff-files on a pair of files marked in dired buffer"
