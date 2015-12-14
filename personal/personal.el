@@ -1003,11 +1003,11 @@ multiple lines separated by `\n'."
                 "\n")))
     (do-applescript (concat
                      "tell application \"iTerm\"\n"
-                     "	tell the current terminal\n"
+                     "  tell the current terminal\n"
                      "    tell the current session\n"
                      (mapconcat (lambda (s) (concat "write text \"" s "\"\n")) lines "")
                      "    end tell\n"
-                     "	end tell\n"
+                     "  end tell\n"
                      "end tell\n"
                      ))))
 
