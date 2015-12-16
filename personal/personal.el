@@ -1576,7 +1576,7 @@ This function is intended to be used as a value of `ring-bell-function'."
                             mkdown
                             ansible
                             auto-dim-other-buffers
-                            flycheck-tip
+                            flycheck-pos-tip
                             emmet-mode
                             htmlize
                             ibuffer-vc
@@ -1590,6 +1590,9 @@ This function is intended to be used as a value of `ring-bell-function'."
                             ))
 
 (add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode))
+
+(with-eval-after-load 'flycheck
+  (flycheck-pos-tip-mode))
 
 ;; Customize auto dim other buffers
 (setq auto-dim-other-buffers-dim-on-focus-out nil)
@@ -1623,9 +1626,6 @@ Show the IEx buffer if an IEx process is already run."
 (require 'auto-highlight-symbol)
 
 (global-auto-highlight-symbol-mode)
-
-(require 'flycheck-tip) ; force load
-(flycheck-tip-use-timer 'verbose)
 
 (add-hook 'prog-mode-hook 'ws-butler-mode)
 
