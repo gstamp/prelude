@@ -1489,7 +1489,8 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;; Setup: Flycheck
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-package 'flycheck)
+(prelude-require-packages '(flycheck flycheck-pos-tip))
+
 
 (defun set-flycheck-defaults()
   (setq flycheck-disabled-checkers '(ruby-rubocop json-jsonlint))
@@ -1498,6 +1499,8 @@ This function is intended to be used as a value of `ring-bell-function'."
 
 (add-hook 'flycheck-mode-hook 'set-flycheck-defaults)
 
+(with-eval-after-load 'flycheck
+  (flycheck-pos-tip-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Shell
@@ -1576,7 +1579,6 @@ This function is intended to be used as a value of `ring-bell-function'."
                             mkdown
                             ansible
                             auto-dim-other-buffers
-                            flycheck-pos-tip
                             emmet-mode
                             htmlize
                             ibuffer-vc
@@ -1590,9 +1592,6 @@ This function is intended to be used as a value of `ring-bell-function'."
                             ))
 
 (add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode))
-
-(with-eval-after-load 'flycheck
-  (flycheck-pos-tip-mode))
 
 ;; Customize auto dim other buffers
 (setq auto-dim-other-buffers-dim-on-focus-out nil)
