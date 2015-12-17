@@ -316,6 +316,19 @@
 ;;;; Setup: Buffer Management
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Auto save on focus change
+(defun save-all ()
+  (interactive)
+  (simple-save-some-buffers))
+(add-hook 'focus-out-hook 'save-all)
+
+;; ibuffer-vc setup
+(add-hook 'ibuffer-hook
+          (lambda ()
+            (ibuffer-vc-set-filter-groups-by-vc-root)
+            (unless (eq ibuffer-sorting-mode 'alphabetic)
+              (ibuffer-do-sort-by-alphabetic))))
+
 (defun rename-current-buffer-file ()
   "Renames current buffer and file it is visiting."
   (interactive)
@@ -1016,7 +1029,10 @@ multiple lines separated by `\n'."
 ;;;; Setup: Ruby
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(rinari rspec-mode bundler ruby-mode ruby-tools ruby-hash-syntax ruby-refactor projectile-rails adaptive-wrap))
+(prelude-require-packages '(rinari rspec-mode bundler ruby-mode ruby-tools ruby-hash-syntax
+                                   ruby-refactor projectile-rails adaptive-wrap rainbow-identifiers))
+
+(add-hook 'ruby-mode-hook 'rainbow-identifiers-mode)
 
 (setq projectile-rails-keymap-prefix (kbd "C-c C-f"))
 
@@ -1567,36 +1583,9 @@ This function is intended to be used as a value of `ring-bell-function'."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; Setup: Misc
+;;;; Setup: Erlang/Elixir
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-require-packages '(cucumber-goto-step
-                            visual-regexp
-                            discover
-                            pig-mode
-                            nginx-mode
-                            idle-highlight-mode
-                            ws-butler
-                            mkdown
-                            ansible
-                            auto-dim-other-buffers
-                            emmet-mode
-                            htmlize
-                            ibuffer-vc
-                            jade-mode
-                            terraform-mode
-                            hideshowvis
-                            restclient
-                            rainbow-identifiers
-                            alchemist
-                            csv-mode
-                            ))
-
-(add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode))
-
-;; Customize auto dim other buffers
-(setq auto-dim-other-buffers-dim-on-focus-out nil)
-(custom-set-faces
- '(auto-dim-other-buffers-face ((t (:background "dim gray")))))
+(prelude-require-packages '(alchemist))
 
 (add-hook 'alchemist-mode-hook 'company-mode)
 (add-hook 'elixir-mode-hook 'alchemist-mode)
@@ -1620,7 +1609,49 @@ Show the IEx buffer if an IEx process is already run."
       (message "No mix.exs file available. Please use `alchemist-iex-run' instead."))))
 (global-set-key (kbd "M-=") 'iex-phoenix)
 
-(add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Smartline
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq sml/theme 'dark)
+(require 'smart-mode-line)
+(setq sml/hidden-modes "yas\\|Golden\\|GitGutter\\|Projectile\\|RubyRef\\|rt\\|rails\\|,\\||\\|Pre\\|Dim\\|HS\\|wb")
+(sml/setup)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Auto dim other buffers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(prelude-require-packages '(auto-dim-other-buffers))
+
+;; Customize auto dim other buffers
+(setq auto-dim-other-buffers-dim-on-focus-out nil)
+(custom-set-faces
+ '(auto-dim-other-buffers-face ((t (:background "dim gray")))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Setup: Misc
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(prelude-require-packages '(cucumber-goto-step
+                            visual-regexp
+                            discover
+                            pig-mode
+                            nginx-mode
+                            idle-highlight-mode
+                            ws-butler
+                            mkdown
+                            ansible
+                            emmet-mode
+                            htmlize
+                            ibuffer-vc
+                            jade-mode
+                            terraform-mode
+                            hideshowvis
+                            restclient
+                            csv-mode
+                            ))
+
+(add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode))
 
 (require 'auto-highlight-symbol)
 
@@ -1631,28 +1662,8 @@ Show the IEx buffer if an IEx process is already run."
 (add-hook 'visual-line-mode-hook 'adaptive-wrap-prefix-mode)
 (setq adaptive-wrap-extra-indent 4)
 
-;; ibuffer-vc setup
-(add-hook 'ibuffer-hook
-          (lambda ()
-            (ibuffer-vc-set-filter-groups-by-vc-root)
-            (unless (eq ibuffer-sorting-mode 'alphabetic)
-              (ibuffer-do-sort-by-alphabetic))))
-
-
-;; Smartline setup
-(setq sml/theme 'dark)
-(require 'smart-mode-line)
-(setq sml/hidden-modes "yas\\|Golden\\|GitGutter\\|Projectile\\|RubyRef\\|rt\\|rails\\|,\\||\\|Pre\\|Dim\\|HS\\|wb")
-(sml/setup)
-
 (define-key global-map (kbd "M-g M-r") 'vr/replace)
 (define-key global-map (kbd "M-g r") 'vr/query-replace)
-
-;; Auto save on focus change - only works on Emacs HEAD
-(defun save-all ()
-  (interactive)
-  (simple-save-some-buffers))
-(add-hook 'focus-out-hook 'save-all)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: IMenu Sections
