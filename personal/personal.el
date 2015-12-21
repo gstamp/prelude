@@ -1036,7 +1036,7 @@ multiple lines separated by `\n'."
 
 (setq projectile-rails-keymap-prefix (kbd "C-c C-f"))
 
-;; Align to the state of the statement rather than the keyword
+;; Align to the tart of the statement rather than the keyword
 (setq ruby-align-to-stmt-keywords 't)
 
 ;; Enable symbol auto completion
