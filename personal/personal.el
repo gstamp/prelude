@@ -1010,7 +1010,7 @@
 (defun send-to-iterm (str)
   "Send STR to the front window/session in iTerm. STR may contain
 multiple lines separated by `\n'."
-  (interactive "siTerm input: ")
+  (interactive "iTerm input: ")
   (let ((lines (split-string
                 (replace-regexp-in-string "\"" "\\\"" str t t)
                 "\n")))
