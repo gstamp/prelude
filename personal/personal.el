@@ -859,7 +859,7 @@
 
 ;; Some experimental helm defaults
 (setq helm-quick-update                     t ; do not display invisible candidates
-      helm-split-window-in-side-p           t ; Force splitting inside selected window when non--nil.
+      helm-split-window-in-side-p           nil ; Force splitting inside selected window when non--nil.
       helm-buffers-fuzzy-matching           t ; fuzzy matching buffer names when non--nil
       helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
       helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
@@ -881,7 +881,7 @@
 (add-hook 'helm-minibuffer-set-up-hook 'helm-hide-minibuffer-maybe)
 
 
-(global-set-key [f1] 'helm-projectile-switch-to-buffer)
+(global-set-key [f1] 'helm-projectile)
 (global-set-key (kbd "C-<f1>") 'helm-ls-git-ls)
 (global-set-key [f2] 'helm-projectile-ag)
 
