@@ -973,10 +973,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Clojure
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-require-packages '(clojure-mode cider align-cljlet cider-decompile cider-spy clojure-quick-repls cider-eval-sexp-fu))
-
-(eval-after-load 'clojure-mode
-  '(define-key clojure-mode-map (kbd "C-c C-a") 'align-cljlet))
+(prelude-require-packages '(clojure-mode cider cider-decompile cider-spy clojure-quick-repls cider-eval-sexp-fu))
 
 ;; Save buffer before trying to compile
 (defadvice cider-load-current-buffer (before save-before-cider-compile activate compile)
@@ -1031,6 +1028,9 @@ multiple lines separated by `\n'."
 
 (prelude-require-packages '(rinari rspec-mode bundler ruby-mode ruby-tools ruby-hash-syntax
                                    ruby-refactor projectile-rails adaptive-wrap rainbow-identifiers))
+
+;; Don't insert crap into my file automatically
+(setq ruby-insert-encoding-magic-comment nil)
 
 (add-hook 'ruby-mode-hook 'rainbow-identifiers-mode)
 
@@ -1485,21 +1485,27 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;; Setup: Theme adjustments
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(custom-theme-set-variables
- 'zenburn
- '(fringe-mode 10 nil (fringe))
- '(linum-format     " %6d "  ))
+(if (boundp 'zenburn)
+    (progn
+      (custom-theme-set-variables
+       'zenburn
+       '(fringe-mode 10 nil (fringe))
+       '(linum-format     " %6d "  ))
 
 
-(custom-theme-set-faces
- 'zenburn
- '(region                              ((t (                       :background "#D0BF8F"))))
- '(highlight                           ((t (                       :background "#D0BF8F"))))
- '(linum                               ((t (:foreground "#ffffff"  :background "#6a6a6a" :height 120 :weight light))))
- '(minibuffer-prompt                   ((t (:foreground "#ffffff"  :background "#F20211"))))
- '(mode-line                           ((t (:foreground "#777777"  :background "#303030" :weight light :box nil :height 125 :inherit (variable-pitch) ))))
- '(fringe                              ((t (                       :background "#4a4a4a"                                               ))))
- )
+      (custom-theme-set-faces
+       'zenburn
+       '(region                              ((t (                       :background "#D0BF8F"))))
+       '(highlight                           ((t (                       :background "#D0BF8F"))))
+       '(linum                               ((t (:foreground "#ffffff"  :background "#6a6a6a" :height 120 :weight light))))
+       '(minibuffer-prompt                   ((t (:foreground "#ffffff"  :background "#F20211"))))
+       '(mode-line                           ((t (:foreground "#777777"  :background "#303030" :weight light :box nil :height 125 :inherit (variable-pitch) ))))
+       '(fringe                              ((t (                       :background "#4a4a4a"                                               ))))
+       )
+
+      )
+  )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Flycheck
@@ -1626,7 +1632,7 @@ Show the IEx buffer if an IEx process is already run."
 ;; Customize auto dim other buffers
 (setq auto-dim-other-buffers-dim-on-focus-out nil)
 (custom-set-faces
- '(auto-dim-other-buffers-face ((t (:background "dim gray")))))
+ '(auto-dim-other-buffers-face ((t (:background "WhiteSmoke")))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1665,6 +1671,9 @@ Show the IEx buffer if an IEx process is already run."
 (define-key global-map (kbd "M-g M-r") 'vr/replace)
 (define-key global-map (kbd "M-g r") 'vr/query-replace)
 
+;; Enable company mode for elisp
+(add-hook 'emacs-lisp-mode-hook 'company-mode)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: IMenu Sections
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1681,4 +1690,3 @@ Show the IEx buffer if an IEx process is already run."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'personal)
 ;;; personal.el ends here
-
