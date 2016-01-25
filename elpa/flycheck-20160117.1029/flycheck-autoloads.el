@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "flycheck" "flycheck.el" (22129 58871 0 0))
+;;;### (autoloads nil "flycheck" "flycheck.el" (22177 19833 0 0))
 ;;; Generated autoloads from flycheck.el
 
 (autoload 'flycheck-info "flycheck" "\
@@ -105,7 +105,7 @@ The following PROPERTIES constitute an error level:
 (put 'flycheck-define-error-level 'lisp-indent-function '1)
 
 (autoload 'flycheck-define-command-checker "flycheck" "\
-Define SYMBOL as syntax checker which runs a command.
+Define SYMBOL as syntax checker to run a command.
 
 Define SYMBOL as generic syntax checker via
 `flycheck-define-generic-checker', which uses an external command
@@ -225,8 +225,8 @@ Use this together with the `option', `option-list' and
 
 ;;;***
 
-;;;### (autoloads nil nil ("flycheck-ert.el" "flycheck-pkg.el") (22129
-;;;;;;  58871 193387 0))
+;;;### (autoloads nil nil ("flycheck-pkg.el") (22177 19833 859199
+;;;;;;  0))
 
 ;;;***
 
