@@ -67,9 +67,10 @@
                                                     (abbreviate-file-name (buffer-file-name))
                                                   "%b"))))
 
-(prelude-require-packages '(soothe-theme sublime-themes ample-theme))
+(prelude-require-packages '(soothe-theme sublime-themes ample-theme farmhouse-theme))
 
-;; use zenburn as the default theme
+
+
 (when prelude-theme
   (load-theme prelude-theme t))
 
