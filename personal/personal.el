@@ -1426,8 +1426,11 @@ This function is intended to be used as a value of `ring-bell-function'."
 (add-hook 'coffee-mode-hook
           (lambda () (highlight-indentation-current-column-mode)))
 
-(custom-set-faces
- '(highlight-indentation-current-column-face ((t (:background "#444444")))))
+(if (equal prelude-theme 'farmhouse-light)
+    (custom-set-faces
+     '(highlight-indentation-current-column-face ((t (:background "#f0f0f0")))))
+  (custom-set-faces
+   '(highlight-indentation-current-column-face ((t (:background "#444444"))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Auto reload tags
@@ -1578,9 +1581,11 @@ This function is intended to be used as a value of `ring-bell-function'."
 (global-set-key (kbd "M-}") 'corral-braces-forward)
 (global-set-key (kbd "M-\"") 'corral-double-quotes-backward)
 
-;; Use a more subtle colour for smartparens overlays
-(custom-set-faces
- '(sp-pair-overlay-face ((t (:inherit highlight :background "gray16")))))
+(if (boundp 'zenburn)
+    (progn
+      ;; Use a more subtle colour for smartparens overlays
+      (custom-set-faces
+       '(sp-pair-overlay-face ((t (:inherit highlight :background "gray16")))))))
 
 ;; Some smart parens options to make editing ruby less annoying
 (add-to-list 'sp-autoescape-string-quote-if-empty 'ruby-mode)

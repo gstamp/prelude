@@ -5,3 +5,5 @@
       (set-frame-size (selected-frame) 124 40)
       )
   )
+
+(setq prelude-theme 'farmhouse-light)
