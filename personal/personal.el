@@ -848,6 +848,9 @@
 
 (prelude-require-packages '(helm helm-swoop helm-ls-git))
 
+;; Reload the theme as something in the load process messes it up
+(load-theme prelude-theme)
+
 ;; while in swoop mode C-c C-e to edit
 (global-set-key (kbd "C-c C-/") 'helm-swoop)
 
@@ -1582,10 +1585,12 @@ This function is intended to be used as a value of `ring-bell-function'."
 (global-set-key (kbd "M-\"") 'corral-double-quotes-backward)
 
 (if (boundp 'zenburn)
-    (progn
-      ;; Use a more subtle colour for smartparens overlays
-      (custom-set-faces
-       '(sp-pair-overlay-face ((t (:inherit highlight :background "gray16")))))))
+    ;; Use a more subtle colour for smartparens overlays
+    (custom-set-faces
+     '(sp-pair-overlay-face ((t (:inherit highlight :background "gray16")))))
+  (custom-set-faces
+   '(sp-pair-overlay-face nil))
+  )
 
 ;; Some smart parens options to make editing ruby less annoying
 (add-to-list 'sp-autoescape-string-quote-if-empty 'ruby-mode)
