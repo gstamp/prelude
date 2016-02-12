@@ -924,6 +924,9 @@
 
 (prelude-require-packages '(org-bullets))
 
+;; Git flavoured markdown
+(require 'ox-md)
+
 ;; Start up bullets mode when org is loaded.
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 't)))
 
