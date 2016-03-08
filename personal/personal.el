@@ -554,6 +554,16 @@
 ;;;; Setup: Helper Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; If inside a string escape the pasted contents. (consider making default)
+(defun escape-yank()
+  (interactive)
+  (if (nth 3 (syntax-ppss)) ;; Checks if inside a string
+      (insert-for-yank (replace-regexp-in-string "[\\\"]"
+                                                 "\\\\\\&"
+                                                 (current-kill 0)
+                                                 t))
+    (call-interactively 'yank)))
+
 (defun untabify-buffer ()
   (interactive)
   (untabify (point-min) (point-max)))
