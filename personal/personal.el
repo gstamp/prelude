@@ -1623,6 +1623,24 @@ This function is intended to be used as a value of `ring-bell-function'."
   (define-key erlang-mode-map (kbd "M-,") 'alchemist-goto-jump-back))
 (add-hook 'erlang-mode-hook 'custom-erlang-mode-hook)
 
+;; Add ruby-end support for elixir mode
+(add-to-list 'elixir-mode-hook
+             (defun auto-activate-ruby-end-mode-for-elixir-mode ()
+               (set (make-variable-buffer-local 'ruby-end-expand-keywords-before-re)
+                    "\\(?:^\\|\\s-+\\)\\(?:do\\)")
+               (set (make-variable-buffer-local 'ruby-end-check-statement-modifiers) nil)
+               (ruby-end-mode +1)))
+
+;; Add smart-paren support for dealing with do..end blocks to Elixir
+(sp-with-modes '(elixir-mode)
+  (sp-local-pair "fn" "end"
+                 :when '(("SPC" "RET"))
+                 :actions '(insert navigate))
+  (sp-local-pair "do" "end"
+                 :when '(("SPC" "RET"))
+                 :post-handlers '(sp-ruby-def-post-handler)
+                 :actions '(insert navigate)))
+
 (defun iex-phoenix ()
   "Start an IEx process with mix 'iex -S mix phoenix.server' in the
 context of an Elixir project.
