@@ -16,6 +16,7 @@
         org-end-of-line
         org-force-self-insert
         org-self-insert-command
+        org-yank
         orgtbl-self-insert-command
         paredit-forward-delete
         prelude-move-beginning-of-line
