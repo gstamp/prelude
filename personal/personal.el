@@ -1678,6 +1678,7 @@ Show the IEx buffer if an IEx process is already run."
                             hideshowvis
                             restclient
                             csv-mode
+                            elmacro
                             ))
 
 (add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode))
