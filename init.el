@@ -33,8 +33,8 @@
 
 ;;; Code:
 (defvar current-user
-      (getenv
-       (if (equal system-type 'windows-nt) "USERNAME" "USER")))
+  (getenv
+   (if (equal system-type 'windows-nt) "USERNAME" "USER")))
 
 (message "Prelude is powering up... Be patient, Master %s!" current-user)
 
@@ -83,9 +83,14 @@ by Prelude.")
 (add-to-list 'load-path prelude-vendor-dir)
 (prelude-add-subfolders-to-load-path prelude-vendor-dir)
 
-;; reduce the frequency of garbage collection by making it happen on
-;; each 50MB of allocated data (the default is on every 0.76MB)
-(setq gc-cons-threshold 50000000)
+;; Turn off GC when minibuffer open
+;; See: http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
+(defun my-minibuffer-setup-hook ()
+  (setq gc-cons-threshold most-positive-fixnum))
+(defun my-minibuffer-exit-hook ()
+  (setq gc-cons-threshold 800000))
+(add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
+(add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
 ;; warn when opening files bigger than 100MB
 (setq large-file-warning-threshold 100000000)
