@@ -1216,6 +1216,20 @@ This command calls the external script 'ruby-to-json.rb'."
 
 (setq magit-push-always-verify nil)
 
+;; Open magit status in the same window
+(setq magit-display-buffer-function
+      (lambda (buffer)
+        (display-buffer
+         buffer (if (and (derived-mode-p 'magit-mode)
+                         (memq (with-current-buffer buffer major-mode)
+                               '(magit-process-mode
+                                 magit-revision-mode
+                                 magit-diff-mode
+                                 magit-stash-mode
+                                 magit-status-mode)))
+                    nil
+                  '(display-buffer-same-window)))))
+
 (defun github-pr (&optional prompt)
   (interactive "P")
   (command-execute 'git-link)  ;; this is just here to force autoloading of git-link
