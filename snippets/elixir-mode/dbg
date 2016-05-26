@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: debug
+# key: dbg
+# --
+IO.write "Variable ${1:var_name} is "; IO.inspect $1
