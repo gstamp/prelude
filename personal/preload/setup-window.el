@@ -6,4 +6,4 @@
       )
   )
 
-(setq prelude-theme 'farmhouse-light)
+(setq prelude-theme 'farmhouse-dark)

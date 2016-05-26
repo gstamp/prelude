@@ -951,7 +951,7 @@
 
 ;; Define org-capture key - make sure org-default-notes-file is
 ;; defined for local machine
-(define-key global-map "\C-cc" 'org-capture)
+(define-key global-map (kbd "C-c c") 'org-capture)
 
 ;; Colour org mode source code
 (setq org-src-fontify-natively 1)
@@ -1629,22 +1629,26 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Erlang/Elixir
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-require-packages '(alchemist))
+(prelude-require-packages '(alchemist flycheck-elixir ob-elixir))
 
 (add-hook 'alchemist-mode-hook 'company-mode)
 (add-hook 'elixir-mode-hook 'alchemist-mode)
 
-(defun custom-erlang-mode-hook ()
-  (define-key erlang-mode-map (kbd "M-,") 'alchemist-goto-jump-back))
-(add-hook 'erlang-mode-hook 'custom-erlang-mode-hook)
+(defun custom-elixir-mode-hook ()
+  (flycheck-mode)
+  (smartparens-mode -1)
+  (define-key elixir-mode-map (kbd "M-,") 'alchemist-goto-jump-back)
 
-;; Add ruby-end support for elixir mode
-(add-to-list 'elixir-mode-hook
-             (defun auto-activate-ruby-end-mode-for-elixir-mode ()
-               (set (make-variable-buffer-local 'ruby-end-expand-keywords-before-re)
-                    "\\(?:^\\|\\s-+\\)\\(?:do\\)")
-               (set (make-variable-buffer-local 'ruby-end-check-statement-modifiers) nil)
-               (ruby-end-mode +1)))
+  (define-key ruby-mode-map (kbd "<f5>") (lambda() (interactive) (close-rspec-output-buffer) (rspec-verify)))
+  (define-key ruby-mode-map (kbd "M-<f5>") (lambda() (interactive) (close-rspec-output-buffer) (rspec-verify-all)))
+
+  (define-key elixir-mode-map (kbd "<f5>") 'alchemist-mix-test-at-point)
+  (define-key elixir-mode-map (kbd "S-<f5>") 'alchemist-mix-test)
+  (define-key elixir-mode-map (kbd "M-<f5>") 'alchemist-mix-test)
+  (define-key elixir-mode-map (kbd "C-c , t") 'alchemist-project-toggle-file-and-tests)
+  (define-key elixir-mode-map (kbd "C-c , c") (lambda() (interactive) (alchemist-mix-execute (list "compile" nil) nil)))
+  )
+(add-hook 'elixir-mode-hook 'custom-elixir-mode-hook)
 
 ;; Add smart-paren support for dealing with do..end blocks to Elixir
 (sp-with-modes '(elixir-mode)
