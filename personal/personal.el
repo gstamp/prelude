@@ -1686,8 +1686,15 @@ Show the IEx buffer if an IEx process is already run."
 
 ;; Customize auto dim other buffers
 (setq auto-dim-other-buffers-dim-on-focus-out nil)
-(custom-set-faces
- '(auto-dim-other-buffers-face ((t (:background "WhiteSmoke")))))
+
+(if (equal prelude-theme 'farmhouse-light)
+    (custom-set-faces
+     '(auto-dim-other-buffers-face ((t (:background "WhiteSmoke")))))
+  (custom-set-faces
+   '(auto-dim-other-buffers-face ((t (:background "#00001F")))))
+  )
+
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
