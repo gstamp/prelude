@@ -938,7 +938,8 @@
 (require 'ox-md)
 
 ;; Start up bullets mode when org is loaded.
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 't)))
+(with-eval-after-load 'org
+  (org-bullets-mode 't))
 
 ;; Don't use the standard org keys for todo and priority management
 ;; http://orgmode.org/manual/Conflicts.html
