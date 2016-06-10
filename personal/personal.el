@@ -1647,11 +1647,19 @@ This function is intended to be used as a value of `ring-bell-function'."
 
   (define-key elixir-mode-map (kbd "<f5>") 'alchemist-mix-test-at-point)
   (define-key elixir-mode-map (kbd "S-<f5>") 'alchemist-mix-test)
-  (define-key elixir-mode-map (kbd "M-<f5>") 'alchemist-mix-test)
   (define-key elixir-mode-map (kbd "C-c , t") 'alchemist-project-toggle-file-and-tests)
   (define-key elixir-mode-map (kbd "C-c , c") (lambda() (interactive) (alchemist-mix-execute (list "compile" nil) nil)))
   )
 (add-hook 'elixir-mode-hook 'custom-elixir-mode-hook)
+
+;; Save before running tests
+(advice-add 'alchemist-mix-test-at-point :before #'save-all)
+(advice-add 'alchemist-mix-test :before #'save-all)
+
+(defadvice alchemist-mix-test-at-point (before alchemist-mix-test-at-point-save-all () activate)
+  "Save the buffer before runng shell command"
+  (simple-save-some-buffers))
+
 
 ;; Add smart-paren support for dealing with do..end blocks to Elixir
 (sp-with-modes '(elixir-mode)
