@@ -1632,7 +1632,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Erlang/Elixir
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-require-packages '(alchemist flycheck-elixir ob-elixir))
+(prelude-require-packages '(alchemist flycheck-mix ob-elixir))
 
 (add-hook 'alchemist-mode-hook 'company-mode)
 (add-hook 'elixir-mode-hook 'alchemist-mode)
