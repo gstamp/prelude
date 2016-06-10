@@ -32,6 +32,8 @@
 (setq js2-basic-offset 2)
 (setq js2-bounce-indent-p t)
 
+;; Don't ask about the tag table.
+(setq tags-add-tables nil)
 
 ;; By default, Emacs inserts tabs in place of multiple spaces when it
 ;; formats a region. We want spaces.
