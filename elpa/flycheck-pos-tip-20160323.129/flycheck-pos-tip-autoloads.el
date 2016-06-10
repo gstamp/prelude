@@ -3,14 +3,9 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "flycheck-pos-tip" "flycheck-pos-tip.el" (22129
-;;;;;;  59026 0 0))
+;;;### (autoloads nil "flycheck-pos-tip" "flycheck-pos-tip.el" (22362
+;;;;;;  23116 0 0))
 ;;; Generated autoloads from flycheck-pos-tip.el
-
-(autoload 'flycheck-pos-tip-error-messages "flycheck-pos-tip" "\
-Display ERRORS in a graphical tooltip.
-
-\(fn ERRORS)" nil nil)
 
 (defvar flycheck-pos-tip-mode nil "\
 Non-nil if Flycheck-Pos-Tip mode is enabled.
@@ -34,12 +29,8 @@ omitted, nil or positive.  If ARG is `toggle', toggle
 interactively.
 
 In `flycheck-pos-tip-mode' show Flycheck's error messages in a
-GUI tooltip.  This does not work on TTY frames.  You can provide
-your own function to show and hide the popup via
-`flycheck-pos-tip-show-function' and
-`flycheck-pos-tip-hide-function' respectively.  For instance you
-may use the popular popup.el library (see URL
-`https://github.com/auto-complete/popup-el').
+GUI tooltip.  Falls back to `flycheck-display-error-messages' on
+TTY frames.
 
 \(fn &optional ARG)" t nil)
 
