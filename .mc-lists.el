@@ -11,6 +11,7 @@
         end-of-visual-line
         go-mode-insert-and-indent
         kill-region
+        markdown-exdent-or-delete
         org-ctrl-c-ctrl-c
         org-delete-char
         org-end-of-line
@@ -33,10 +34,12 @@
         sp-splice-sexp-killing-backward
         yaml-electric-backspace
         yaml-electric-dash-and-dot
+        zop-up-to-char
         ))
 
 (setq mc/cmds-to-run-once
       '(
+        end-of-buffer
         eshell-previous-matching-input-from-input
         helm-M-x
         ns-handle-scroll-bar-event

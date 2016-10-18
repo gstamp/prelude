@@ -1634,10 +1634,18 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (prelude-require-packages '(alchemist flycheck-mix ob-elixir))
 
+(flycheck-mix-setup)
+
 (add-hook 'alchemist-mode-hook 'company-mode)
 (add-hook 'elixir-mode-hook 'alchemist-mode)
 
+(defconst elixir--prettify-symbols-alist
+  '(("fn"  . ?λ)))
+
 (defun custom-elixir-mode-hook ()
+  (push '(">=" . ?≥) prettify-symbols-alist)
+  (push '("fn"  . ?λ) prettify-symbols-alist)
+  (push '("|>"  . ?ǁ) prettify-symbols-alist)
   (flycheck-mode)
   (smartparens-mode -1)
   (define-key elixir-mode-map (kbd "M-,") 'alchemist-goto-jump-back)
@@ -1651,6 +1659,12 @@ This function is intended to be used as a value of `ring-bell-function'."
   (define-key elixir-mode-map (kbd "C-c , c") (lambda() (interactive) (alchemist-mix-execute (list "compile" nil) nil)))
   )
 (add-hook 'elixir-mode-hook 'custom-elixir-mode-hook)
+
+;; Add elixir to hide-show mode
+(add-to-list 'hs-special-modes-alist
+             '(elixir-mode
+               "do" "end" "#"
+               nil nil))
 
 ;; Save before running tests
 (advice-add 'alchemist-mix-test-at-point :before #'save-all)
@@ -1718,7 +1732,15 @@ This function is intended to be used as a value of `ring-bell-function'."
                             restclient
                             csv-mode
                             elmacro
+                            neotree
+                            logstash-conf
                             ))
+
+(setq logstash-indent 2)
+
+;; fill column indicator
+(turn-on-fci-mode)
+(set-fill-column 120)
 
 (add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode))
 
@@ -1733,6 +1755,8 @@ This function is intended to be used as a value of `ring-bell-function'."
 
 (define-key global-map (kbd "M-g M-r") 'vr/replace)
 (define-key global-map (kbd "M-g r") 'vr/query-replace)
+
+(global-set-key (kbd "M-g t") 'neotree-toggle)
 
 ;; Enable company mode for elisp
 (add-hook 'emacs-lisp-mode-hook 'company-mode)
