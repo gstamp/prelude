@@ -556,6 +556,15 @@
 ;;;; Setup: Helper Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun kill-dired-buffers ()
+  "Kill all dired buffers."
+  (interactive)
+  (mapc (lambda (buffer)
+          (when (eq 'dired-mode (buffer-local-value 'major-mode buffer))
+            (kill-buffer buffer)))
+        (buffer-list)))
+(global-set-key (kbd "C-c C-k") 'kill-dired-buffers)
+
 ;; If inside a string escape the pasted contents. (consider making default)
 (defun escape-yank()
   (interactive)
