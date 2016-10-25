@@ -1738,10 +1738,6 @@ This function is intended to be used as a value of `ring-bell-function'."
 
 (setq logstash-indent 2)
 
-;; fill column indicator
-(turn-on-fci-mode)
-(set-fill-column 120)
-
 (add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode))
 
 (require 'auto-highlight-symbol)
