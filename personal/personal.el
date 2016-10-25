@@ -1614,7 +1614,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;; Setup: Smart parens & corral
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-package 'corral)
+(prelude-require-packages '(corral smartparens))
 
 (global-set-key (kbd "M-9") 'corral-parentheses-backward)
 (global-set-key (kbd "M-0") 'corral-parentheses-forward)
@@ -1632,10 +1632,9 @@ This function is intended to be used as a value of `ring-bell-function'."
    '(sp-pair-overlay-face nil))
   )
 
-;; Some smart parens options to make editing ruby less annoying
-(add-to-list 'sp-autoescape-string-quote-if-empty 'ruby-mode)
-(setq sp-autoescape-string-quote nil)
-(setq sp-autoinsert-if-followed-by-same 3)
+;; Does not seem to be working
+;;(setq-default sp-escape-quotes-after-insert nil)
+(setq-default sp-escape-wrapped-region nil)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
