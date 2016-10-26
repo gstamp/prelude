@@ -27,3 +27,5 @@ tramp
 /games/
 /.sx/
 elpa/archives
+.emacs.desktop
+.emacs.desktop.lock
