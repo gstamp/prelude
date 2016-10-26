@@ -1232,10 +1232,10 @@ This command calls the external script 'ruby-to-json.rb'."
   (interactive "P")
   (command-execute 'git-link)  ;; this is just here to force autoloading of git-link
   (let* ((remote-name (if prompt (read-string "Remote: " nil nil git-link-default-remote)
-                        git-link-default-remote))
-         (remote-host (git-link-remote-host remote-name))
-         (branch      (git-link-current-branch))
-         (commit      (git-link-last-commit))
+                        (git-link--remote)))
+         (remote-host (git-link--remote-host remote-name))
+         (branch      (git-link--current-branch))
+         (commit      (git-link--last-commit))
          (handler     (nth 1 (assoc remote-host git-link-remote-alist))))
 
     (cond ((null remote-host)
@@ -1248,7 +1248,7 @@ This command calls the external script 'ruby-to-json.rb'."
           ;; null ret val
           ((browse-url
             (format "https://github.com/%s/compare/%s"
-                    (git-link-remote-dir remote-name)
+                    (git-link--remote-dir remote-name)
                     branch))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
