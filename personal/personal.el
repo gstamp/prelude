@@ -492,9 +492,7 @@
   (interactive)
   (shell-command (concat "open " (shell-quote-argument default-directory))))
 
-(global-set-key [(control shift j)] 'prelude-top-join-line)
-
-(defalias 'iwb 'prelude-indent-buffer)
+(global-set-key [(control shift j)] 'crux-top-join-line)
 
 (global-set-key [home] (kbd "C-a"))
 
@@ -799,8 +797,8 @@
 
 (global-set-key "\r" 'newline-and-indent)
 
-(global-set-key (kbd "C-o") 'prelude-smart-open-line)
-(global-set-key (kbd "C-S-o") 'prelude-smart-open-line-above)
+(global-set-key (kbd "C-o") 'crux-smart-open-line)
+(global-set-key (kbd "C-S-o") 'crux-smart-open-line-above)
 
 ;; Repeat (default of C-x z is very hard to type)
 (global-set-key (kbd "s-.") 'repeat)
@@ -820,7 +818,7 @@
 (global-set-key (kbd "C-S-f") (lambda () (interactive) (ignore-errors (forward-char 5))))
 (global-set-key (kbd "C-S-b") (lambda () (interactive) (ignore-errors (backward-char 5))))
 
-(global-set-key (kbd "M-g M-i") 'prelude-indent-defun)
+(global-set-key (kbd "M-g M-i") 'crux-indent-defun)
 
 (global-set-key (kbd "M-x") 'helm-M-x)
 
@@ -850,18 +848,6 @@
 (prelude-require-packages '(ido-vertical-mode))
 
 (ido-vertical-mode +1)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; Setup: Fiplr
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; For finding files in a project
-
-(prelude-require-packages '(fiplr))
-
-(setq *grizzl-read-max-results* 20)
-(setq fiplr-ignored-globs '((directories (".git" ".svn" "vendor" "tmp"))
-                            (files ("*.jpg" "*.png" "*.zip" "*~"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Helm/Projectile
@@ -1167,7 +1153,7 @@ multiple lines separated by `\n'."
             ))
 
 ;; Use preludes beginning of line for virual-line-mode
-(define-key visual-line-mode-map [remap move-beginning-of-line] 'prelude-move-beginning-of-line)
+(define-key visual-line-mode-map [remap move-beginning-of-line] 'crux-move-beginning-of-line)
 
 (setq ruby-refactor-add-parens +1)
 
