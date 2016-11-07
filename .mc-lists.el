@@ -45,6 +45,7 @@
         ns-handle-scroll-bar-event
         pop-global-mark
         smex
+        text-scale-decrease
         undo-tree-visualize
         wgrep-finish-edit
         yas-expand
