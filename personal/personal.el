@@ -1443,24 +1443,6 @@ This function is intended to be used as a value of `ring-bell-function'."
 (yas-global-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; Setup: Highlight indentation
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(prelude-require-packages '(highlight-indentation))
-
-(add-hook 'ruby-mode-hook
-          (lambda () (highlight-indentation-current-column-mode)))
-
-(add-hook 'coffee-mode-hook
-          (lambda () (highlight-indentation-current-column-mode)))
-
-(if (equal prelude-theme 'farmhouse-light)
-    (custom-set-faces
-     '(highlight-indentation-current-column-face ((t (:background "#f0f0f0")))))
-  (custom-set-faces
-   '(highlight-indentation-current-column-face ((t (:background "#444444"))))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Auto reload tags
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
