@@ -1542,8 +1542,7 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;; Setup: Flycheck
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(flycheck flycheck-pos-tip))
-
+(prelude-require-packages '(flycheck flycheck-pos-tip helm-flycheck))
 
 (defun set-flycheck-defaults()
   (setq flycheck-disabled-checkers '(ruby-rubocop json-jsonlint))
@@ -1767,3 +1766,4 @@ This function is intended to be used as a value of `ring-bell-function'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'personal)
 ;;; personal.el ends here
+
