@@ -374,7 +374,7 @@
 (global-set-key [(control f2)] 'projectile-ag)
 (global-set-key [(meta f2)] 'ag-project)
 
-(setq ag-arguments (list "--ignore-case" "--nogroup" "--column" "--"))
+(setq ag-arguments (list "--smart-case" "--stats"))
 
 ;; Automatically save buffers when exiting wgrep edit mode.
 (setq wgrep-auto-save-buffer t)
