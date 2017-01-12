@@ -24,6 +24,7 @@
         prelude-top-join-line
         ruby-tools-interpolate
         ruby-tools-to-single-quote-string
+        sh-assignment
         sp--self-insert-command
         sp-backward-delete-char
         sp-delete-char
