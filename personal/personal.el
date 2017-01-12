@@ -987,7 +987,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Setup: Clojure
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prelude-require-packages '(clojure-mode cider cider-decompile cider-spy clojure-quick-repls cider-eval-sexp-fu))
+(prelude-require-packages '(clojure-mode cider cider-decompile cider-spy clojure-quick-repls cider-eval-sexp-fu clj-refactor))
 
 ;; Save buffer before trying to compile
 (defadvice cider-load-current-buffer (before save-before-cider-compile activate compile)
