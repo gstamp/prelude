@@ -6,4 +6,5 @@
       )
   )
 
-(setq prelude-theme 'farmhouse-dark)
+(if (boundp 'idea-darkula)
+    (setq prelude-theme 'idea-darkula))
