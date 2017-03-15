@@ -1,10 +1,10 @@
 ;;; rainbow-identifiers-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
 ;;;### (autoloads nil "rainbow-identifiers" "rainbow-identifiers.el"
-;;;;;;  (21998 34664 0 0))
+;;;;;;  (22728 46254 0 0))
 ;;; Generated autoloads from rainbow-identifiers.el
 
 (autoload 'rainbow-identifiers-mode "rainbow-identifiers" "\

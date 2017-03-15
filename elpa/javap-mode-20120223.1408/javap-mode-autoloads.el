@@ -1,9 +1,9 @@
 ;;; javap-mode-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "javap-mode" "javap-mode.el" (21990 29505 0
+;;;### (autoloads nil "javap-mode" "javap-mode.el" (22728 46229 0
 ;;;;;;  0))
 ;;; Generated autoloads from javap-mode.el
 

@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "beacon" "beacon.el" (22543 1995 0 0))
+;;;### (autoloads nil "beacon" "beacon.el" (22728 45999 0 0))
 ;;; Generated autoloads from beacon.el
 
 (autoload 'beacon-blink "beacon" "\

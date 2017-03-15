@@ -1,10 +1,10 @@
 ;;; cucumber-goto-step-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
 ;;;### (autoloads nil "cucumber-goto-step" "cucumber-goto-step.el"
-;;;;;;  (21990 29542 0 0))
+;;;;;;  (22728 46296 0 0))
 ;;; Generated autoloads from cucumber-goto-step.el
 
 (autoload 'jump-to-cucumber-step "cucumber-goto-step" "\

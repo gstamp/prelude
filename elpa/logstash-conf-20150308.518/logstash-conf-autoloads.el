@@ -1,9 +1,9 @@
 ;;; logstash-conf-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "logstash-conf" "logstash-conf.el" (22487 38283
+;;;### (autoloads nil "logstash-conf" "logstash-conf.el" (22728 46316
 ;;;;;;  0 0))
 ;;; Generated autoloads from logstash-conf.el
 

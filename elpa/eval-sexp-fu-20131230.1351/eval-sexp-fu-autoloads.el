@@ -1,10 +1,9 @@
 ;;; eval-sexp-fu-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil nil ("eval-sexp-fu.el") (22118 28107 767130
-;;;;;;  0))
+;;;### (autoloads nil nil ("eval-sexp-fu.el") (22728 46233 0 0))
 
 ;;;***
 

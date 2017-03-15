@@ -1,9 +1,9 @@
 ;;; soothe-theme-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "soothe-theme" "soothe-theme.el" (21990 29410
+;;;### (autoloads nil "soothe-theme" "soothe-theme.el" (22728 46037
 ;;;;;;  0 0))
 ;;; Generated autoloads from soothe-theme.el
 

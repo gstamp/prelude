@@ -291,4 +291,3 @@ what diminished modes would be on the mode-line if they were still minor."
 (provide 'diminish)
 
 ;;; diminish.el ends here
-closed

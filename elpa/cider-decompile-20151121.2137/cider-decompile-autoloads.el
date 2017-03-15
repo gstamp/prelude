@@ -1,10 +1,10 @@
 ;;; cider-decompile-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "cider-decompile" "cider-decompile.el" (22118
-;;;;;;  28342 0 0))
+;;;### (autoloads nil "cider-decompile" "cider-decompile.el" (22728
+;;;;;;  46230 0 0))
 ;;; Generated autoloads from cider-decompile.el
 
 (autoload 'cider-decompile-func "cider-decompile" "\

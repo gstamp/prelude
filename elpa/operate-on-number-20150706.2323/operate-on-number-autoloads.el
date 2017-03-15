@@ -1,10 +1,10 @@
 ;;; operate-on-number-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
 ;;;### (autoloads nil "operate-on-number" "operate-on-number.el"
-;;;;;;  (21990 29401 0 0))
+;;;;;;  (22728 46028 0 0))
 ;;; Generated autoloads from operate-on-number.el
 
 (autoload 'find-number-at-point "operate-on-number" "\

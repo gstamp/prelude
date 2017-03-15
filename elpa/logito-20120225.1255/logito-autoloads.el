@@ -1,9 +1,9 @@
 ;;; logito-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil nil ("logito.el") (21990 29385 425781 0))
+;;;### (autoloads nil nil ("logito.el") (22728 46011 0 0))
 
 ;;;***
 

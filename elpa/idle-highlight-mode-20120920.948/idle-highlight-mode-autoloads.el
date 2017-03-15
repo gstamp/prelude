@@ -1,10 +1,10 @@
 ;;; idle-highlight-mode-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
 ;;;### (autoloads nil "idle-highlight-mode" "idle-highlight-mode.el"
-;;;;;;  (21990 29547 0 0))
+;;;;;;  (22728 46299 0 0))
 ;;; Generated autoloads from idle-highlight-mode.el
 
 (autoload 'idle-highlight-mode "idle-highlight-mode" "\
