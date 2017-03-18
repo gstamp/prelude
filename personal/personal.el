@@ -554,6 +554,43 @@
 ;;;; Setup: Helper Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun user-buffer-q ()
+  "Return t if current buffer is a user buffer, else nil.
+Typically, if buffer name starts with *, it's not considered a user buffer.
+This function is used by buffer switching command and close buffer command, so that next buffer shown is a user buffer.
+You can override this function to get your idea of “user buffer”."
+  (interactive)
+  (if (string-equal "*" (substring (buffer-name) 0 1))
+      nil
+    (if (string-equal major-mode "dired-mode")
+        nil
+      t
+      )))
+
+(defun next-user-buffer ()
+  "Switch to the next user buffer.
+“user buffer” is determined by `user-buffer-q'."
+  (interactive)
+  (next-buffer)
+  (let ((i 0))
+    (while (< i 20)
+      (if (not (user-buffer-q))
+          (progn (next-buffer)
+                 (setq i (1+ i)))
+        (progn (setq i 100))))))
+
+(defun previous-user-buffer ()
+  "Switch to the previous user buffer.
+“user buffer” is determined by `user-buffer-q'."
+  (interactive)
+  (previous-buffer)
+  (let ((i 0))
+    (while (< i 20)
+      (if (not (user-buffer-q))
+          (progn (previous-buffer)
+                 (setq i (1+ i)))
+        (progn (setq i 100))))))
+
 (defun kill-dired-buffers ()
   "Kill all dired buffers."
   (interactive)
@@ -773,8 +810,8 @@
 (global-set-key [(control f5)] 'linum-mode)
 
 ;; Navigate backward and forward through buffers
-(global-set-key [(super left)] 'previous-buffer)
-(global-set-key [(super right)] 'next-buffer)
+(global-set-key [(super left)] 'previous-user-buffer)
+(global-set-key [(super right)] 'next-user-buffer)
 (defun my-switch-to-other-buffer ()
   "Switch to other buffer"
   (interactive)
