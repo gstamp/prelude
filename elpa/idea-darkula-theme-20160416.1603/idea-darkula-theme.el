@@ -69,12 +69,12 @@
  '(ecb-default-highlight-face ((t (:background "DarkSlateGray" :box (:line-width 1 :style released-button)))))
  '(ecb-default-general-face ((t (:foreground "white"))))
  ;; coding customizations
- '(font-lock-comment-face ((t (:foreground "#808080"))))
+ '(font-lock-comment-face ((t (:foreground "#808080" :italic t))))
  '(font-lock-comment-delimiter-face ((t (:foreground "#808080"))))
  '(font-lock-doc-face ((t (:foreground "#629755" :italic t))))
  '(font-lock-keyword-face ((t (:foreground "#CC7832"))))
  '(font-lock-preprocessor-face ((t (:foreground "green"))))
- '(font-lock-string-face ((t (:foreground "#6A8759"))))
+ '(font-lock-string-face ((t (:foreground "#6A8759" :italic t))))
  '(font-latex-string-face ((t (:foreground "#6A8759"))))
  '(font-latex-math-face ((t (:foreground "aquamarine1"))))
  '(font-lock-type-face ((t (:foreground "#CC7832"))))
@@ -121,23 +121,23 @@
  '(diredp-compressed-file-suffix ((t (:foreground "cyan1"))))
  '(diredp-ignored-file-name ((t (:foreground "cyan1"))))
  ;; nXML customizations
- ; '<' and '>' characters
+                                        ; '<' and '>' characters
  '(nxml-tag-delimiter ((t (:foreground "#E8BF6A"))))
- ; '=' and '"' characters 
+                                        ; '=' and '"' characters 
  '(nxml-attribute-value-delimiter ((t (:foreground "#E8BF6A"))))
- ; tag name
+                                        ; tag name
  '(nxml-element-local-name ((t (:foreground "#CC7832"))))
- ; attribute name
- ;'(nxml-attribute-local-name ((t (:foreground "#BABABA"))))
+                                        ; attribute name
+                                        ;'(nxml-attribute-local-name ((t (:foreground "#BABABA"))))
  '(nxml-attribute-local-name ((t (:foreground "#ABCDEF"))))
- ; attribute value
+                                        ; attribute value
  '(nxml-attribute-value ((t (:foreground "#A5C261"))))
  '(nxml-text ((t (:foreground "#BABABA"))))
  '(nxml-cdata-section-content ((t (:foreground "gold"))))
- ; attribute prefix like xlink:href - here it is "xlink"
- ;'(nxml-attribute-prefix ((t (:foreground "#DADADA"))))
+                                        ; attribute prefix like xlink:href - here it is "xlink"
+                                        ;'(nxml-attribute-prefix ((t (:foreground "#DADADA"))))
  '(nxml-attribute-prefix ((t (:foreground "#BBEDFF"))))
- ; tag prefix : <ui:Checkbox> - here it is "ui"
+                                        ; tag prefix : <ui:Checkbox> - here it is "ui"
  '(nxml-element-prefix ((t (:foreground "#EC9852"))))
  ;; ERC customizations
  '(erc-nick-default-face ((t (:foreground "##9876AA" :bold t))))
