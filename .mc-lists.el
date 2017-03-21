@@ -20,6 +20,7 @@
         org-yank
         orgtbl-self-insert-command
         paredit-forward-delete
+        phi-search
         prelude-move-beginning-of-line
         prelude-top-join-line
         ruby-tools-interpolate
