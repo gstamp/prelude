@@ -1632,14 +1632,6 @@ If the error list is visible, hide it.  Otherwise, show it."
 
   (define-key flycheck-mode-map (kbd "C-c C-t") 'toggle-flycheck-error-list)
 
-  (push '("^\\*Flycheck.+\\*$"
-          :regexp t
-          :dedicated t
-          :position bottom
-          :stick t
-          :noselect t)
-        popwin:special-display-config)
-
   ;; Custom fringe indicator
   (when (fboundp 'define-fringe-bitmap)
     (define-fringe-bitmap 'my-flycheck-fringe-indicator
@@ -1717,6 +1709,7 @@ If the error list is visible, hide it.  Otherwise, show it."
 (add-to-list 'popwin:special-display-config '("*rspec-compilation*" :noselect t))
 (add-to-list 'popwin:special-display-config '("*Help*" :noselect t))
 (add-to-list 'popwin:special-display-config '("*alchemist help*" :noselect t))
+(add-to-list 'popwin:special-display-config '("^\\*Flycheck.+\\*$" :regexp t :dedicated t :position bottom :stick t :noselect t))
 (delete "*Shell Command Output*" popwin:special-display-config)
 (delete "*vc-diff*" popwin:special-display-config)
 
