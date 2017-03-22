@@ -1087,8 +1087,12 @@ multiple lines separated by `\n'."
 ;;;; Setup: Ruby
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(prelude-require-packages '(rinari rspec-mode bundler ruby-mode ruby-tools ruby-hash-syntax
-                                   ruby-refactor projectile-rails adaptive-wrap rainbow-identifiers))
+(prelude-require-packages '(rinari rspec-mode bundler ruby-mode
+                                   ruby-tools ruby-hash-syntax
+                                   ruby-refactor projectile-rails
+                                   adaptive-wrap
+                                   rainbow-identifiers
+                                   ))
 
 ;; Don't insert crap into my file automatically
 (setq ruby-insert-encoding-magic-comment nil)
