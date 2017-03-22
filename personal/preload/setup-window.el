@@ -6,7 +6,7 @@
          ((find-font (font-spec :name "Operator Mono-14:weight=light"))
           (set-frame-font "Operator Mono-14:weight=light"))
          ((find-font (font-spec :name "Oxygen Mono-14"))
-          (set-frame-font "Oxygen Mono-13"))
+          (set-frame-font "Oxygen Mono-14"))
          ((find-font (font-spec :name "DejaVu Sans Mono"))
           (set-frame-font "DejaVu Sans Mono-12"))
          ((find-font (font-spec :name "inconsolata"))
@@ -19,5 +19,5 @@
       )
   )
 
-(if (boundp 'idea-darkula)
+(if (featurep 'idea-darkula-theme)
     (setq prelude-theme 'idea-darkula))
