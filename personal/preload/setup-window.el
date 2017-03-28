@@ -19,5 +19,10 @@
       )
   )
 
+(require 'idea-darkula-theme)
+
 (if (featurep 'idea-darkula-theme)
     (setq prelude-theme 'idea-darkula))
+
+(load "server")
+(unless (server-running-p) (server-start))
